@@ -9,7 +9,7 @@ const path = require('path');
 const fs = require('fs');
 const ini = require('ini');
 const sOS = require('os');
-const { spawn } = require('child_process');
+const { exec, spawn } = require('child_process');
 const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
@@ -21,6 +21,7 @@ process.on('uncaughtException', (error) => {
 });
 
 let phpServerProcess;
+let sPort;
 
 const createWindow = () => {
     const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
@@ -91,7 +92,7 @@ function startPHPServer(win, config) {
 
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
-    let sPort = sListen.address().port;
+    sPort = sListen.address().port;
     sListen.close();
     sCreateServer.close();
 
@@ -118,9 +119,24 @@ function startPHPServer(win, config) {
     phpServerProcess.unref(); // Permite que o aplicativo seja fechado sem fechar o processo do servidor PHP
 }
 
+// Função para encerrar o processo com base na porta
+function killProcessByPort(port) {
+    exec(`lsof -ti:${port} | xargs kill`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Erro ao encerrar o processo na porta ${port}: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`Erro ao encerrar o processo na porta ${port}: ${stderr}`);
+        return;
+      }
+      console.log(`Processo na porta ${port} encerrado com sucesso.`);
+    });
+  }  
+
 function stopPHPServer() {
     if (phpServerProcess) {
-        phpServerProcess.kill(); // Encerra todos os processos do PHP que estão sob a mesma porta
+        killProcessByPort(sPort); // Encerra todos os processos do PHP que estão sob a mesma porta
         console.log('Servidor PHP parado.');
     }
 }
