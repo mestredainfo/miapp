@@ -12,7 +12,7 @@ Para executar MIApp a partir do código-fonte, siga estas etapas:
 - Crie uma pasta chamada php
 - Copie o PHP compilado e a LICENSE para dentro da pasta php
 - Crie um arquivo php.ini para a pasta php
-- Altere o "miappserver" para "php" na variável "sFilePHP" do "main.js"
+- Altere o "miappserver" para "php" na variável "server" do "config/config.ini"
 - Inicie o aplicativo: `npm start`
 
 Sugestão: Caso queira disponibilizar o PHP em diferentes versões das distros Linux, recomendo criar um AppImage do PHP.
