@@ -79,13 +79,21 @@ function startPHPServer(win, config) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        sFilePHP = path.join(app.getAppPath(), '/php/miappserver');
+        if (config.php.folderphp) {
+            sFilePHP = path.join(app.getAppPath(), '/php/', config.php.server);
+        } else {
+            sFilePHP = 'php';
+        }
 
         if (config.php.perm) {
             permPHP(sFilePHP, config);
         }
 
-        sFilePHPINI = path.join(app.getAppPath(), '/php/php.ini');
+        if (config.php.folderini || config.php.folderphp) {
+            sFilePHPINI = path.join(app.getAppPath(), '/php/php.ini');
+        } else {
+            sFilePHPINI = '';
+        }
     } else {
         app.quit();
     }
