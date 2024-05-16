@@ -4,7 +4,7 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const ini = require('ini');
@@ -20,61 +20,84 @@ process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
 
+const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
+const winOptions = {
+    width: config.app.width,
+    height: config.app.height,
+    resizable: config.app.resizable,
+    icon: path.join(app.getAppPath(), config.app.icon),
+    webPreferences: {
+        preload: path.join(app.getAppPath(), '/preload.js'),
+    }
+}
+
+let sServerName;
 let phpServerProcess;
 let sPort;
 
-const createWindow = () => {
-    const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
-
-    const winOptions = {
-        width: config.app.width,
-        height: config.app.height,
-        resizable: config.app.resizable,
-        icon: path.join(app.getAppPath(), config.app.icon),
-        webPreferences: {
-            preload: path.join(app.getAppPath(), '/preload.js'),
+function createMenu(sWin) {
+    fs.readFile(path.join(app.getAppPath(), config.app.menu, '/menu.json'), (err, data) => {
+        if (err) {
+            console.error('Erro ao ler o arquivo JSON', err);
+            return;
         }
+
+        const menuData = JSON.parse(data);
+
+        // Cria o menu principal
+        const mainMenu = Menu.buildFromTemplate(getMenuTemplate(sWin, menuData));
+        sWin.setMenu(mainMenu);
+    });
+}
+
+const createWindow = () => {
+    const win = new BrowserWindow(winOptions);
+    win.setMenu(null);
+    startPHPServer(win); // Inicie o servidor PHP
+
+    if (config.app.menu) {
+        createMenu(win);
+    } else {
+        win.setMenu(null);
     }
 
-    const win = new BrowserWindow(winOptions);
-
-    win.setMenu(null);
-
-    startPHPServer(win, config); // Inicie o servidor PHP
-
-    if (config.app.devtools) {
+    if (config.dev.tools) {
         win.webContents.openDevTools();
     }
 
     win.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
-            return {
-                action: 'allow',
-                overrideBrowserWindowOptions: winOptions
-            }
+            miappNewWindow(url);
+
+            return { action: 'deny' }
         }
 
-        return { action: 'deny' }
+        return { action: 'allow' }
     });
 
     app.on("browser-window-created", (e, win) => {
-        if (config.app.devtools) {
+        if (config.dev.tools) {
             win.webContents.openDevTools();
         }
-        win.removeMenu();
+
+        if (!config.dev.menu) {
+            win.removeMenu();
+        }
     });
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
     mifunctions.mifunctions(win);
 }
 
-function permPHP(filephp, config) {
+// Aplica permissão de execução para o filephp
+function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
     config.php.perm = false;
     fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), ini.stringify(config));
 }
 
-function startPHPServer(win, config) {
+// Inicia o servidor embutido do PHP
+function startPHPServer(win) {
     let sFilePHP;
     let sFilePHPINI;
 
@@ -86,7 +109,7 @@ function startPHPServer(win, config) {
         }
 
         if (config.php.perm) {
-            permPHP(sFilePHP, config);
+            permPHP(sFilePHP);
         }
 
         if (config.php.folderini || config.php.folderphp) {
@@ -111,7 +134,8 @@ function startPHPServer(win, config) {
 
         if (message.includes('Development Server (http://localhost:' + sPort + ')')) {
             console.log('Servidor PHP iniciado com sucesso.');
-            win.loadURL('http://localhost:' + sPort);
+            sServerName = `http://localhost:${sPort}/`;
+            win.loadURL(sServerName);
         }
     });
 
@@ -125,6 +149,89 @@ function startPHPServer(win, config) {
 
 
     phpServerProcess.unref(); // Permite que o aplicativo seja fechado sem fechar o processo do servidor PHP
+}
+
+// Nova Janela
+function miappNewWindow(url) {
+    const sNewWindow = new BrowserWindow(winOptions);
+    sNewWindow.setMenu(null);
+    sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
+    
+
+    sNewWindow.webContents.setWindowOpenHandler(({ url }) => {
+        if (url !== '') {
+            console.log(url);
+            miappNewWindow(`${url}`);
+
+            return { action: 'deny' }
+        }
+
+        return { action: 'allow' }
+    });
+
+    createMenu(sNewWindow);
+}
+
+// Template de Menu
+function getMenuTemplate(win, menuData) {
+    const template = [];
+
+    if (config.dev.menu) {
+        const devMenu = {
+            label: 'DevTools',
+            submenu: [
+                {
+                    label: 'Refresh',
+                    accelerator: 'F5',
+                    click: () => {
+                        win.reload();
+                    }
+                },
+                {
+                    label: 'Tools',
+                    accelerator: 'F12',
+                    click: () => {
+                        win.openDevTools();
+                    }
+                }
+            ]
+        }
+
+        template.push(devMenu);
+    }
+
+    // Loop sobre as chaves do objeto JSON
+    Object.keys(menuData).forEach((key) => {
+        const submenu = [];
+
+        // Loop sobre os itens do submenu
+        Object.keys(menuData[key]).forEach((submenuKey) => {
+            const menuItem = {
+                label: submenuKey,
+                accelerator: menuData[key][submenuKey].key,
+                click: () => {
+                    // Verifica se é uma página ou URL
+                    if (menuData[key][submenuKey].page) {
+                        if (menuData[key][submenuKey].newwindow) {
+                            miappNewWindow(menuData[key][submenuKey].page)
+                            //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
+                        } else {
+                            win.loadURL(sServerName + menuData[key][submenuKey].page);
+                        }
+                    } else if (menuData[key][submenuKey].url) {
+                        require('electron').shell.openExternal(menuData[key][submenuKey].url);
+                    }
+                }
+            };
+
+            submenu.push(menuItem);
+        });
+
+        // Adiciona o submenu ao item do menu principal
+        template.push({ label: key, submenu });
+    });
+
+    return template;
 }
 
 // Função para encerrar o processo com base na porta
