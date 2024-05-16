@@ -1,0 +1,52 @@
+{
+    "Exemplos": {
+        "Página Inicial": {
+            "page": "index.php"
+        },
+        "Abrir": {
+            "page": "abrir.php",
+            "key": "CTRL+O"
+        },
+        "Salvar": {
+            "page": "salvar.php",
+            "key": "CTRL+B"
+        },
+        "Cookies": {
+            "page": "cookies.php",
+            "key": "CTRL+K",
+            "newwindow": true
+        },
+        "Include": {
+            "page": "include.php",
+            "key": "CTRL+I"
+        },
+        "PHPInfo": {
+            "page": "phpinfo.php",
+            "key": "CTRL+P",
+            "newwindow": true
+        },
+        "Sem Cache": {
+            "page": "semcache.php",
+            "key": "CTRL+S"
+        },
+        "Session": {
+            "page": "session.php",
+            "key": "CTRL+SHIFT+S"
+        },
+        "SQLite3": {
+            "page": "sqlite.php",
+            "key": "CTRL+ALT+S"
+        },
+        "Timezone": {
+            "page": "timezone.php",
+            "key": "CTRL+T"
+        }
+    },
+    "Sobre":
+    {
+        "Página do MIApp": {
+            "url": "https://mestredainfo.wordpress.com/miapp/",
+            "key": "CTRL+M"
+        }
+    }
+}
