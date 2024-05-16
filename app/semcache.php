@@ -5,6 +5,8 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
+
 header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

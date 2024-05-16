@@ -5,6 +5,8 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
+
 date_default_timezone_set("America/Sao_Paulo");
 ?>
 <!DOCTYPE html>

@@ -5,6 +5,8 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
+
 if (empty($_COOKIE['info'])) {
     $count = 1;
     setcookie('info[msg]', $count, 0, '/', $_SERVER['SERVER_NAME'], false, true);
