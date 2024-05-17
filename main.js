@@ -156,7 +156,7 @@ function miappNewWindow(url) {
     const sNewWindow = new BrowserWindow(winOptions);
     sNewWindow.setMenu(null);
     sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
-    
+
 
     sNewWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
@@ -174,10 +174,10 @@ function miappNewWindow(url) {
 
 // Template de Menu
 function getMenuTemplate(win, menuData) {
-    const template = [];
+    let template = [];
 
     if (config.dev.menu) {
-        const devMenu = {
+        let devMenu = {
             label: 'DevTools',
             submenu: [
                 {
@@ -186,6 +186,9 @@ function getMenuTemplate(win, menuData) {
                     click: () => {
                         win.reload();
                     }
+                },
+                {
+                    label: 'separator'
                 },
                 {
                     label: 'Tools',
@@ -202,27 +205,32 @@ function getMenuTemplate(win, menuData) {
 
     // Loop sobre as chaves do objeto JSON
     Object.keys(menuData).forEach((key) => {
-        const submenu = [];
+        let submenu = [];
 
         // Loop sobre os itens do submenu
         Object.keys(menuData[key]).forEach((submenuKey) => {
-            const menuItem = {
-                label: submenuKey,
-                accelerator: menuData[key][submenuKey].key,
-                click: () => {
-                    // Verifica se é uma página ou URL
-                    if (menuData[key][submenuKey].page) {
-                        if (menuData[key][submenuKey].newwindow) {
-                            miappNewWindow(menuData[key][submenuKey].page)
-                            //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
-                        } else {
-                            win.loadURL(sServerName + menuData[key][submenuKey].page);
+            let menuItem = {};
+            if (submenuKey == 'separator') {
+                menuItem = { type: 'separator' };
+            } else {
+                menuItem = {
+                    label: submenuKey,
+                    accelerator: menuData[key][submenuKey].key,
+                    click: () => {
+                        // Verifica se é uma página ou URL
+                        if (menuData[key][submenuKey].page) {
+                            if (menuData[key][submenuKey].newwindow) {
+                                miappNewWindow(menuData[key][submenuKey].page)
+                                //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
+                            } else {
+                                win.loadURL(sServerName + menuData[key][submenuKey].page);
+                            }
+                        } else if (menuData[key][submenuKey].url) {
+                            require('electron').shell.openExternal(menuData[key][submenuKey].url);
                         }
-                    } else if (menuData[key][submenuKey].url) {
-                        require('electron').shell.openExternal(menuData[key][submenuKey].url);
                     }
-                }
-            };
+                };
+            }
 
             submenu.push(menuItem);
         });
