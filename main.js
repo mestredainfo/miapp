@@ -188,7 +188,7 @@ function getMenuTemplate(win, menuData) {
                     }
                 },
                 {
-                    label: 'separator'
+                    type: 'separator'
                 },
                 {
                     label: 'Tools',
