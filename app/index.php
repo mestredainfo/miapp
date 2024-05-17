@@ -61,8 +61,8 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
             txtVersion.innerHTML += `Versão do NodeJS: ${result}<br>`;
         });
 
-        window.miapp.versao('chrome').then((result) => {
-            txtVersion.innerHTML += `Versão do Chrome: ${result}<br>`;
+        window.miapp.versao('chromium').then((result) => {
+            txtVersion.innerHTML += `Versão do Chromium: ${result}<br>`;
         });
     </script>
 </body>
