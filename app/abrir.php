@@ -14,13 +14,23 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abrir Arquivo</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <?php
+    if (!empty($_GET['filename'])) {
+        $filename = filter_input(INPUT_GET, 'filename');
+
+        echo '<textarea>' . file_get_contents($filename) . '</textarea>';
+        exit;
+    }
+    ?>
     <script>
         async function abrir() {
             let sAbrir = await window.arquivo.abrir();
-            document.write(sAbrir.toString());
+            window.location.assign(`?filename=${sAbrir.toString()}`);
         }
         abrir();
     </script>
