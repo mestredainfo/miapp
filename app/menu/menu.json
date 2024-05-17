@@ -3,6 +3,7 @@
         "Página Inicial": {
             "page": "index.php"
         },
+        "separator": {},
         "Abrir": {
             "page": "abrir.php",
             "key": "CTRL+O"
