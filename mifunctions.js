@@ -37,7 +37,7 @@ module.exports = {
                 return process.versions.electron;
             } else if (tipo == 'node') {
                 return process.versions.node;
-            } else if (tipo == 'chrome') {
+            } else if (tipo == 'chromium') {
                 return process.versions.chrome;
             } else {
                 return '';
