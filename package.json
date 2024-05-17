@@ -1,7 +1,7 @@
 {
     "name": "miapp",
     "productName": "miapp",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Roda apps desenvolvidos em PHP para desktop.",
     "main": "main.js",
     "scripts": {
