@@ -93,7 +93,13 @@ const createWindow = () => {
 function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
     config.php.perm = false;
-    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), ini.stringify(config));
+
+    let sTopoINI = '# Copyright (C) 2004-2024 Murilo Gomes Julio\n';
+    sTopoINI += '# SPDX-License-Identifier: GPL-2.0-only\n\n';
+    sTopoINI += '# Organização: Mestre da Info\n';
+    sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
+
+    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
 }
 
 // Inicia o servidor embutido do PHP
@@ -210,7 +216,8 @@ function getMenuTemplate(win, menuData) {
         // Loop sobre os itens do submenu
         Object.keys(menuData[key]).forEach((submenuKey) => {
             let menuItem = {};
-            if (submenuKey == 'separator') {
+
+            if (submenuKey.indexOf('separator') == 0) {
                 menuItem = { type: 'separator' };
             } else {
                 menuItem = {
