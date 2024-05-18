@@ -3,7 +3,7 @@
         "Página Inicial": {
             "page": "index.php"
         },
-        "separator": {},
+        "separator1": {},
         "Abrir": {
             "page": "abrir.php",
             "key": "CTRL+O"
@@ -12,6 +12,7 @@
             "page": "salvar.php",
             "key": "CTRL+B"
         },
+        "separator2": {},
         "Cookies": {
             "page": "cookies.php",
             "key": "CTRL+K",
