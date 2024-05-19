@@ -22,6 +22,5 @@ contextBridge.exposeInMainWorld('externo', {
 // MIApp
 contextBridge.exposeInMainWorld('miapp', {
     versao: (tipo) => ipcRenderer.invoke('appVersao', tipo),
-    message: (title, msg, type) => ipcRenderer.invoke('appMessage', title, msg, type),
-    confirm: (title, msg, type) => ipcRenderer.invoke('appConfirm', title, msg, type)
+    mensagem: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, confirm),
 });
