@@ -43,5 +43,31 @@ module.exports = {
                 return '';
             }
         });
+
+        // Função para caixa de alerta
+        ipcMain.handle('appMessage', async (event, title, msg, type) => {
+            let options = {
+                type: type,
+                buttons: ["Continuar"],
+                defaultId: 1,
+                cancelId: 2,
+                title: title,
+                message: msg
+            }
+            return dialog.showMessageBoxSync(null, options);
+        });
+
+        // Função para caixa de confirmação
+        ipcMain.handle('appConfirm', async (event, title, msg, type) => {
+            let options = {
+                type: type,
+                buttons: ["Continuar", "Cancelar"],
+                defaultId: 1,
+                cancelId: 2,
+                title: title,
+                message: msg
+            }
+            return dialog.showMessageBoxSync(null, options);
+        });
     }
 }
