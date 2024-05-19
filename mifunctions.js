@@ -45,23 +45,18 @@ module.exports = {
         });
 
         // Função para caixa de alerta
-        ipcMain.handle('appMessage', async (event, title, msg, type) => {
-            let options = {
-                type: type,
-                buttons: ["Continuar"],
-                defaultId: 1,
-                cancelId: 2,
-                title: title,
-                message: msg
-            }
-            return dialog.showMessageBoxSync(null, options);
-        });
+        ipcMain.handle('appMessage', async (event, title, msg, type, confirm) => {
+            let sButtons;
 
-        // Função para caixa de confirmação
-        ipcMain.handle('appConfirm', async (event, title, msg, type) => {
+            if (confirm) {
+                sButtons = ['Continuar', 'Cancelar'];
+            } else {
+                sButtons = ['Continuar'];
+            }
+
             let options = {
                 type: type,
-                buttons: ["Continuar", "Cancelar"],
+                buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
                 title: title,
