@@ -2,9 +2,9 @@
 
 MIApp é uma plataforma que permite a criação e execução de aplicativos desenvolvidos em PHP diretamente para desktop. Compatível com Linux (Debian e Ubuntu).
 
-## Em breve
+## Em breve compatível com Windows 10 ou superior
 
-A nova versão do MIApp está sendo desenvolvida para funcionar também no Windows 10 ou superior. Dessa forma será possível desenvolver softwares em PHP para funcionar no Linux e Windows.
+A nova versão do MIApp está sendo desenvolvida para funcionar também no Windows. Dessa forma será possível desenvolver softwares em PHP para funcionar no Linux e Windows.
 
 Em breve disponibilizo o executável do MIApp, estou apenas realizando mais testes antes do lançamento oficial.
 
