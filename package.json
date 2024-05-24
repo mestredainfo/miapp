@@ -1,12 +1,13 @@
 {
     "name": "miapp",
     "productName": "miapp",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Roda apps desenvolvidos em PHP para desktop.",
     "main": "main.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "electron .",
+        "make-win32": "electron-forge make --platform=win32",
         "make": "electron-forge make"
     },
     "author": {
