@@ -45,6 +45,12 @@
         "Timezone": {
             "page": "timezone.php",
             "key": "CTRL+T"
+        },
+        "Formulário POST": {
+            "page": "formpost.php"
+        },
+        "Formulário GET": {
+            "page": "formget.php"
         }
     },
     "Sobre":
