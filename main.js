@@ -138,16 +138,6 @@ function startPHPServer(win) {
 
     phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
 
-    phpServerProcess.on('error', (err) => {
-        console.error(`Erro ao iniciar o servidor PHP: ${err}`);
-    });
-
-    phpServerProcess.on('close', (code) => {
-        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
-    });
-
-    phpServerProcess.unref(); // Permite que o aplicativo seja fechado sem fechar o processo do servidor PHP
-
     if (sPlataform == 'linux') {
         const checkPortL = setInterval(() => {
             let lsof = spawn('lsof', ['-ti:' + sPort]);
@@ -198,6 +188,16 @@ function startPHPServer(win) {
             });
         }, 1000);
     }
+
+    phpServerProcess.on('error', (err) => {
+        console.error(`Erro ao iniciar o servidor PHP: ${err}`);
+    });
+
+    phpServerProcess.on('close', (code) => {
+        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
+    });
+
+    phpServerProcess.unref(); // Permite que o aplicativo seja fechado sem fechar o processo do servidor PHP
 }
 
 // Nova Janela
