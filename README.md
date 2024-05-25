@@ -1,14 +1,12 @@
 # MIApp
 
-MIApp é uma plataforma que permite a criação e execução de aplicativos desenvolvidos em PHP diretamente para desktop. Compatível com Linux (Debian e Ubuntu).
+MIApp é uma plataforma que permite a criação e execução de aplicativos desenvolvidos em PHP diretamente para desktop. Compatível com Linux (Debian e Ubuntu) e Windows.
 
-## Em breve compatível com Windows 10 ou superior
+## Requerimento
 
-A nova versão do MIApp está sendo desenvolvida para funcionar também no Windows. Dessa forma será possível desenvolver softwares em PHP para funcionar no Linux e Windows.
+- Sistema Operacional (64 bits): Linux Debian 12 ou superior, Linux Ubuntu 22.04 ou superior, Windows 10 ou superior
 
-Em breve disponibilizo o executável do MIApp, estou apenas realizando mais testes antes do lançamento oficial.
-
-## Executando da Fonte
+## Executando da Fonte no Linux
 
 Para executar MIApp a partir do código-fonte, siga estas etapas:
 
@@ -16,12 +14,27 @@ Para executar MIApp a partir do código-fonte, siga estas etapas:
 - Instale as dependencias necessárias: `npm install`
 - Compile o PHP para Linux
 - Crie uma pasta chamada php
-- Copie o PHP compilado e a LICENSE para dentro da pasta php
-- Crie um arquivo php.ini para a pasta php
+- Crie uma subpasta dentro do php chamado linux
+- Copie o PHP compilado e a LICENSE para dentro da pasta php/linux/
+- Crie um arquivo php.ini na pasta php/linux/
 - Altere o "miappserver" para "php" na variável "server" do "config/config.ini"
 - Inicie o aplicativo: `npm start`
 
 Sugestão: Caso queira disponibilizar o PHP em diferentes versões das distros Linux, recomendo criar um AppImage do PHP.
+
+## Executando da Fonte no Windows
+
+Para executar MIApp a partir do código-fonte, siga estas etapas:
+
+- Extraia o arquivo zip
+- Instale as dependencias necessárias: `npm install`
+- Baixe a versão mais recente do PHP para Windows
+- Crie uma pasta chamada php
+- Crie uma subpasta dentro do php chamado win32
+- Copie o PHP compilado e a LICENSE para dentro da pasta php/win32/
+- Crie um arquivo php.ini na pasta php/win32/
+- Altere o "miappserver" para "php" na variável "server" do "config/config.ini"
+- Inicie o aplicativo: `npm start`
 
 ## Links
 
