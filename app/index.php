@@ -13,7 +13,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIApp - Rode e Desenvolva aplicativos em PHP para desktop</title>
+    <title>MIApp - Execute e Desenvolva aplicativos em PHP para desktop</title>
     <style>
         body {
             font-size: 18px;
