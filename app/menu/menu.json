@@ -46,6 +46,7 @@
             "page": "timezone.php",
             "key": "CTRL+T"
         },
+        "separator3": {},
         "Formulário POST": {
             "page": "formpost.php"
         },
