@@ -92,7 +92,7 @@ const createWindow = () => {
 // Aplica permissão de execução para o filephp
 function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
-    config.php.perm = false;
+    config.phplinux.perm = false;
 
     let sTopoINI = '# Copyright (C) 2004-2024 Murilo Gomes Julio\n';
     sTopoINI += '# SPDX-License-Identifier: GPL-2.0-only\n\n';
@@ -108,17 +108,17 @@ function startPHPServer(win) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        if (config.php.folderphp) {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.server);
+        if (config.phplinux.folderphp) {
+            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.phplinux.server);
         } else {
             sFilePHP = 'php';
         }
 
-        if (config.php.perm) {
+        if (config.phplinux.perm) {
             permPHP(sFilePHP);
         }
 
-        if (config.php.folderini || config.php.folderphp) {
+        if (config.phplinux.folderini || config.phplinux.folderphp) {
             sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
         } else {
             sFilePHPINI = '';
@@ -137,6 +137,14 @@ function startPHPServer(win) {
     sCreateServer.close();
 
     phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+
+    phpServerProcess.on('error', (err) => {
+        console.error(`Erro ao iniciar o servidor PHP: ${err}`);
+    });
+
+    phpServerProcess.on('close', (code) => {
+        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
+    });
 
     if (sPlataform == 'linux') {
         const checkPortL = setInterval(() => {
@@ -188,14 +196,6 @@ function startPHPServer(win) {
             });
         }, 1000);
     }
-
-    phpServerProcess.on('error', (err) => {
-        console.error(`Erro ao iniciar o servidor PHP: ${err}`);
-    });
-
-    phpServerProcess.on('close', (code) => {
-        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
-    });
 
     phpServerProcess.unref(); // Permite que o aplicativo seja fechado sem fechar o processo do servidor PHP
 }
