@@ -109,7 +109,7 @@ function startPHPServer(win) {
 
     if (sPlataform == 'linux') {
         if (config.php.folderphp) {
-            sFilePHP = path.join(app.getAppPath(), '/php/', config.php.server);
+            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.server);
         } else {
             sFilePHP = 'php';
         }
@@ -119,10 +119,13 @@ function startPHPServer(win) {
         }
 
         if (config.php.folderini || config.php.folderphp) {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/php.ini');
+            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
         } else {
             sFilePHPINI = '';
         }
+    } else if (sPlataform == 'win32') {
+        sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
+        sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
     } else {
         app.quit();
     }
@@ -133,26 +136,76 @@ function startPHPServer(win) {
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { detached: true });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+    // { detached: true }
 
-    phpServerProcess.stderr.on('data', (data) => {
-        const message = data.toString();
+    if (sPlataform == 'linux') {
+        const checkPortL = setInterval(() => {
+            let lsof = spawn('lsof', ['-ti:' + sPort]);
 
-        if (message.includes('Development Server (http://localhost:' + sPort + ')')) {
-            console.log('Servidor PHP iniciado com sucesso.');
-            sServerName = `http://localhost:${sPort}/`;
-            win.loadURL(sServerName);
-        }
-    });
+            lsof.stdout.on('data', (data) => {
+                console.log('Servidor PHP iniciado com sucesso.');
+                sServerName = `http://localhost:${sPort}/`;
+                win.loadURL(sServerName);
+                clearInterval(checkPortL);
+            });
 
-    phpServerProcess.on('error', (err) => {
-        console.error(`Erro ao iniciar o servidor PHP: ${err}`);
-    });
+            lsof.stderr.on('data', (data) => {
+                console.error(`Erro ao executar lsof: ${data}`);
+            });
 
-    phpServerProcess.on('close', (code) => {
-        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
-    });
+            lsof.on('close', (code) => {
+                if (code !== 0) {
+                    console.error(`lsof saiu com código de erro ${code}`);
+                }
+            });
+        }, 1000);
+    } else if (sPlataform == 'win32') {
+        const checkPortW = setInterval(() => {
+            let netstat = spawn('netstat', ['-ano']);
+            let findstr = spawn('findstr', [':' + sPort]);
 
+            netstat.stdout.on('data', (data) => {
+                findstr.stdin.write(data);
+            });
+
+            netstat.stderr.on('data', (data) => {
+                console.error(`Erro ao executar netstat: ${data}`);
+            });
+
+            netstat.on('close', (code) => {
+                if (code !== 0) {
+                    console.error(`netstat saiu com código de erro ${code}`);
+                }
+                findstr.stdin.end();
+            });
+
+            findstr.stdout.on('data', (data) => {
+                console.log('Servidor PHP iniciado com sucesso.');
+                sServerName = `http://localhost:${sPort}/`;
+                win.loadURL(sServerName);
+                clearInterval(checkPortW);
+
+            });
+        }, 1000);
+    }
+    // phpServerProcess.stderr.on('data', (data) => {
+    //     const message = data.toString();
+
+    //     if (message.includes('Development Server (http://localhost:' + sPort + ')')) {
+    //         console.log('Servidor PHP iniciado com sucesso.');
+    //         sServerName = `http://localhost:${sPort}/`;
+    //         win.loadURL(sServerName);
+    //     }
+    // });
+
+    // phpServerProcess.on('error', (err) => {
+    //     console.error(`Erro ao iniciar o servidor PHP: ${err}`);
+    // });
+
+    // phpServerProcess.on('close', (code) => {
+    //     console.log(`O servidor PHP foi encerrado com o código: ${code}`);
+    // });
 
     phpServerProcess.unref(); // Permite que o aplicativo seja fechado sem fechar o processo do servidor PHP
 }
@@ -162,7 +215,6 @@ function miappNewWindow(url) {
     const sNewWindow = new BrowserWindow(winOptions);
     sNewWindow.setMenu(null);
     sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
-
 
     sNewWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
@@ -251,24 +303,75 @@ function getMenuTemplate(win, menuData) {
 
 // Função para encerrar o processo com base na porta
 function killProcessByPort(port) {
-    let phpServerClose = spawn('lsof', ['-ti:' + port, '|', 'xargs', 'kill'], { shell: true });
+    let phpServerClose;
+    if (sPlataform == 'linux') {
+        phpServerClose = spawn('lsof', ['-ti:' + port, '|', 'xargs', 'kill'], { shell: true });
 
-    phpServerClose.stderr.on('data', (data) => {
-        console.log(`Erro ao encerrar o processo na porta: ${sPort}`);
-        return;
-    });
+        phpServerClose.stderr.on('data', (data) => {
+            console.log(`Erro ao encerrar o processo na porta: ${sPort}`);
+            return;
+        });
 
-    phpServerClose.on('error', (err) => {
-        console.error(`Erro ao encerrar o processo na porta ${port}: ${err.message}`);
-        return;
-    });
+        phpServerClose.on('error', (err) => {
+            console.error(`Erro ao encerrar o processo na porta ${port}: ${err.message}`);
+            return;
+        });
 
-    phpServerClose.on('close', (code) => {
-        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
-        return;
-    });
+        phpServerClose.on('close', (code) => {
+            console.log(`O servidor PHP foi encerrado com o código: ${code}`);
+            return;
+        });
 
-    console.log(`Processo na porta ${port} encerrado com sucesso.`);
+        console.log(`Processo na porta ${port} encerrado com sucesso.`);
+        // } else if (sPlataform == 'win32') {
+        //     const netstat = spawn('netstat', ['-ano']);
+        //     const findstr = spawn('findstr', [':' + port]);
+
+        //     netstat.stdout.on('data', (data) => {
+        //         findstr.stdin.write(data);
+        //     });
+
+        //     netstat.stderr.on('data', (data) => {
+        //         console.error(`Erro ao executar netstat: ${data}`);
+        //     });
+
+        //     netstat.on('close', (code) => {
+        //         if (code !== 0) {
+        //             console.error(`netstat saiu com código de erro ${code}`);
+        //         }
+        //         findstr.stdin.end();
+        //     });
+
+        //     findstr.stdout.on('data', (data) => {
+        //         const lines = data.toString().trim().split('\n');
+        //         if (lines.length < 1) {
+        //             console.log('Nenhuma conexão encontrada na porta 8080.');
+        //             return;
+        //         }
+
+        //         const parts = lines[0].trim().split(/\s+/);
+        //         const pid = parts[parts.length - 1];
+
+        //         const taskkill = spawn('taskkill', ['/PID', pid, '/F']);
+        //         taskkill.on('close', (code) => {
+        //             if (code !== 0) {
+        //                 console.error(`taskkill saiu com código de erro ${code}`);
+        //             } else {
+        //                 console.log('Processo finalizado com sucesso.');
+        //             }
+        //         });
+        //     });
+
+        //     findstr.stderr.on('data', (data) => {
+        //         console.error(`Erro ao executar findstr: ${data}`);
+        //     });
+
+        //     findstr.on('close', (code) => {
+        //         if (code !== 0) {
+        //             console.error(`findstr saiu com código de erro ${code}`);
+        //         }
+        //     });
+    }
 }
 
 function stopPHPServer() {
