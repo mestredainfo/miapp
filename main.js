@@ -14,18 +14,48 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
-app.disableHardwareAcceleration();
+// Argumentos
+function checkArg(nome) {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
+    return (sArg !== -1) ? true : false;
+}
+
+function getArg(nome) {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
+    return process.argv[sArg].split('=')[1]
+}
+
+// Arquivo de configuração
+const config = (() => {
+    if (checkArg('app')) {
+        return ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/apps/' + getArg('app') + '/config/config.ini'), 'utf-8'));
+    } else {
+        return ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/apps/miapp/config/config.ini'), 'utf-8'));
+    }
+});
+
+if (config().app.disableHardwareAcceleration) {
+    app.disableHardwareAcceleration();
+}
 
 process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
 
-const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
+// Icone do Aplicativo
+const iconApp = (() => {
+    if (checkArg('app')) {
+        return path.join(app.getAppPath(), '/apps/', getArg('app'), '/icon/icon.png');
+    } else {
+        return path.join(app.getAppPath(), '/apps/miapp/icon/icon.png');
+    }
+});
+
 const winOptions = {
-    width: config.app.width,
-    height: config.app.height,
-    resizable: config.app.resizable,
-    icon: path.join(app.getAppPath(), config.app.icon),
+    width: config().app.width,
+    height: config().app.height,
+    resizable: config().app.resizable,
+    icon: iconApp,
     webPreferences: {
         preload: path.join(app.getAppPath(), '/preload.js'),
     }
@@ -36,7 +66,12 @@ let phpServerProcess;
 let sPort;
 
 function createMenu(sWin) {
-    fs.readFile(path.join(app.getAppPath(), config.app.menu, '/menu.json'), (err, data) => {
+    let pathMenu = path.join(app.getAppPath(), '/apps/miapp/menu/menu.json');
+    if (checkArg('app')) {
+        pathMenu = path.join(app.getAppPath(), '/apps/', getArg('app'), config().app.menu, '/menu.json');
+    }
+
+    fs.readFile(pathMenu, (err, data) => {
         if (err) {
             console.error('Erro ao ler o arquivo JSON', err);
             return;
@@ -55,13 +90,9 @@ const createWindow = () => {
     win.setMenu(null);
     startPHPServer(win); // Inicie o servidor PHP
 
-    if (config.app.menu) {
-        createMenu(win);
-    } else {
-        win.setMenu(null);
-    }
+    createMenu(win);
 
-    if (config.dev.tools) {
+    if (config().dev.tools) {
         win.webContents.openDevTools();
     }
 
@@ -76,11 +107,11 @@ const createWindow = () => {
     });
 
     app.on("browser-window-created", (e, win) => {
-        if (config.dev.tools) {
+        if (config().dev.tools) {
             win.webContents.openDevTools();
         }
 
-        if (!config.dev.menu) {
+        if (!config().dev.menu) {
             win.removeMenu();
         }
     });
@@ -92,14 +123,18 @@ const createWindow = () => {
 // Aplica permissão de execução para o filephp
 function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
-    config.phplinux.perm = false;
+    config().phplinux.perm = false;
 
     let sTopoINI = '# Copyright (C) 2004-2024 Murilo Gomes Julio\n';
     sTopoINI += '# SPDX-License-Identifier: GPL-2.0-only\n\n';
     sTopoINI += '# Organização: Mestre da Info\n';
     sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
 
-    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
+    if (checkArg('app')) {
+        fs.writeFileSync(path.join(app.getAppPath(), '/apps/', getArg('app'), '/config/config.ini'), sTopoINI + ini.stringify(config()));
+    } else {
+        fs.writeFileSync(path.join(app.getAppPath(), '/apps/miapp/config/config.ini'), sTopoINI + ini.stringify(config()));
+    }
 }
 
 // Inicia o servidor embutido do PHP
@@ -108,20 +143,20 @@ function startPHPServer(win) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        if (config.phplinux.folderphp) {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.phplinux.server);
+        if (config().phplinux.customphp) {
+            sFilePHP = customphp;
         } else {
-            sFilePHP = 'php';
+            sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
 
-        if (config.phplinux.perm) {
+        if (config().phplinux.perm) {
             permPHP(sFilePHP);
         }
 
-        if (config.phplinux.folderini || config.phplinux.folderphp) {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
+        if (config().phplinux.customini) {
+            sFilePHPINI = customini;
         } else {
-            sFilePHPINI = '';
+            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
         }
     } else if (sPlataform == 'win32') {
         sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
@@ -130,13 +165,15 @@ function startPHPServer(win) {
         app.quit();
     }
 
+    sFolderApp = (checkArg('app')) ? getArg('app') : 'miapp';
+
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
     sPort = sListen.address().port;
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/apps/', sFolderApp)], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(`Erro ao iniciar o servidor PHP: ${err}`);
@@ -224,7 +261,7 @@ function miappNewWindow(url) {
 function getMenuTemplate(win, menuData) {
     let template = [];
 
-    if (config.dev.menu) {
+    if (config().dev.menu) {
         let devMenu = {
             label: 'DevTools',
             submenu: [

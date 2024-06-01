@@ -1,0 +1,39 @@
+{
+    "Apps": {
+        "Adicionar Apps": {
+            "page": "loja.php"
+        },
+        "Gerenciar Apps": {
+            "page": "index.php"
+        },
+        "separator1": {},
+        "Instalar App Local": {
+            "page": "applocal.php"
+        },
+        "Importar Apps": {
+            "page": "importar.php"
+        },
+        "Exportar Apps": {
+            "page": "exportar.php"
+        }
+    },
+    "Sobre":
+    {
+        "Documentação do MIApp": {
+            "url": "https://mestredainfo.wordpress.com/miapp/",
+            "key": "F1"
+        },
+        "separator1": {},
+        "Suporte Técnico": {
+            "url": "https://mestredainfo.wordpress.com/miapp/assinantes/"
+        },
+        "separator2": {},
+        "Verificar Atualização": {
+            "page": "checkupdate.php"
+        },
+        "separator3": {},
+        "Sobre o MIApp": {
+            "page": "sobre.php"
+        }
+    }
+}
