@@ -276,6 +276,8 @@ function getMenuTemplate(win, menuData) {
                             }
                         } else if (menuData[key][submenuKey].url) {
                             require('electron').shell.openExternal(menuData[key][submenuKey].url);
+                        } else if (menuData[key][submenuKey].script) {
+                            win.webContents.executeJavaScript(menuData[key][submenuKey].script);
                         }
                     }
                 };
