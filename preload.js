@@ -23,7 +23,6 @@ contextBridge.exposeInMainWorld('externo', {
 contextBridge.exposeInMainWorld('miapp', {
     versao: (tipo) => ipcRenderer.invoke('appVersao', tipo),
     mensagem: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, confirm),
-    app: (nome) => ipcRenderer.invoke('appRun', nome),
 });
 contextBridge.exposeInMainWorld('dev', {
     tools: () => ipcRenderer.invoke('appDevTools')
