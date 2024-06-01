@@ -1,0 +1,48 @@
+/* Estilos para o menu */
+.menu {
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    position:relative;
+    display:block;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    position: relative;
+    float: left;
+}
+
+.menu li a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.menu ul ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 1000;
+}
+
+.menu ul ul li {
+    float: none;
+    width: 100%;
+}
+
+.menu ul ul a {
+    padding: 10px 20px;
+}
+
+.menu li:hover>ul {
+    display: block;
+}

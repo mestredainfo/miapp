@@ -14,6 +14,16 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
+const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
+
+if (config.app.disableHardwareAcceleration) {
+    app.disableHardwareAcceleration();
+}
+
+process.on('uncaughtException', (error) => {
+    console.error('Exceção não tratada:', error);
+});
+
 // Argumentos
 function checkArg(nome) {
     let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
@@ -25,37 +35,11 @@ function getArg(nome) {
     return process.argv[sArg].split('=')[1]
 }
 
-// Arquivo de configuração
-const config = (() => {
-    if (checkArg('app')) {
-        return ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/apps/' + getArg('app') + '/config/config.ini'), 'utf-8'));
-    } else {
-        return ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/apps/miapp/config/config.ini'), 'utf-8'));
-    }
-});
-
-if (config().app.disableHardwareAcceleration) {
-    app.disableHardwareAcceleration();
-}
-
-process.on('uncaughtException', (error) => {
-    console.error('Exceção não tratada:', error);
-});
-
-// Icone do Aplicativo
-const iconApp = (() => {
-    if (checkArg('app')) {
-        return path.join(app.getAppPath(), '/apps/', getArg('app'), '/icon/icon.png');
-    } else {
-        return path.join(app.getAppPath(), '/apps/miapp/icon/icon.png');
-    }
-});
-
 const winOptions = {
-    width: config().app.width,
-    height: config().app.height,
-    resizable: config().app.resizable,
-    icon: iconApp,
+    width: config.app.width,
+    height: config.app.height,
+    resizable: true,
+    icon: path.join(app.getAppPath(), '/icon/miapp.png'),
     webPreferences: {
         preload: path.join(app.getAppPath(), '/preload.js'),
     }
@@ -65,36 +49,10 @@ let sServerName;
 let phpServerProcess;
 let sPort;
 
-function createMenu(sWin) {
-    let pathMenu = path.join(app.getAppPath(), '/apps/miapp/menu/menu.json');
-    if (checkArg('app')) {
-        pathMenu = path.join(app.getAppPath(), '/apps/', getArg('app'), config().app.menu, '/menu.json');
-    }
-
-    fs.readFile(pathMenu, (err, data) => {
-        if (err) {
-            console.error('Erro ao ler o arquivo JSON', err);
-            return;
-        }
-
-        const menuData = JSON.parse(data);
-
-        // Cria o menu principal
-        const mainMenu = Menu.buildFromTemplate(getMenuTemplate(sWin, menuData));
-        sWin.setMenu(mainMenu);
-    });
-}
-
 const createWindow = () => {
     const win = new BrowserWindow(winOptions);
     win.setMenu(null);
     startPHPServer(win); // Inicie o servidor PHP
-
-    createMenu(win);
-
-    if (config().dev.tools) {
-        win.webContents.openDevTools();
-    }
 
     win.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
@@ -107,13 +65,7 @@ const createWindow = () => {
     });
 
     app.on("browser-window-created", (e, win) => {
-        if (config().dev.tools) {
-            win.webContents.openDevTools();
-        }
-
-        if (!config().dev.menu) {
-            win.removeMenu();
-        }
+        win.removeMenu();
     });
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
@@ -123,18 +75,14 @@ const createWindow = () => {
 // Aplica permissão de execução para o filephp
 function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
-    config().phplinux.perm = false;
+    config.phplinux.perm = false;
 
     let sTopoINI = '# Copyright (C) 2004-2024 Murilo Gomes Julio\n';
     sTopoINI += '# SPDX-License-Identifier: GPL-2.0-only\n\n';
     sTopoINI += '# Organização: Mestre da Info\n';
     sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
 
-    if (checkArg('app')) {
-        fs.writeFileSync(path.join(app.getAppPath(), '/apps/', getArg('app'), '/config/config.ini'), sTopoINI + ini.stringify(config()));
-    } else {
-        fs.writeFileSync(path.join(app.getAppPath(), '/apps/miapp/config/config.ini'), sTopoINI + ini.stringify(config()));
-    }
+    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
 }
 
 // Inicia o servidor embutido do PHP
@@ -143,20 +91,11 @@ function startPHPServer(win) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        if (config().phplinux.customphp) {
-            sFilePHP = customphp;
-        } else {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
-        }
+        sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
+        sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
 
-        if (config().phplinux.perm) {
+        if (config.phplinux.perm) {
             permPHP(sFilePHP);
-        }
-
-        if (config().phplinux.customini) {
-            sFilePHPINI = customini;
-        } else {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
         }
     } else if (sPlataform == 'win32') {
         sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
@@ -165,7 +104,7 @@ function startPHPServer(win) {
         app.quit();
     }
 
-    sFolderApp = (checkArg('app')) ? getArg('app') : 'miapp';
+    let sFolderProject = (checkArg('app')) ? path.join(app.getAppPath(), '/apps/', getArg('app')) : path.join(app.getAppPath(), '/apps/');
 
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
@@ -173,7 +112,7 @@ function startPHPServer(win) {
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/apps/', sFolderApp)], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', sFolderProject], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(`Erro ao iniciar o servidor PHP: ${err}`);
@@ -253,79 +192,6 @@ function miappNewWindow(url) {
 
         return { action: 'allow' }
     });
-
-    createMenu(sNewWindow);
-}
-
-// Template de Menu
-function getMenuTemplate(win, menuData) {
-    let template = [];
-
-    if (config().dev.menu) {
-        let devMenu = {
-            label: 'DevTools',
-            submenu: [
-                {
-                    label: 'Refresh',
-                    accelerator: 'F5',
-                    click: () => {
-                        win.reload();
-                    }
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    label: 'Tools',
-                    accelerator: 'F12',
-                    click: () => {
-                        win.openDevTools();
-                    }
-                }
-            ]
-        }
-
-        template.push(devMenu);
-    }
-
-    // Loop sobre as chaves do objeto JSON
-    Object.keys(menuData).forEach((key) => {
-        let submenu = [];
-
-        // Loop sobre os itens do submenu
-        Object.keys(menuData[key]).forEach((submenuKey) => {
-            let menuItem = {};
-
-            if (submenuKey.indexOf('separator') == 0) {
-                menuItem = { type: 'separator' };
-            } else {
-                menuItem = {
-                    label: submenuKey,
-                    accelerator: menuData[key][submenuKey].key,
-                    click: () => {
-                        // Verifica se é uma página ou URL
-                        if (menuData[key][submenuKey].page) {
-                            if (menuData[key][submenuKey].newwindow) {
-                                miappNewWindow(menuData[key][submenuKey].page)
-                                //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
-                            } else {
-                                win.loadURL(sServerName + menuData[key][submenuKey].page);
-                            }
-                        } else if (menuData[key][submenuKey].url) {
-                            require('electron').shell.openExternal(menuData[key][submenuKey].url);
-                        }
-                    }
-                };
-            }
-
-            submenu.push(menuItem);
-        });
-
-        // Adiciona o submenu ao item do menu principal
-        template.push({ label: key, submenu });
-    });
-
-    return template;
 }
 
 // Função para encerrar o processo com base na porta

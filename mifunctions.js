@@ -29,6 +29,16 @@ module.exports = {
             require('electron').shell.openExternal(url);
         });
 
+        // Rodar apps
+        ipcMain.handle('appRun', async (event, nome) => {
+            require('electron').shell.openExternal(require('electron').app.getPath('exe') + ' --app=' + nome);
+        });
+
+        // Rodar DevTools
+        ipcMain.handle('appDevTools', async (event) => {
+            win.webContents.openDevTools();
+        });
+
         // Obter versão do aplicativo e recursos
         ipcMain.handle('appVersao', async (event, tipo) => {
             if (tipo == 'miapp') {
