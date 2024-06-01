@@ -24,17 +24,6 @@ process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
 
-// Argumentos
-function checkArg(nome) {
-    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
-    return (sArg !== -1) ? true : false;
-}
-
-function getArg(nome) {
-    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
-    return process.argv[sArg].split('=')[1]
-}
-
 const winOptions = {
     width: config.app.width,
     height: config.app.height,
@@ -83,6 +72,17 @@ function permPHP(filephp) {
     sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
 
     fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
+}
+
+// Argumentos
+function checkArg(nome) {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
+    return (sArg !== -1) ? true : false;
+}
+
+function getArg(nome) {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
+    return process.argv[sArg].split('=')[1]
 }
 
 // Inicia o servidor embutido do PHP
