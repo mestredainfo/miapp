@@ -16,6 +16,13 @@
             "page": "mensagem.php"
         },
         "separator2": {},
+        "Script": {
+            "page": "script.php"
+        },
+        "Mensagem no Script": {
+            "script": "mensagem();"
+        },
+        "separator3": {},
         "Cookies": {
             "page": "cookies.php",
             "key": "CTRL+K",
@@ -46,7 +53,7 @@
             "page": "timezone.php",
             "key": "CTRL+T"
         },
-        "separator3": {},
+        "separator4": {},
         "Formulário POST": {
             "page": "formpost.php"
         },
