@@ -1,25 +1,23 @@
-<div class="menu">
-  <ul>
-    <li><a href="#">Arquivo</a>
-      <ul>
-        <li><a href="#">Novo</a></li>
-        <li><a href="#">Abrir</a></li>
-        <li><a href="#">Salvar</a></li>
+<nav class="navbar navbar-expand bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">MIApp</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Apps
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Adicionar (Online)</a></li>
+            <li><a class="dropdown-item" href="#">Adicionar (Local)</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/">Gerenciar</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Importar</a></li>
+            <li><a class="dropdown-item" href="#">Exportar</a></li>
+          </ul>
+        </li>
       </ul>
-    </li>
-    <li><a href="#">Editar</a>
-      <ul>
-        <li><a href="#">Copiar</a></li>
-        <li><a href="#">Colar</a></li>
-        <li><a href="#">Desfazer</a></li>
-      </ul>
-    </li>
-    <li><a href="#">Exibir</a>
-      <ul>
-        <li><a href="#">Tela cheia</a></li>
-        <li><a href="#">Zoom</a></li>
-      </ul>
-    </li>
-    <li><a href="#">Ajuda</a></li>
-  </ul>
-</div>
+    </div>
+  </div>
+</nav>

@@ -104,7 +104,7 @@ function startPHPServer(win) {
         app.quit();
     }
 
-    let sFolderProject = (checkArg('app')) ? path.join(app.getAppPath(), '/apps/', getArg('app')) : path.join(app.getAppPath(), '/apps/');
+    let sFolderProject = (checkArg('app')) ? path.join(path.resolve(__dirname, '..'), '/apps/', getArg('app')) : path.join(path.resolve(__dirname, '..'), '/apps/');
 
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
