@@ -44,6 +44,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
             }
         }
     }
+    echo '<li><a href="#" onclick="window.miapp.novajanela(\'cookies.php\', 200, 200, false, false)">Nova Janela Personalizada</a></li>';
     echo '</ul>';
     ?>
     <script>

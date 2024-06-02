@@ -91,7 +91,7 @@ const createWindow = () => {
     });
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
-    mifunctions.mifunctions(win);
+    mifunctions.mifunctions(win, miappNewWindow);
 }
 
 // Aplica permissão de execução para o filephp

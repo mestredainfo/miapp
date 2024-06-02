@@ -7,7 +7,7 @@
 const { ipcMain, dialog } = require('electron')
 
 module.exports = {
-    mifunctions: function (win) {
+    mifunctions: function (win, miappNewWindow) {
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
             const { canceled, filePaths } = await dialog.showOpenDialog({});
@@ -63,6 +63,11 @@ module.exports = {
                 message: msg
             }
             return dialog.showMessageBoxSync(null, options);
+        });
+
+        // Abre uma nova janela personalizada
+        ipcMain.handle('appNewWindow', async (event, url, width, height, resizable, menu) => {
+            miappNewWindow(url, width, height, resizable, menu);
         });
     }
 }
