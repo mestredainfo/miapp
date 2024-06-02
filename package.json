@@ -2,7 +2,7 @@
     "name": "miapp",
     "productName": "miapp",
     "version": "2.0.1",
-    "description": "Roda apps desenvolvidos em PHP para desktop.",
+    "description": "Executa apps desenvolvidos em PHP para desktop.",
     "main": "main.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,10 +12,12 @@
     },
     "author": {
         "name": "Murilo Gomes Julio",
+        "email": "contatomestredainfo@gmail.com",
         "organization": "Mestre da Info",
         "contact": "https://mestredainfo.wordpress.com/contato/",
         "url": "https://linktr.ee/mestreinfo"
     },
+    "homepage": "https://mestredainfo.wordpress.com",
     "copyright": "Copyright (C) 2004-2024 Murilo Gomes Julio",
     "bugs": {
         "url": "https://mestredainfo.wordpress.com/bug-reporting/"
