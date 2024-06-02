@@ -14,27 +14,21 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
+app.disableHardwareAcceleration();
+
 process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
 
-function getFolderApp() {
-    let sArg = process.argv.findIndex(arg => arg.startsWith(`--app=`));
-
-    if (sArg !== -1) {
-        return process.argv[sArg].split('=')[1]
-    } else {
-        return path.join(app.getAppPath(), '/app/');
+const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
+const winOptions = {
+    width: config.app.width,
+    height: config.app.height,
+    resizable: config.app.resizable,
+    icon: path.join(app.getAppPath(), config.app.icon),
+    webPreferences: {
+        preload: path.join(app.getAppPath(), '/preload.js'),
     }
-}
-
-const sFolderApp = getFolderApp();
-const config = ini.parse(fs.readFileSync(path.join(sFolderApp, '/config/config.ini'), 'utf-8'));
-
-app.name = config.app.name
-
-if (config.app.disableHardwareAcceleration) {
-    app.disableHardwareAcceleration();
 }
 
 let sServerName;
@@ -42,7 +36,7 @@ let phpServerProcess;
 let sPort;
 
 function createMenu(sWin) {
-    fs.readFile(path.join(sFolderApp, config.app.menu, '/menu.json'), (err, data) => {
+    fs.readFile(path.join(app.getAppPath(), config.app.menu, '/menu.json'), (err, data) => {
         if (err) {
             console.error('Erro ao ler o arquivo JSON', err);
             return;
@@ -57,15 +51,7 @@ function createMenu(sWin) {
 }
 
 const createWindow = () => {
-    const win = new BrowserWindow({
-        width: config.app.width,
-        height: config.app.height,
-        resizable: config.app.resizable,
-        icon: path.join(app.getAppPath(), config.app.icon),
-        webPreferences: {
-            preload: path.join(app.getAppPath(), '/preload.js'),
-        }
-    });
+    const win = new BrowserWindow(winOptions);
     win.setMenu(null);
     startPHPServer(win); // Inicie o servidor PHP
 
@@ -100,7 +86,7 @@ const createWindow = () => {
     });
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
-    mifunctions.mifunctions(win, miappNewWindow);
+    mifunctions.mifunctions(win);
 }
 
 // Aplica permissão de execução para o filephp
@@ -113,7 +99,7 @@ function permPHP(filephp) {
     sTopoINI += '# Organização: Mestre da Info\n';
     sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
 
-    fs.writeFileSync(path.join(sFolderApp, '/config/config.ini'), sTopoINI + ini.stringify(config));
+    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
 }
 
 // Inicia o servidor embutido do PHP
@@ -122,33 +108,24 @@ function startPHPServer(win) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        if (config.phplinux.customphp) {
-            sFilePHP = config.phplinux.customphp;
+        if (config.phplinux.folderphp) {
+            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.phplinux.server);
         } else {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
+            sFilePHP = 'php';
         }
 
         if (config.phplinux.perm) {
             permPHP(sFilePHP);
         }
 
-        if (config.phplinux.customini) {
-            sFilePHPINI = config.phplinux.customini;
-        } else {
+        if (config.phplinux.folderini || config.phplinux.folderphp) {
             sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
+        } else {
+            sFilePHPINI = '';
         }
     } else if (sPlataform == 'win32') {
-        if (config.phpwin32.customphp) {
-            sFilePHP = config.phpwin32.customphp
-        } else {
-            sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
-        }
-
-        if (config.phpwin32.customini) {
-            sFilePHPINI = config.phpwin32.customini
-        } else {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
-        }
+        sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
+        sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
     } else {
         app.quit();
     }
@@ -159,7 +136,7 @@ function startPHPServer(win) {
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', sFolderApp], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(`Erro ao iniciar o servidor PHP: ${err}`);
@@ -224,26 +201,14 @@ function startPHPServer(win) {
 }
 
 // Nova Janela
-function miappNewWindow(url, width, height, resizable, menu) {
-    let sWidth = (width !== '') ? width : config.app.width;
-    let sHeight = (height !== '') ? height : config.app.height;
-    let sResizable = (resizable == true || resizable == false) ? resizable : config.app.resizable;
-    let sMenu = (menu) ? true : false;
-
-    const sNewWindow = new BrowserWindow({
-        width: sWidth,
-        height: sHeight,
-        resizable:sResizable,
-        icon: path.join(app.getAppPath(), config.app.icon),
-        webPreferences: {
-            preload: path.join(app.getAppPath(), '/preload.js'),
-        }
-    });
+function miappNewWindow(url) {
+    const sNewWindow = new BrowserWindow(winOptions);
     sNewWindow.setMenu(null);
     sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
 
     sNewWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
+            console.log(url);
             miappNewWindow(`${url}`);
 
             return { action: 'deny' }
@@ -252,9 +217,7 @@ function miappNewWindow(url, width, height, resizable, menu) {
         return { action: 'allow' }
     });
 
-    if (sMenu) {
-        createMenu(sNewWindow);
-    }
+    createMenu(sNewWindow);
 }
 
 // Template de Menu
@@ -306,15 +269,13 @@ function getMenuTemplate(win, menuData) {
                         // Verifica se é uma página ou URL
                         if (menuData[key][submenuKey].page) {
                             if (menuData[key][submenuKey].newwindow) {
-                                miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu)
+                                miappNewWindow(menuData[key][submenuKey].page)
                                 //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
                             } else {
                                 win.loadURL(sServerName + menuData[key][submenuKey].page);
                             }
                         } else if (menuData[key][submenuKey].url) {
                             require('electron').shell.openExternal(menuData[key][submenuKey].url);
-                        } else if (menuData[key][submenuKey].script) {
-                            win.webContents.executeJavaScript(menuData[key][submenuKey].script);
                         }
                     }
                 };

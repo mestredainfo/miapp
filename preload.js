@@ -23,5 +23,4 @@ contextBridge.exposeInMainWorld('externo', {
 contextBridge.exposeInMainWorld('miapp', {
     versao: (tipo) => ipcRenderer.invoke('appVersao', tipo),
     mensagem: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, confirm),
-    novajanela: (url, width, height, resizable, menu) => ipcRenderer.invoke('appNovaJanela', url, width, height, resizable, menu),
 });

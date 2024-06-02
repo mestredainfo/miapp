@@ -16,13 +16,6 @@
             "page": "mensagem.php"
         },
         "separator2": {},
-        "Script": {
-            "page": "script.php"
-        },
-        "Mensagem no Script": {
-            "script": "mensagem();"
-        },
-        "separator3": {},
         "Cookies": {
             "page": "cookies.php",
             "key": "CTRL+K",
@@ -53,23 +46,16 @@
             "page": "timezone.php",
             "key": "CTRL+T"
         },
-        "separator4": {},
+        "separator3": {},
         "Formulário POST": {
             "page": "formpost.php"
         },
         "Formulário GET": {
             "page": "formget.php"
-        },
-        "Nova Janela Personalizada": {
-            "page": "mensagem.php",
-            "newwindow": true,
-            "width": 200,
-            "height": 100,
-            "resizable": false,
-            "menu": false
         }
     },
-    "Sobre": {
+    "Sobre":
+    {
         "Página do MIApp": {
             "url": "https://mestredainfo.wordpress.com/miapp/",
             "key": "CTRL+M"
