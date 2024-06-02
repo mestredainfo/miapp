@@ -14,13 +14,27 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
-app.disableHardwareAcceleration();
-
 process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
 
-const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
+function getFolderApp() {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--app=`));
+
+    if (sArg !== -1) {
+        return process.argv[sArg].split('=')[1]
+    } else {
+        return path.join(app.getAppPath(), '/app/');
+    }
+}
+
+const sFolderApp = getFolderApp();
+const config = ini.parse(fs.readFileSync(path.join(sFolderApp, '/config/config.ini'), 'utf-8'));
+
+if (config.app.disableHardwareAcceleration) {
+    app.disableHardwareAcceleration();
+}
+
 const winOptions = {
     width: config.app.width,
     height: config.app.height,
@@ -36,7 +50,7 @@ let phpServerProcess;
 let sPort;
 
 function createMenu(sWin) {
-    fs.readFile(path.join(app.getAppPath(), config.app.menu, '/menu.json'), (err, data) => {
+    fs.readFile(path.join(sFolderApp, config.app.menu, '/menu.json'), (err, data) => {
         if (err) {
             console.error('Erro ao ler o arquivo JSON', err);
             return;
@@ -99,53 +113,44 @@ function permPHP(filephp) {
     sTopoINI += '# Organização: Mestre da Info\n';
     sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
 
-    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
-}
-
-// Argumentos
-function checkArg(nome) {
-    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
-    return (sArg !== -1) ? true : false;
-}
-
-function getArg(nome) {
-    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
-    return process.argv[sArg].split('=')[1]
+    fs.writeFileSync(path.join(sFolderApp, '/config/config.ini'), sTopoINI + ini.stringify(config));
 }
 
 // Inicia o servidor embutido do PHP
 function startPHPServer(win) {
     let sFilePHP;
     let sFilePHPINI;
-    let sFolderApp;
 
     if (sPlataform == 'linux') {
-        if (config.phplinux.folderphp) {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.phplinux.server);
+        if (config.phplinux.customphp) {
+            sFilePHP = config.phplinux.customphp;
         } else {
-            sFilePHP = 'php';
+            sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
 
         if (config.phplinux.perm) {
             permPHP(sFilePHP);
         }
 
-        if (config.phplinux.folderini || config.phplinux.folderphp) {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
+        if (config.phplinux.customini) {
+            sFilePHPINI = config.phplinux.customini;
         } else {
-            sFilePHPINI = '';
+            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
         }
     } else if (sPlataform == 'win32') {
-        sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
-        sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
+        if (config.phpwin32.customphp) {
+            sFilePHP = config.phpwin32.customphp
+        } else {
+            sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
+        }
+
+        if (config.phpwin32.customini) {
+            sFilePHPINI = config.phpwin32.customini
+        } else {
+            sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
+        }
     } else {
         app.quit();
-    }
-
-    if (checkArg('folderapp')) {
-        sFolderApp = getArg('folderapp');
-    } else {
-        sFolderApp = path.join(app.getAppPath(), '/app/');
     }
 
     let sCreateServer = sHttp.createServer();
