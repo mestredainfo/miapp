@@ -44,6 +44,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
             }
         }
     }
+    echo '<li><a href="javascript:window.miapp.novajanela(\'mensagem.php\', 400, 200, false, false);">Nova Janela Personalizada</a></li>';
     echo '</ul>';
     ?>
     <script>
