@@ -33,6 +33,10 @@ if (config.app.disableHardwareAcceleration) {
     app.disableHardwareAcceleration();
 }
 
+if (config.app.name) {
+    app.setName(config.app.name);
+}
+
 let sServerName;
 let phpServerProcess;
 let sPort;
