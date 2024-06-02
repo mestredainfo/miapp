@@ -102,10 +102,22 @@ function permPHP(filephp) {
     fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
 }
 
+// Argumentos
+function checkArg(nome) {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
+    return (sArg !== -1) ? true : false;
+}
+
+function getArg(nome) {
+    let sArg = process.argv.findIndex(arg => arg.startsWith(`--${nome}=`))
+    return process.argv[sArg].split('=')[1]
+}
+
 // Inicia o servidor embutido do PHP
 function startPHPServer(win) {
     let sFilePHP;
     let sFilePHPINI;
+    let sFolderApp;
 
     if (sPlataform == 'linux') {
         if (config.phplinux.folderphp) {
@@ -130,13 +142,19 @@ function startPHPServer(win) {
         app.quit();
     }
 
+    if (checkArg('app')) {
+        sFolderApp = getArg('app');
+    } else {
+        sFolderApp = path.join(app.getAppPath(), '/app/');
+    }
+
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
     sPort = sListen.address().port;
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', sFolderApp], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(`Erro ao iniciar o servidor PHP: ${err}`);
