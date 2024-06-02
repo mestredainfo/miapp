@@ -19,7 +19,11 @@
         "Cookies": {
             "page": "cookies.php",
             "key": "CTRL+K",
-            "newwindow": true
+            "newwindow": true,
+            "width": 200,
+            "height": 200,
+            "resizable": false,
+            "menu": false
         },
         "Include": {
             "page": "include.php",

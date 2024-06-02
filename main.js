@@ -19,15 +19,6 @@ process.on('uncaughtException', (error) => {
 });
 
 const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
-const winOptions = {
-    width: config.app.width,
-    height: config.app.height,
-    resizable: config.app.resizable,
-    icon: path.join(app.getAppPath(), config.app.icon),
-    webPreferences: {
-        preload: path.join(app.getAppPath(), '/preload.js'),
-    }
-}
 
 if (config.app.disableHardwareAcceleration) {
     app.disableHardwareAcceleration();
@@ -57,7 +48,15 @@ function createMenu(sWin) {
 }
 
 const createWindow = () => {
-    const win = new BrowserWindow(winOptions);
+    const win = new BrowserWindow({
+        width: config.app.width,
+        height: config.app.height,
+        resizable: config.app.resizable,
+        icon: path.join(app.getAppPath(), config.app.icon),
+        webPreferences: {
+            preload: path.join(app.getAppPath(), '/preload.js'),
+        }
+    });
     win.setMenu(null);
     startPHPServer(win); // Inicie o servidor PHP
 
@@ -128,7 +127,7 @@ function startPHPServer(win) {
             sFilePHPINI = config.phplinux.customini
         } else {
             sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
-            
+
         }
     } else if (sPlataform == 'win32') {
         if (config.phpwin32.customphp) {
@@ -141,7 +140,7 @@ function startPHPServer(win) {
             sFilePHPINI = config.phpwin32.customini
         } else {
             sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
-            
+
         }
     } else {
         app.quit();
@@ -218,8 +217,21 @@ function startPHPServer(win) {
 }
 
 // Nova Janela
-function miappNewWindow(url) {
-    const sNewWindow = new BrowserWindow(winOptions);
+function miappNewWindow(url, width, height, resizable, menu) {
+    let sWidth = (width) ? width : config.app.width;
+    let sHeight = (height) ? height : config.app.height;
+    let sResizable = (resizable == true || resizable == false) ? resizable : config.app.resizable;
+    let sMenu = (menu == true || menu == false) ? menu : config.app.menu;
+
+    const sNewWindow = new BrowserWindow({
+        width: sWidth,
+        height: sHeight,
+        resizable: sResizable,
+        icon: path.join(app.getAppPath(), config.app.icon),
+        webPreferences: {
+            preload: path.join(app.getAppPath(), '/preload.js'),
+        }
+    });
     sNewWindow.setMenu(null);
     sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
 
@@ -234,7 +246,9 @@ function miappNewWindow(url) {
         return { action: 'allow' }
     });
 
-    createMenu(sNewWindow);
+    if (sMenu) {
+        createMenu(sNewWindow);
+    }
 }
 
 // Template de Menu
@@ -286,7 +300,7 @@ function getMenuTemplate(win, menuData) {
                         // Verifica se é uma página ou URL
                         if (menuData[key][submenuKey].page) {
                             if (menuData[key][submenuKey].newwindow) {
-                                miappNewWindow(menuData[key][submenuKey].page)
+                                miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu)
                                 //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
                             } else {
                                 win.loadURL(sServerName + menuData[key][submenuKey].page);
