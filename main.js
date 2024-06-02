@@ -31,6 +31,8 @@ function getFolderApp() {
 const sFolderApp = getFolderApp();
 const config = ini.parse(fs.readFileSync(path.join(sFolderApp, '/config/config.ini'), 'utf-8'));
 
+app.name = config.app.name
+
 if (config.app.disableHardwareAcceleration) {
     app.disableHardwareAcceleration();
 }
