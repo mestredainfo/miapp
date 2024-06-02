@@ -59,10 +59,17 @@
         },
         "Formulário GET": {
             "page": "formget.php"
+        },
+        "Nova Janela Personalizada": {
+            "page": "mensagem.php",
+            "newwindow": true,
+            "width": 200,
+            "height": 100,
+            "resizable": false,
+            "menu": false
         }
     },
-    "Sobre":
-    {
+    "Sobre": {
         "Página do MIApp": {
             "url": "https://mestredainfo.wordpress.com/miapp/",
             "key": "CTRL+M"
