@@ -142,8 +142,8 @@ function startPHPServer(win) {
         app.quit();
     }
 
-    if (checkArg('app')) {
-        sFolderApp = getArg('app');
+    if (checkArg('folderapp')) {
+        sFolderApp = getArg('folderapp');
     } else {
         sFolderApp = path.join(app.getAppPath(), '/app/');
     }
