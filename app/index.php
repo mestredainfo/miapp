@@ -18,6 +18,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
         body {
             font-size: 18px;
         }
+
         li {
             line-height: 27px;
         }
@@ -65,6 +66,10 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
         window.miapp.versao('chromium').then((result) => {
             txtVersion.innerHTML += `Versão do Chromium: ${result}<br>`;
         });
+
+        function mensagem() {
+            window.miapp.mensagem('MIApp', 'Está é uma mensagem!', 'info');
+        }
     </script>
 </body>
 

@@ -3,6 +3,9 @@
         "Página Inicial": {
             "page": "index.php"
         },
+        "Função Mensagem (Página Inicial)": {
+            "script": "mensagem();"
+        },
         "separator1": {},
         "Abrir": {
             "page": "abrir.php",

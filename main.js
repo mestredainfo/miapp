@@ -301,12 +301,13 @@ function getMenuTemplate(win, menuData) {
                         if (menuData[key][submenuKey].page) {
                             if (menuData[key][submenuKey].newwindow) {
                                 miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu)
-                                //win.webContents.executeJavaScript(`window.open('${menuData[key][submenuKey].page}', '_blank');`);
                             } else {
                                 win.loadURL(sServerName + menuData[key][submenuKey].page);
                             }
                         } else if (menuData[key][submenuKey].url) {
                             require('electron').shell.openExternal(menuData[key][submenuKey].url);
+                        } else if (menuData[key][submenuKey].script) {
+                            win.webContents.executeJavaScript(menuData[key][submenuKey].script);
                         }
                     }
                 };
