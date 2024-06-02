@@ -14,8 +14,6 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
-app.disableHardwareAcceleration();
-
 process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
@@ -29,6 +27,10 @@ const winOptions = {
     webPreferences: {
         preload: path.join(app.getAppPath(), '/preload.js'),
     }
+}
+
+if (config.app.disableHardwareAcceleration) {
+    app.disableHardwareAcceleration();
 }
 
 let sServerName;
@@ -108,24 +110,35 @@ function startPHPServer(win) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        if (config.phplinux.folderphp) {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.phplinux.server);
+        if (config.phplinux.customphp) {
+            sFilePHP = config.phplinux.customphp
         } else {
-            sFilePHP = 'php';
+            sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
 
         if (config.phplinux.perm) {
             permPHP(sFilePHP);
         }
 
-        if (config.phplinux.folderini || config.phplinux.folderphp) {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
+        if (config.phplinux.customini) {
+            sFilePHPINI = config.phplinux.customini
         } else {
-            sFilePHPINI = '';
+            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
+            
         }
     } else if (sPlataform == 'win32') {
-        sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
-        sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
+        if (config.phpwin32.customphp) {
+            sFilePHP = config.phpwin32.customphp
+        } else {
+            sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
+        }
+
+        if (config.phpwin32.customini) {
+            sFilePHPINI = config.phpwin32.customini
+        } else {
+            sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
+            
+        }
     } else {
         app.quit();
     }
