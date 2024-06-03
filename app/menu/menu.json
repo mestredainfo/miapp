@@ -1,26 +1,26 @@
 {
     "Exemplos": {
         "Página Inicial": {
-            "page": "index.php"
+            "page": "index.php?checkupdate=no"
         },
         "Função Mensagem (Página Inicial)": {
             "script": "mensagem();"
         },
         "separator1": {},
         "Abrir": {
-            "page": "abrir.php",
+            "page": "abrir.php?checkupdate=no",
             "key": "CTRL+O"
         },
         "Salvar": {
-            "page": "salvar.php",
+            "page": "salvar.php?checkupdate=no",
             "key": "CTRL+B"
         },
         "Mensagem": {
-            "page": "mensagem.php"
+            "page": "mensagem.php?checkupdate=no"
         },
         "separator2": {},
         "Cookies": {
-            "page": "cookies.php",
+            "page": "cookies.php?checkupdate=no",
             "key": "CTRL+K",
             "newwindow": true,
             "width": 200,
@@ -29,43 +29,71 @@
             "menu": false
         },
         "Include": {
-            "page": "include.php",
+            "page": "include.php?checkupdate=no",
             "key": "CTRL+I"
         },
         "PHPInfo": {
-            "page": "phpinfo.php",
+            "page": "phpinfo.php?checkupdate=no",
             "key": "CTRL+P",
             "newwindow": true
         },
         "Sem Cache": {
-            "page": "semcache.php",
+            "page": "semcache.php?checkupdate=no",
             "key": "CTRL+S"
         },
         "Session": {
-            "page": "session.php",
+            "page": "session.php?checkupdate=no",
             "key": "CTRL+SHIFT+S"
         },
         "SQLite3": {
-            "page": "sqlite.php",
+            "page": "sqlite.php?checkupdate=no",
             "key": "CTRL+ALT+S"
         },
         "Timezone": {
-            "page": "timezone.php",
+            "page": "timezone.php?checkupdate=no",
             "key": "CTRL+T"
         },
         "separator3": {},
         "Formulário POST": {
-            "page": "formpost.php"
+            "page": "formpost.php?checkupdate=no"
         },
         "Formulário GET": {
-            "page": "formget.php"
+            "page": "formget.php?checkupdate=no"
         }
     },
     "Sobre":
     {
-        "Página do MIApp": {
+        "Criar Atalho": {
+            "page": "createdesktop.php?checkupdate=no",
+            "newwindow": true,
+            "width": 200,
+            "height": 200,
+            "resizable": false,
+            "menu": false
+        },
+        "separator1": {},
+        "Verificar Atualização": {
+            "page": "index.php?checkupdate=yes",
+            "newwindow": true,
+            "width": 400,
+            "height": 200,
+            "resizable": false,
+            "menu": false
+        },
+        "separator2": {},
+        "Documentação do MIApp": {
             "url": "https://mestredainfo.wordpress.com/miapp/",
-            "key": "CTRL+M"
+            "key": "F1"
+        },
+        "Suporte": {
+            "url": "https://mestredainfo.wordpress.com/assinantes/"
+        },
+        "separator3": {},
+        "Sobre o MIApp": {
+            "page": "sobre.php?checkupdate=no",
+            "newwindow": true,
+            "resizable": false,
+            "menu": false
         }
     }
 }
