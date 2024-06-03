@@ -1,0 +1,20 @@
+{
+    "Exceção não tratada:": "Untreated exception:",
+    "Servidor PHP iniciado com sucesso.": "PHP server started successfully",
+    "Erro ao ler o arquivo JSON": "Error reading the json file",
+    "Erro ao iniciar o servidor PHP: ": "Error when starting the php server: ",
+    "O servidor PHP foi encerrado com o código: ": "The PHP server was closed with the code: ",
+    "Erro ao executar lsof: ": "Error when executing lsof: ",
+    "lsof saiu com código de erro ": "lsof came out with error code ",
+    "Erro ao executar netstat: ": "Error executing Netstat: ",
+    "netstat saiu com código de erro ": "Netstat came out with error code ",
+    "Atualizar": "Refresh",
+    "Ferramentas do Desenvolvedor": "DevTools",
+    "Erro ao encerrar o processo na porta: ": "Error when ending the process at the door: ",
+    "Processo na porta ": "Process at the door ",
+    " encerrado com sucesso.": " closed successfully.",
+    "Servidor PHP parado.": "PHP server stopped.",
+    "Exemplos": "Examples",
+    "Sobre": "About",
+    "Este é um exemplo no PHP!": "This is an example in PHP!"
+}

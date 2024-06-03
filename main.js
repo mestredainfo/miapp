@@ -14,6 +14,9 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
+const milangs = require(path.join(app.getAppPath(), '/milang.js'));
+const milang = new milangs(sPlataform, app.getAppPath());
+
 process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
@@ -310,7 +313,7 @@ function getMenuTemplate(win, menuData) {
                 menuItem = { type: 'separator' };
             } else {
                 menuItem = {
-                    label: submenuKey,
+                    label: milang.traduzir(submenuKey),
                     accelerator: menuData[key][submenuKey].key,
                     click: () => {
                         // Verifica se é uma página ou URL
@@ -333,7 +336,7 @@ function getMenuTemplate(win, menuData) {
         });
 
         // Adiciona o submenu ao item do menu principal
-        template.push({ label: key, submenu });
+        template.push({ label: milang.traduzir(key), submenu });
     });
 
     return template;
