@@ -1,4 +1,7 @@
 <?php
+
+use MIApp\lang;
+
 if (!defined('miapp')) {
     exit;
 }
@@ -18,6 +21,29 @@ include_once($documentroot . '/core/config.php');
 
 /* Funções */
 include_once($documentroot . '/core/funcoes.php');
+
+$milang = new lang();
+
+/* Verifica Atualizações */
+if (empty($_GET['checkupdate'])) {
+    include_once($documentroot . '/controls/checkupdate.php');
+    checkUpdate();
+    redirect('index.php?checkupdate=no');
+} else {
+    if ($_GET['checkupdate'] == 'yes') {
+        include_once($documentroot . '/controls/checkupdate.php');
+        checkUpdate();
+    }
+}
+
+if (requestURI() == 'sobre.php') {
+    include_once($documentroot . '/controls/sobre.php');
+}
+
+if (requestURI() == 'createdesktop.php') {
+    include_once($documentroot . '/controls/criaratalho.php');
+    exit;
+}
 
 /* Rotas */
 include_once(includeviews());
