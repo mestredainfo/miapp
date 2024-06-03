@@ -13,14 +13,14 @@ class lang
 
     public function __construct()
     {
-        $aLang = file_get_contents(dirname(__FILE__) . '/lang/lang.txt');
+        $aLang = file_get_contents(dirname(__FILE__, 3) . '/lang/lang.txt');
         $sPath = dirname(__FILE__) . '/lang/' . $aLang . '.json';
 
         if (file_exists($sPath)) {
             $this->sLang = json_decode(file_get_contents($sPath), true);
         } else {
-            if (file_exists(dirname(__FILE__) . '/lang/en.json')) {
-                $this->sLang = json_decode(file_get_contents(dirname(__FILE__) . '/lang/en.json'), true);
+            if (file_exists(dirname(__FILE__, 3) . '/lang/en.json')) {
+                $this->sLang = json_decode(file_get_contents(dirname(__FILE__, 3) . '/lang/en.json'), true);
             } else {
                 $this->sLang = [];
             }
