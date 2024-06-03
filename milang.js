@@ -9,7 +9,7 @@ module.exports = class milang {
         const fs = require('fs');
         const path = require('path');
         let aLang;
-        
+
         if (platform == 'linux') {
             aLang = (process.env.LANG || process.env.LANGUAGE || process.env.LC_ALL || process.env.LC_MESSAGES).split('.')[0].split('_')[0];
         } else {
@@ -19,11 +19,15 @@ module.exports = class milang {
         }
 
         let sPath = path.join(dirapp, '/app/lang/', `${aLang}.json`);
-        
+
         if (fs.existsSync(sPath)) {
             this.sLang = JSON.parse(fs.readFileSync(sPath), 'utf-8');
         } else {
-            this.sLang = JSON.parse(fs.readFileSync(path.join(dirapp, '/app/lang/pt.json'), 'utf-8'));
+            if (fs.existsSync(path.join(dirapp, '/app/lang/en.json'))) {
+                this.sLang = JSON.parse(fs.readFileSync(path.join(dirapp, '/app/lang/en.json'), 'utf-8'));
+            } else {
+                this.sLang = [];
+            }
         }
 
         fs.writeFileSync(path.join(dirapp, '/app/lang/lang.txt'), aLang);
