@@ -25,15 +25,11 @@ ini_set("display_errors", 1);
 // Configurações
 $aConfig = json_decode(file_get_contents(dirname(__FILE__, 2) . '/config/config.json'), true);
 
-$config['app'] = $aConfig['app']['name'];
-$config['description'] = $aConfig['app']['description'];
-$config['checkupdate'] = $aConfig['update']['url'];;
-
 // Verifica se a pasta do banco de dados existe, se não existir a mesma é criada
 if ($aConfig['db']) {
-    $config['db'] = '/home/' . get_current_user() . '/.' . str_replace(' ', '', strtolower($config['app'])) . '/data/' . str_replace(' ', '', strtolower($config['app'])) . '.sqlite';
+    $config['db'] = '/home/' . get_current_user() . '/.' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '/data/' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '.sqlite';
 
-    if (!file_exists(dirname($config['app']))) {
-        mkdir(dirname($config['app']), 0777, true);
+    if (!file_exists(dirname($aConfig['app']['name']))) {
+        mkdir(dirname($aConfig['app']['name']), 0777, true);
     }
 }
