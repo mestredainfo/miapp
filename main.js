@@ -7,7 +7,6 @@
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const ini = require('ini');
 const sOS = require('os');
 const { spawn } = require('child_process');
 const sHttp = require('http');
@@ -21,7 +20,7 @@ process.on('uncaughtException', (error) => {
     console.error('Exceção não tratada:', error);
 });
 
-const config = ini.parse(fs.readFileSync(path.join(app.getAppPath(), '/config/config.ini'), 'utf-8'));
+const config = JSON.parse(fs.readFileSync(path.join(app.getAppPath(), '/app/config/config.json'), 'utf-8'));
 
 if (config.app.disableHardwareAcceleration) {
     app.disableHardwareAcceleration();
@@ -36,7 +35,7 @@ let phpServerProcess;
 let sPort;
 
 function createMenu(sWin) {
-    fs.readFile(path.join(app.getAppPath(), config.app.menu, '/menu.json'), (err, data) => {
+    fs.readFile(path.join(app.getAppPath(), '/app/', config.app.menu, '/menu.json'), (err, data) => {
         if (err) {
             console.error('Erro ao ler o arquivo JSON', err);
             return;
@@ -55,7 +54,7 @@ const createWindow = () => {
         width: config.app.width,
         height: config.app.height,
         resizable: config.app.resizable,
-        icon: path.join(app.getAppPath(), config.app.icon),
+        icon: path.join(app.getAppPath(), '/app/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
@@ -100,14 +99,9 @@ const createWindow = () => {
 // Aplica permissão de execução para o filephp
 function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
-    config.phplinux.perm = false;
+    config.php.linux.perm = false;
 
-    let sTopoINI = '# Copyright (C) 2004-2024 Murilo Gomes Julio\n';
-    sTopoINI += '# SPDX-License-Identifier: GPL-2.0-only\n\n';
-    sTopoINI += '# Organização: Mestre da Info\n';
-    sTopoINI += '# Site: https://linktr.ee/mestreinfo\n\n';
-
-    fs.writeFileSync(path.join(app.getAppPath(), '/config/config.ini'), sTopoINI + ini.stringify(config));
+    fs.writeFileSync(path.join(app.getAppPath(), '/app/config/config.json'), JSON.stringify(config, '', '\t'));
 }
 
 // Inicia o servidor embutido do PHP
@@ -116,46 +110,46 @@ function startPHPServer(win) {
     let sFilePHPINI;
 
     if (sPlataform == 'linux') {
-        if (config.phplinux.customphp) {
-            if (config.phplinux.folderphp) {
-                sFilePHP = path.join(app.getAppPath(), '/php/linux/' . config.phplinux.customphp);
+        if (config.php.linux.custom) {
+            if (config.php.linux.folder) {
+                sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.linux.custom);
             } else {
-                sFilePHP = config.phplinux.customphp
+                sFilePHP = config.php.linux.custom;
             }
         } else {
             sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
 
-        if (config.phplinux.perm) {
+        if (config.php.linux.perm) {
             permPHP(sFilePHP);
         }
 
-        if (config.phplinux.customini) {
-            if (config.phplinux.folderini) {
-                sFilePHPINI = path.join(app.getAppPath(), '/php/linux/' . config.phplinux.customini);
+        if (config.php.linux.ini.custom) {
+            if (config.php.linux.ini.folder) {
+                sFilePHPINI = path.join(app.getAppPath(), '/php/linux/', config.php.linux.ini.custom);
             } else {
-                sFilePHPINI = config.phplinux.customini
+                sFilePHPINI = config.php.linux.ini.custom
             }
         } else {
             sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
 
         }
     } else if (sPlataform == 'win32') {
-        if (config.phpwin32.customphp) {
-            if (config.phpwin32.folderphp) {
-                sFilePHP = path.join(app.getAppPath(), '/php/linux/' . config.phpwin32.customphp);
+        if (config.php.win32.custom) {
+            if (config.php.win32.folder) {
+                sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.win32.custom);
             } else {
-                sFilePHP = config.phpwin32.customphp
+                sFilePHP = config.php.win32.custom
             }
         } else {
             sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
         }
 
-        if (config.phpwin32.customini) {
-            if (config.phpwin32.folderini) {
-                sFilePHPINI = path.join(app.getAppPath(), '/php/linux/' . config.phpwin32.customini);
+        if (config.php.win32.ini.custom) {
+            if (config.php.win32.ini.folder) {
+                sFilePHPINI = path.join(app.getAppPath(), '/php/linux/', config.php.win32.ini.custom);
             } else {
-                sFilePHPINI = config.phpwin32.customini
+                sFilePHPINI = config.php.win32.ini.custom
             }
         } else {
             sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
@@ -165,13 +159,18 @@ function startPHPServer(win) {
         app.quit();
     }
 
+    let sRouter = '';
+    if (config.php.router) {
+        sRouter = path.join(app.getAppPath(), '/app/router.php');
+    }
+
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
     sPort = sListen.address().port;
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(`Erro ao iniciar o servidor PHP: ${err}`);
@@ -246,7 +245,7 @@ function miappNewWindow(url, width, height, resizable, menu) {
         width: sWidth,
         height: sHeight,
         resizable: sResizable,
-        icon: path.join(app.getAppPath(), config.app.icon),
+        icon: path.join(app.getAppPath(), '/app/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
