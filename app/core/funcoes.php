@@ -95,7 +95,7 @@ function requestURI(): string
     $sRequestURI = $_SERVER['REQUEST_URI'];
     $sRequestURI = CleanDB($sRequestURI);
     $txt = explode('?', $sRequestURI);
-    return empty($txt[0]) ? '' : $txt[0];
+    return empty($txt[0]) ? '' : ltrim($txt[0], '/');
 }
 
 /* Exibe Alertas */
