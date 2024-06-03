@@ -1,0 +1,42 @@
+{
+    "app": {
+        "name": "MIApp",
+        "description": "Executa apps desenvolvidos em PHP no desktop com MIApp.",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "icon": "icon.png",
+        "menu": "menu",
+        "disableHardwareAcceleration": true
+    },
+    "update": {
+        "url": "https://mestredainfo.wordpress.com/miapp/"
+    },
+    "copyright": "Copyright (C) 2004-2024 Murilo Gomes Julio",
+    "license": "GPL-2.0-only",
+    "php": {
+        "linux": {
+            "perm": false,
+            "custom": "",
+            "folder": true,
+            "ini": {
+                "custom": "",
+                "folder": true
+            }
+        },
+        "win32": {
+            "custom": "",
+            "folder": true,
+            "ini": {
+                "custom": "",
+                "folder": true
+            }
+        },
+        "router": true
+    },
+    "db": false,
+    "dev": {
+        "menu": true,
+        "tools": false
+    }
+}
