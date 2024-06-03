@@ -1,0 +1,22 @@
+<?php
+// Copyright (C) 2004-2024 Murilo Gomes Julio
+// SPDX-License-Identifier: GPL-2.0-only
+
+// Organização: Mestre da Info
+// Site: https://linktr.ee/mestreinfo
+
+
+
+date_default_timezone_set("America/Sao_Paulo");
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timezone | MIApp</title>
+</head>
+<body>
+    <?php echo date('d/m/Y') . ' ' . date('H:i:s'); ?>
+</body>
+</html>
