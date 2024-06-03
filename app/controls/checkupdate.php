@@ -11,15 +11,15 @@ header("Content-Security-Policy: script-src 'self' 'unsafe-inline' script.js");
 function checkUpdate($a = false)
 {
     try {
-        global $config, $documentroot;
+        global $aConfig, $documentroot;
 
         if ($a) {
             echo 'Verificando atualizações...';
         }
 
-        $url = $config['checkupdate'];
+        $url = $aConfig['update']['url'];
 
-        $versaoatual = file_get_contents($documentroot . '/version');
+        $versaoatual = $aConfig['app']['version'];
 
         $ch = curl_init();
 
@@ -68,6 +68,7 @@ function checkUpdate($a = false)
     }
 }
 
-if (!empty($_GET['a'])) {
+if (!empty($_GET['checkupdate'])) {
     checkUpdate(true);
+    exit;
 }
