@@ -15,7 +15,7 @@ const sHttp = require('http');
 const sPlataform = sOS.platform().toLowerCase();
 
 const milangs = require(path.join(app.getAppPath(), '/milang.js'));
-const milang = new milangs(fs, path, app, Intl.DateTimeFormat().resolvedOptions().locale);
+const milang = new milangs(app.getAppPath(), Intl.DateTimeFormat().resolvedOptions().locale);
 
 process.on('uncaughtException', (error) => {
     console.error(milang.traduzir('Exceção não tratada:'), error);

@@ -15,5 +15,6 @@
     " encerrado com sucesso.": " closed successfully.",
     "Servidor PHP parado.": "PHP server stopped.",
     "Exemplos": "Examples",
-    "Sobre": "About"
+    "Sobre": "About",
+    "Este é um exemplo no PHP!": "This is an example in PHP!"
 }
