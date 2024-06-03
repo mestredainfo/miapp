@@ -28,7 +28,7 @@
     "license": "GPL-2.0-only",
     "php": {
         "linux": {
-            "perm": false,
+            "perm": true,
             "custom": "",
             "folder": true,
             "ini": {
