@@ -130,7 +130,21 @@ dist
 .pnp.*
 
 #php
-php/
+php/linux/LICENSE
+php/linux/miappserver
+php/win32/dev/
+php/win32/ext/
+php/win32/extras/
+php/win32/lib/
+php/win32/README.md
+php/win32/*.exe
+php/win32/*.dll
+php/win32/*.txt
+php/win32/*.bat
+php/win32/*.phar
+php/win32/*.lib
+php/win32/*.ini-development
+php/win32/*.ini-production
 
 # package-lock.json
 package-lock.json
