@@ -5,6 +5,4 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-
-
 include_once(dirname(__FILE__) . '/includes/exemplo.php');

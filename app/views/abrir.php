@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abrir Arquivo</title>
+    <title><?php echo $milang->traduzir('Abrir Arquivo'); ?></title>
 
     <link rel="stylesheet" href="/views/style.css">
 </head>
@@ -28,7 +28,7 @@
     <script>
         async function abrir() {
             let sAbrir = await window.arquivo.abrir();
-            window.location.assign(`?filename=${sAbrir.toString()}`);
+            window.location.assign(`?filename=${sAbrir.toString()}&checkupdate=no`);
         }
         abrir();
     </script>

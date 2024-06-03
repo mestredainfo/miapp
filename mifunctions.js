@@ -7,7 +7,7 @@
 const { ipcMain, dialog } = require('electron')
 
 module.exports = {
-    mifunctions: function (win, miappNewWindow) {
+    mifunctions: function (win, milang, miappNewWindow) {
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
             const { canceled, filePaths } = await dialog.showOpenDialog({});
@@ -49,9 +49,9 @@ module.exports = {
             let sButtons;
 
             if (confirm) {
-                sButtons = ['Continuar', 'Cancelar'];
+                sButtons = [milang.traduzir('Continuar'), milang.traduzir('Cancelar')];
             } else {
-                sButtons = ['Continuar'];
+                sButtons = [milang.traduzir('Continuar')];
             }
 
             let options = {
@@ -59,8 +59,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: title,
-                message: msg
+                title: milang.traduzir(title),
+                message: milang.traduzir(msg)
             }
             return dialog.showMessageBoxSync(null, options);
         });

@@ -14,7 +14,7 @@ class lang
     public function __construct()
     {
         $aLang = file_get_contents(dirname(__FILE__, 3) . '/lang/lang.txt');
-        $sPath = dirname(__FILE__) . '/lang/' . $aLang . '.json';
+        $sPath = dirname(__FILE__, 3) . '/lang/' . $aLang . '.json';
 
         if (file_exists($sPath)) {
             $this->sLang = json_decode(file_get_contents($sPath), true);

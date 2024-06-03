@@ -5,8 +5,6 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-
-
 if (empty($_COOKIE['info'])) {
     $count = 1;
     setcookie('info[msg]', $count, 0, '/', $_SERVER['SERVER_NAME'], false, true);
@@ -26,21 +24,15 @@ if (empty($_COOKIE['info'])) {
 
 <body>
     <?php
-    $pathDados = dirname('__FILE__') . '/dados/';
-    if (!file_exists($pathDados)) {
-        mkdir($pathDados);
-    }
-
     // Cria o banco de dados e a tabela
-    $db1 = new SQLite3($pathDados . '/exemplo.sqlite');
+    $db1 = new SQLite3($db[0]);
     $db1->exec("CREATE TABLE IF NOT EXISTS mi_exemplo (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL
-)");
+    nome TEXT NOT NULL)");
     $db1->close();
 
     // Inseri registros
-    $db2 = new SQLite3($pathDados . '/exemplo.sqlite', SQLITE3_OPEN_READWRITE);
+    $db2 = new SQLite3($db[0], SQLITE3_OPEN_READWRITE);
     if (empty($_COOKIE['info'])) {
         $db2->query("INSERT INTO mi_exemplo (nome) VALUES ('" . $count . "')");
     } else {
@@ -52,10 +44,10 @@ if (empty($_COOKIE['info'])) {
     }
     $db2->close();
 
-    echo '<p><a href="javascript:window.location.reload();">Atualizar Página</a></p>';
+    echo '<p><a href="javascript:window.location.reload();">' . $milang->traduzir('Atualizar Página') . '</a></p>';
 
     // Consulta registros
-    $db3 = new SQLite3($pathDados . '/exemplo.sqlite', SQLITE3_OPEN_READONLY);
+    $db3 = new SQLite3($db[0], SQLITE3_OPEN_READONLY);
     $query = $db3->query('SELECT * FROM mi_exemplo ORDER BY id DESC');
     while ($row = $query->fetchArray(SQLITE3_ASSOC)) {
         echo $row['nome'] . '<br>';

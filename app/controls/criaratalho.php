@@ -19,13 +19,13 @@ Categories=Utility;';
 
         $sCreateFile = file_put_contents($sFolder . '/' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '.desktop', $sDesktop);
         if ($sCreateFile) {
-            echo '<script>window.alert(\'Atalho criado no menu iniciar!\');window.location.assign(\'index.php\');</script>';
+            echo '<script>window.alert(\'Atalho criado no menu iniciar!\');window.close();</script>';
         } else {
-            echo '<script>window.alert(\'Não foi possível criar o atalho no menu iniciar!\');window.location.assign(\'index.php\');</script>';
+            echo '<script>window.alert(\'Não foi possível criar o atalho no menu iniciar!\');window.close();</script>';
         }
     } else {
-        echo '<script>window.alert(\'Não foi possível criar o atalho no menu iniciar!\');window.location.assign(\'index.php\');</script>';
+        echo '<script>window.alert(\'Não foi possível criar o atalho no menu iniciar!\');window.close();</script>';
     }
 } else {
-    echo '<script>window.alert(\'No Windows você pode criar um atalho clicando com o botão direito no executável "' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '.exe" e clicando em "Criar Atalho"!\');window.location.assign(\'index.php\');</script>';
+    echo '<script>window.alert(\'No Windows você pode criar um atalho clicando com o botão direito no executável "' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '.exe" e clicando em "Criar Atalho"!\');window.close();</script>';
 }

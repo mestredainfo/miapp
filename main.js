@@ -37,7 +37,7 @@ let sPort;
 function createMenu(sWin) {
     fs.readFile(path.join(app.getAppPath(), '/app/', config.app.menu, '/menu.json'), (err, data) => {
         if (err) {
-            console.error('Erro ao ler o arquivo JSON', err);
+            console.error(milang.traduzir('Erro ao ler o arquivo JSON'), err);
             return;
         }
 
@@ -93,7 +93,7 @@ const createWindow = () => {
     });
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
-    mifunctions.mifunctions(win, miappNewWindow);
+    mifunctions.mifunctions(win, milang, miappNewWindow);
 }
 
 // Aplica permissão de execução para o filephp
@@ -173,11 +173,11 @@ function startPHPServer(win) {
     phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
-        console.error(`Erro ao iniciar o servidor PHP: ${err}`);
+        console.error(milang.traduzir('Erro ao iniciar o servidor PHP:'), err);
     });
 
     phpServerProcess.on('close', (code) => {
-        console.log(`O servidor PHP foi encerrado com o código: ${code}`);
+        console.log(milang.traduzir('O servidor PHP foi encerrado com o código:'), code);
     });
 
     if (sPlataform == 'linux') {
@@ -185,19 +185,19 @@ function startPHPServer(win) {
             let lsof = spawn('lsof', ['-ti:' + sPort]);
 
             lsof.stdout.on('data', (data) => {
-                console.log('Servidor PHP iniciado com sucesso.');
+                console.log(milang.traduzir('Servidor PHP iniciado com sucesso.'));
                 sServerName = `http://localhost:${sPort}/`;
                 win.loadURL(sServerName);
                 clearInterval(checkPortL);
             });
 
             lsof.stderr.on('data', (data) => {
-                console.error(`Erro ao executar lsof: ${data}`);
+                console.error(milang.traduzir('Erro ao executar lsof:'), data);
             });
 
             lsof.on('close', (code) => {
                 if (code !== 0) {
-                    console.error(`lsof saiu com código de erro ${code}`);
+                    console.error(milang.traduzir('lsof saiu com código de erro'), code);
                 }
             });
         }, 1000);
@@ -211,18 +211,18 @@ function startPHPServer(win) {
             });
 
             netstat.stderr.on('data', (data) => {
-                console.error(`Erro ao executar netstat: ${data}`);
+                console.error(milang.traduzir('Erro ao executar netstat:'), data);
             });
 
             netstat.on('close', (code) => {
                 if (code !== 0) {
-                    console.error(`netstat saiu com código de erro ${code}`);
+                    console.error(milang.traduzir('netstat saiu com código de erro'), code);
                 }
                 findstr.stdin.end();
             });
 
             findstr.stdout.on('data', (data) => {
-                console.log('Servidor PHP iniciado com sucesso.');
+                console.log(milang.traduzir('Servidor PHP iniciado com sucesso.'));
                 sServerName = `http://localhost:${sPort}/`;
                 win.loadURL(sServerName);
                 clearInterval(checkPortW);
@@ -275,10 +275,10 @@ function getMenuTemplate(win, menuData) {
 
     if (config.dev.menu) {
         let devMenu = {
-            label: 'DevTools',
+            label: milang.traduzir('Dev'),
             submenu: [
                 {
-                    label: 'Refresh',
+                    label: milang.traduzir('Refresh'),
                     accelerator: 'F5',
                     click: () => {
                         win.reload();
@@ -288,7 +288,7 @@ function getMenuTemplate(win, menuData) {
                     type: 'separator'
                 },
                 {
-                    label: 'Tools',
+                    label: milang.traduzir('DevTools'),
                     accelerator: 'F12',
                     click: () => {
                         win.openDevTools();
@@ -348,28 +348,28 @@ function killProcessByPort(port) {
         phpServerClose = spawn('lsof', ['-ti:' + port, '|', 'xargs', 'kill'], { shell: true });
 
         phpServerClose.stderr.on('data', (data) => {
-            console.log(`Erro ao encerrar o processo na porta: ${sPort}`);
+            console.log(milang.traduzir('Erro ao encerrar o processo na porta:'), sPort);
             return;
         });
 
         phpServerClose.on('error', (err) => {
-            console.error(`Erro ao encerrar o processo na porta ${port}: ${err.message}`);
+            console.error(milang.traduzir('Erro ao encerrar o processo na porta'), port, err.message);
             return;
         });
 
         phpServerClose.on('close', (code) => {
-            console.log(`O servidor PHP foi encerrado com o código: ${code}`);
+            console.log(milang.traduzir('O servidor PHP foi encerrado com o código:'), code);
             return;
         });
 
-        console.log(`Processo na porta ${port} encerrado com sucesso.`);
+        console.log(milang.traduzir('Processo na porta'), port, milang.traduzir('encerrado com sucesso.'));
     }
 }
 
 function stopPHPServer() {
     if (phpServerProcess) {
         killProcessByPort(sPort); // Encerra todos os processos do PHP que estão sob a mesma porta
-        console.log('Servidor PHP parado.');
+        console.log(milang.traduzir('Servidor PHP parado.'));
     }
 }
 

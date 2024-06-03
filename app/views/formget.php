@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário GET</title>
+    <title><?php echo $milang->traduzir('Formulário'); ?> GET</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -22,14 +22,14 @@
         if (!empty($_GET['txtNome'])) {
             $txtNome = filter_input(INPUT_GET, 'txtNome');
 
-            echo 'Seu nome é ' . $txtNome . '<hr>';
+            echo $milang->traduzir('Seu nome é ') . $txtNome . '<hr>';
         }
     }
     ?>
-    <form name="frmPost" method="get" action="formget.php">
+    <form name="frmPost" method="get" action="formget.php?checkupdate=no">
         <div>
-            <label for="txtNome">Digite seu nome</label>
-            <input id="txtNome" name="txtNome" type="text" placeholder="Digite seu nome" required>
+            <label for="txtNome"><?php echo $milang->traduzir('Digite seu nome'); ?></label>
+            <input id="txtNome" name="txtNome" type="text" placeholder="<?php echo $milang->traduzir('Digite seu nome'); ?>" required>
         </div>
         <button type="submit">Enviar</button>
     </form>

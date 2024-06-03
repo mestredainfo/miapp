@@ -5,8 +5,6 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-
-
 date_default_timezone_set("America/Sao_Paulo");
 ?>
 <!DOCTYPE html>

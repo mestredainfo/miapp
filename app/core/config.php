@@ -1,4 +1,10 @@
 <?php
+// Copyright (C) 2004-2024 Murilo Gomes Julio
+// SPDX-License-Identifier: GPL-2.0-only
+
+// Organização: Mestre da Info
+// Site: https://linktr.ee/mestreinfo
+
 if (!defined('miapp')) {
     exit;
 }
@@ -9,9 +15,6 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-
-// Políticas de Segurança de Conteúdo
-header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'");
 
 // Define o fuso horário
 date_default_timezone_set("America/Sao_Paulo");
@@ -27,9 +30,10 @@ $aConfig = json_decode(file_get_contents(dirname(__FILE__, 2) . '/config/config.
 
 // Verifica se a pasta do banco de dados existe, se não existir a mesma é criada
 if ($aConfig['db']) {
-    $config['db'] = '/home/' . get_current_user() . '/.' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '/data/' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '.sqlite';
+    $processUser = posix_getpwuid(posix_geteuid());
+    $db[] = '/home/' . $processUser['name'] . '/.' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '/data/' . str_replace(' ', '', strtolower($aConfig['app']['name'])) . '.sqlite';
 
-    if (!file_exists(dirname($aConfig['app']['name']))) {
-        mkdir(dirname($aConfig['app']['name']), 0777, true);
+    if (!file_exists(dirname($db[0]))) {
+        mkdir(dirname($db[0]), 0777, true);
     }
 }

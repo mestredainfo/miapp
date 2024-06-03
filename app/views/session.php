@@ -5,9 +5,7 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-
-
-session_name('miapp');
+session_name(str_replace(' ', '', strtolower($aConfig['app']['name'])));
 session_start();
 ?>
 <!DOCTYPE html>
@@ -33,7 +31,7 @@ session_start();
         echo 'Session: ' . $count;
     }
 
-    echo '<p><a href="javascript:window.location.reload();">Atualizar Página</a></p>';
+    echo '<p><a href="javascript:window.location.reload();">' . $milang->traduzir('Atualizar Página') . '</a></p>';
     ?>
 </body>
 
