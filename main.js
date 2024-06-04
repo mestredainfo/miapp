@@ -22,29 +22,73 @@ function getMIAppPath() {
     }
 
     if (!sArg) {
-        sArg = app.getAppPath();                
-    } else {
-        sArg = path.parse(sArg).dir;
+        sArg = 'retorno';
+        app.quit(); //sArg = app.getAppPath();
     }
 
     return sArg;
 }
 
+const miappPath = getMIAppPath();
 const milangs = require(path.join(app.getAppPath(), '/milang.js'));
-const milang = new milangs(sPlataform, getMIAppPath());
+const milang = new milangs(sPlataform, miappPath);
 
 process.on('uncaughtException', (error) => {
     console.error(milang.traduzir('Exceção não tratada:'), error);
 });
 
-const config = JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8'));
+// Atualização
+async function checkUpdate() {
+    try {
+        const axios = require('axios');
+        const cheerio = require('cheerio');
 
-if (config.app.disableHardwareAcceleration) {
-    app.disableHardwareAcceleration();
+        // URL da página HTML que você deseja analisar
+        const url = 'https://mestredainfo.wordpress.com/miapp/';
+
+        const versaoatual = require('electron').app.getVersion();
+
+        // Realiza a requisição HTTP
+        const response = await axios.get(url);
+
+        // Carrega o HTML retornado usando a biblioteca cheerio
+        const $ = cheerio.load(response.data);
+
+        // Extrai os dados desejados
+        const versaonova = $('#appversion').text();
+
+        if (versaonova > versaoatual) {
+            const options = {
+                type: 'question',
+                buttons: [milang.traduzir('Mais tarde'), milang.traduzir('Atualizar Agora')],
+                title: milang.traduzir('Deseja baixar a nova versão?'),
+                message: milang.traduzir('A versão ') + versaonova + milang.traduzir(' já está disponível.')
+            };
+
+            require('electron').dialog.showMessageBox(null, options).then(retorno => {
+                if (retorno.response === 1) {
+                    require('electron').shell.openExternal(url);
+                }
+            });
+        }
+    } catch (error) {
+        console.error(milang.traduzir('Erro ao buscar os dados:'), error);
+    }
 }
 
-if (config.app.name) {
-    app.setName(config.app.name);
+
+checkUpdate();
+
+const config = (miappPath !== 'retorno') ? JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8')) : '';
+
+if (miappPath !== 'retorno') {
+    if (config.app.disableHardwareAcceleration) {
+        app.disableHardwareAcceleration();
+    }
+
+    if (config.app.name) {
+        app.setName(config.app.name);
+    }
 }
 
 let sServerName;
@@ -176,10 +220,10 @@ function startPHPServer(win) {
         app.quit();
     }
 
-    let sRouter = '';
-    if (config.php.router) {
-        sRouter = path.join(getMIAppPath(), '/app/router.php');
-    }
+    // let sRouter = '';
+    // if (config.php.router) {
+    //     sRouter = path.join(getMIAppPath(), '/app/router.php');
+    // }
 
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
@@ -187,7 +231,7 @@ function startPHPServer(win) {
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(getMIAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(getMIAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(milang.traduzir('Erro ao iniciar o servidor PHP:'), err);
@@ -390,12 +434,14 @@ function stopPHPServer() {
 }
 
 app.whenReady().then(() => {
-    createWindow()
+    if (miappPath !== 'retorno') {
+        createWindow()
 
-    // Enquanto os aplicativos do Linux e do Windows são encerrados quando não há janelas abertas, os aplicativos do macOS geralmente continuam em execução mesmo sem nenhuma janela aberta, e ativar o aplicativo quando não há janelas disponíveis deve abrir um novo.
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
+        // Enquanto os aplicativos do Linux e do Windows são encerrados quando não há janelas abertas, os aplicativos do macOS geralmente continuam em execução mesmo sem nenhuma janela aberta, e ativar o aplicativo quando não há janelas disponíveis deve abrir um novo.
+        app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) createWindow()
+        })
+    }
 })
 
 // Para sair do aplicativo no Windows e Linux
