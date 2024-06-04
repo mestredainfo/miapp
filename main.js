@@ -35,7 +35,7 @@ let phpServerProcess;
 let sPort;
 
 function createMenu(sWin) {
-    fs.readFile(path.join(app.getAppPath(), '/app/', config.app.menu, '/menu.json'), (err, data) => {
+    fs.readFile(path.join(app.getAppPath(), '/app/menu.json'), (err, data) => {
         if (err) {
             console.error(milang.traduzir('Erro ao ler o arquivo JSON'), err);
             return;
