@@ -5,35 +5,41 @@
 // Site: https://linktr.ee/mestreinfo
 
 module.exports = class milang {
-    constructor(platform, dirapp) {
+    constructor(platform, dirmi, dirapp) {
         const fs = require('fs');
         const path = require('path');
-        let aLang;
-
-        if (platform == 'linux') {
-            aLang = (process.env.LANG || process.env.LANGUAGE || process.env.LC_ALL || process.env.LC_MESSAGES).split('.')[0].split('_')[0];
-        } else {
-            const { execFileSync } = require('child_process');
-            let nLang = String(execFileSync('wmic', ['os', 'get', 'locale'])).trim();
-            aLang = this.getNameLang(Number.parseInt(nLang.replace('Locale', ''), 16));
-        }
+        let aLang = [];
 
         if (dirapp !== 'retorno') {
+            if (platform == 'linux') {
+                aLang = (process.env.LANG || process.env.LANGUAGE || process.env.LC_ALL || process.env.LC_MESSAGES).split('.')[0].split('_')[0];
+            } else {
+                const { execFileSync } = require('child_process');
+                let nLang = String(execFileSync('wmic', ['os', 'get', 'locale'])).trim();
+                aLang = this.getNameLang(Number.parseInt(nLang.replace('Locale', ''), 16));
+            }
+
+            // Idioma do MIApp
+            let sPathMI = path.join(dirmi, '/lang/', `${aLang}.json`);
+            this.sLangMI = JSON.parse(fs.readFileSync(sPathMI), 'utf-8');
+
+            // Idioma do App
             let sPath = path.join(dirapp, '/app/lang/', `${aLang}.json`);
 
             if (fs.existsSync(sPath)) {
-                this.sLang = JSON.parse(fs.readFileSync(sPath), 'utf-8');
+                this.sLangApp = JSON.parse(fs.readFileSync(sPath), 'utf-8');
             } else {
                 if (fs.existsSync(path.join(dirapp, '/app/lang/en.json'))) {
-                    this.sLang = JSON.parse(fs.readFileSync(path.join(dirapp, '/app/lang/en.json'), 'utf-8'));
+                    this.sLangApp = JSON.parse(fs.readFileSync(path.join(dirapp, '/app/lang/en.json'), 'utf-8'));
                 } else {
-                    this.sLang = [];
+                    this.sLangApp = [];
                 }
             }
 
             fs.writeFileSync(path.join(dirapp, '/app/lang/lang.txt'), aLang);
         } else {
-            $this.sLang = [];
+            this.sLangMI = [];
+            this.sLangApp = [];
         }
     }
 
@@ -274,7 +280,11 @@ module.exports = class milang {
         return (sCode[valor]) ? sCode[valor] : 'en';
     }
 
-    traduzir(texto) {
-        return (this.sLang[texto]) ? this.sLang[texto] : texto
+    traduzir(texto, app) {
+        if (app) {
+            return (this.sLangApp[texto]) ? this.sLangApp[texto] : texto
+        } else {
+            return (this.sLangMI[texto]) ? this.sLangMI[texto] : texto
+        }
     }
 }
