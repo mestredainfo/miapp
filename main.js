@@ -158,12 +158,12 @@ const createWindow = () => {
 }
 
 // Aplica permissão de execução para o filephp
-function permPHP(filephp) {
-    spawn('chmod', ['+x', filephp]);
-    config.php.linux.perm = false;
+// function permPHP(filephp) {
+//     spawn('chmod', ['+x', filephp]);
+//     config.php.linux.perm = false;
 
-    fs.writeFileSync(path.join(getMIAppPath(), '/app/config/config.json'), JSON.stringify(config, '', '\t'));
-}
+//     fs.writeFileSync(path.join(getMIAppPath(), '/app/config/config.json'), JSON.stringify(config, '', '\t'));
+// }
 
 // Inicia o servidor embutido do PHP
 function startPHPServer(win) {
@@ -175,21 +175,21 @@ function startPHPServer(win) {
             if (config.php.linux.folder) {
                 sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.linux.custom);
             } else {
-                sFilePHP = config.php.linux.custom;
+                sFilePHP = path.join(miappPath, '/app/php/', config.php.linux.custom);
             }
         } else {
             sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
 
-        if (config.php.linux.folder && config.php.linux.perm) {
-            permPHP(sFilePHP);
-        }
+        // if (config.php.linux.folder && config.php.linux.perm) {
+        //     permPHP(sFilePHP);
+        // }
 
         if (config.php.linux.ini.custom) {
             if (config.php.linux.ini.folder) {
                 sFilePHPINI = path.join(app.getAppPath(), '/php/linux/', config.php.linux.ini.custom);
             } else {
-                sFilePHPINI = config.php.linux.ini.custom
+                sFilePHPINI = path.join(miappPath, '/app/php/', config.php.linux.ini.custom);
             }
         } else {
             sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
@@ -200,7 +200,7 @@ function startPHPServer(win) {
             if (config.php.win32.folder) {
                 sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.win32.custom);
             } else {
-                sFilePHP = config.php.win32.custom
+                sFilePHP = path.join(miappPath, '/app/php/', config.php.win32.custom);
             }
         } else {
             sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
@@ -210,7 +210,7 @@ function startPHPServer(win) {
             if (config.php.win32.ini.folder) {
                 sFilePHPINI = path.join(app.getAppPath(), '/php/linux/', config.php.win32.ini.custom);
             } else {
-                sFilePHPINI = config.php.win32.ini.custom
+                sFilePHPINI = path.join(miappPath, '/app/php/', config.php.win32.ini.custom);
             }
         } else {
             sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
