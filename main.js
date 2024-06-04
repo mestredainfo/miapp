@@ -17,7 +17,7 @@ const milangs = require(path.join(app.getAppPath(), '/milang.js'));
 const milang = new milangs(sPlataform, app.getAppPath());
 
 process.on('uncaughtException', (error) => {
-    console.error('Exceção não tratada:', error);
+    console.error(milang.traduzir('Exceção não tratada:'), error);
 });
 
 const config = JSON.parse(fs.readFileSync(path.join(app.getAppPath(), '/app/config/config.json'), 'utf-8'));
@@ -255,7 +255,6 @@ function miappNewWindow(url, width, height, resizable, menu) {
 
     sNewWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
-            console.log(url);
             miappNewWindow(`${url}`);
 
             return { action: 'deny' }
@@ -353,7 +352,7 @@ function killProcessByPort(port) {
         });
 
         phpServerClose.on('error', (err) => {
-            console.error(milang.traduzir('Erro ao encerrar o processo na porta'), port, err.message);
+            console.error(milang.traduzir('Erro ao encerrar o processo na porta:'), port, err.message);
             return;
         });
 
