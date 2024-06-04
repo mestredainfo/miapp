@@ -120,7 +120,7 @@ function startPHPServer(win) {
             sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
 
-        if (config.php.linux.perm) {
+        if (config.php.linux.folder && config.php.linux.perm) {
             permPHP(sFilePHP);
         }
 
