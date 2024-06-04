@@ -18,19 +18,23 @@ module.exports = class milang {
             aLang = this.getNameLang(Number.parseInt(nLang.replace('Locale', ''), 16));
         }
 
-        let sPath = path.join(dirapp, '/app/lang/', `${aLang}.json`);
+        if (dirapp !== 'retorno') {
+            let sPath = path.join(dirapp, '/app/lang/', `${aLang}.json`);
 
-        if (fs.existsSync(sPath)) {
-            this.sLang = JSON.parse(fs.readFileSync(sPath), 'utf-8');
-        } else {
-            if (fs.existsSync(path.join(dirapp, '/app/lang/en.json'))) {
-                this.sLang = JSON.parse(fs.readFileSync(path.join(dirapp, '/app/lang/en.json'), 'utf-8'));
+            if (fs.existsSync(sPath)) {
+                this.sLang = JSON.parse(fs.readFileSync(sPath), 'utf-8');
             } else {
-                this.sLang = [];
+                if (fs.existsSync(path.join(dirapp, '/app/lang/en.json'))) {
+                    this.sLang = JSON.parse(fs.readFileSync(path.join(dirapp, '/app/lang/en.json'), 'utf-8'));
+                } else {
+                    this.sLang = [];
+                }
             }
-        }
 
-        fs.writeFileSync(path.join(dirapp, '/app/lang/lang.txt'), aLang);
+            fs.writeFileSync(path.join(dirapp, '/app/lang/lang.txt'), aLang);
+        } else {
+            $this.sLang = [];
+        }
     }
 
     // Win32 
