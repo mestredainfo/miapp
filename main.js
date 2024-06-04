@@ -31,7 +31,7 @@ function getMIAppPath() {
 
 const miappPath = getMIAppPath();
 const milangs = require(path.join(app.getAppPath(), '/milang.js'));
-const milang = new milangs(sPlataform, miappPath);
+const milang = new milangs(sPlataform, app.getAppPath(), miappPath);
 
 process.on('uncaughtException', (error) => {
     console.error(milang.traduzir('Exceção não tratada:'), error);
@@ -372,7 +372,7 @@ function getMenuTemplate(win, menuData) {
                 menuItem = { type: 'separator' };
             } else {
                 menuItem = {
-                    label: milang.traduzir(submenuKey),
+                    label: milang.traduzir(submenuKey, true),
                     accelerator: menuData[key][submenuKey].key,
                     click: () => {
                         // Verifica se é uma página ou URL
@@ -395,7 +395,7 @@ function getMenuTemplate(win, menuData) {
         });
 
         // Adiciona o submenu ao item do menu principal
-        template.push({ label: milang.traduzir(key), submenu });
+        template.push({ label: milang.traduzir(key, true), submenu });
     });
 
     return template;
