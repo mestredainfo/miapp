@@ -13,14 +13,31 @@ const sHttp = require('http');
 
 const sPlataform = sOS.platform().toLowerCase();
 
+// Argumentos
+function getMIAppPath() {
+    let aArg = process.argv;
+    let sArg = aArg[1];
+    if (sArg == '.') {
+        sArg = aArg[2];
+    }
+
+    if (!sArg) {
+        sArg = app.getAppPath();                
+    } else {
+        sArg = path.parse(sArg).dir;
+    }
+
+    return sArg;
+}
+
 const milangs = require(path.join(app.getAppPath(), '/milang.js'));
-const milang = new milangs(sPlataform, app.getAppPath());
+const milang = new milangs(sPlataform, getMIAppPath());
 
 process.on('uncaughtException', (error) => {
     console.error(milang.traduzir('Exceção não tratada:'), error);
 });
 
-const config = JSON.parse(fs.readFileSync(path.join(app.getAppPath(), '/app/config/config.json'), 'utf-8'));
+const config = JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8'));
 
 if (config.app.disableHardwareAcceleration) {
     app.disableHardwareAcceleration();
@@ -35,7 +52,7 @@ let phpServerProcess;
 let sPort;
 
 function createMenu(sWin) {
-    fs.readFile(path.join(app.getAppPath(), '/app/menu.json'), (err, data) => {
+    fs.readFile(path.join(getMIAppPath(), '/app/menu/menu.json'), (err, data) => {
         if (err) {
             console.error(milang.traduzir('Erro ao ler o arquivo JSON'), err);
             return;
@@ -54,7 +71,7 @@ const createWindow = () => {
         width: config.app.width,
         height: config.app.height,
         resizable: config.app.resizable,
-        icon: path.join(app.getAppPath(), '/app/', config.app.icon),
+        icon: path.join(getMIAppPath(), '/app/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
@@ -101,7 +118,7 @@ function permPHP(filephp) {
     spawn('chmod', ['+x', filephp]);
     config.php.linux.perm = false;
 
-    fs.writeFileSync(path.join(app.getAppPath(), '/app/config/config.json'), JSON.stringify(config, '', '\t'));
+    fs.writeFileSync(path.join(getMIAppPath(), '/app/config/config.json'), JSON.stringify(config, '', '\t'));
 }
 
 // Inicia o servidor embutido do PHP
@@ -161,7 +178,7 @@ function startPHPServer(win) {
 
     let sRouter = '';
     if (config.php.router) {
-        sRouter = path.join(app.getAppPath(), '/app/router.php');
+        sRouter = path.join(getMIAppPath(), '/app/router.php');
     }
 
     let sCreateServer = sHttp.createServer();
@@ -170,7 +187,7 @@ function startPHPServer(win) {
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(getMIAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(milang.traduzir('Erro ao iniciar o servidor PHP:'), err);
@@ -245,7 +262,7 @@ function miappNewWindow(url, width, height, resizable, menu) {
         width: sWidth,
         height: sHeight,
         resizable: sResizable,
-        icon: path.join(app.getAppPath(), '/app/', config.app.icon),
+        icon: path.join(getMIAppPath(), '/app/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
