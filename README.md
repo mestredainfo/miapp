@@ -5,7 +5,7 @@ MIApp é uma plataforma que permite a criação e execução de aplicativos dese
 ## Documentação
 
 - [Página do MIApp](https://mestredainfo.wordpress.com/miapp/)
-- [Apoie](https://mestredainfo.wordpress.com/apoie/)
+- [Apoie o MIApp](https://mestredainfo.wordpress.com/assinantes/)
 
 ## Licença
 
