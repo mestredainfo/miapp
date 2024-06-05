@@ -37,46 +37,9 @@ process.on('uncaughtException', (error) => {
     console.error(milang.traduzir('Exceção não tratada:'), error);
 });
 
-// Atualização
-async function checkUpdate() {
-    try {
-        const axios = require('axios');
-        const cheerio = require('cheerio');
-
-        // URL da página HTML que você deseja analisar
-        const url = 'https://mestredainfo.wordpress.com/miapp/';
-
-        const versaoatual = require('electron').app.getVersion();
-
-        // Realiza a requisição HTTP
-        const response = await axios.get(url);
-
-        // Carrega o HTML retornado usando a biblioteca cheerio
-        const $ = cheerio.load(response.data);
-
-        // Extrai os dados desejados
-        const versaonova = $('#appversion').text();
-
-        if (versaonova > versaoatual) {
-            const options = {
-                type: 'question',
-                buttons: [milang.traduzir('Mais tarde'), milang.traduzir('Atualizar Agora')],
-                title: milang.traduzir('Deseja baixar a nova versão do MIApp?'),
-                message: milang.traduzir('A versão ') + versaonova + milang.traduzir(' já está disponível no MIApp.')
-            };
-
-            require('electron').dialog.showMessageBox(null, options).then(retorno => {
-                if (retorno.response === 1) {
-                    require('electron').shell.openExternal(url);
-                }
-            });
-        }
-    } catch (error) {
-        console.error(milang.traduzir('Erro ao buscar os dados:'), error);
-    }
-}
-
-checkUpdate();
+const miupdates = require(path.join(app.getAppPath(), '/miupdate.js'));
+const miupdate = new miupdates(milang);
+miupdate.checkUpdate();
 
 const config = (miappPath !== 'retorno') ? JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8')) : '';
 
