@@ -16,5 +16,11 @@
     "encerrado com sucesso.": "closed successfully.",
     "Servidor PHP parado.": "PHP server stopped.",
     "Continuar": "Continue",
-    "Cancelar": "Cancel"
+    "Cancelar": "Cancel",
+    "Mais tarde": "Later",
+    "Atualizar Agora": "Update now",
+    "Deseja baixar a nova versão?": "Want to download the new version?",
+    "A versão ": "The version ",
+    " já está disponível.": " is now available.",
+    "Erro ao buscar os dados:": "Error when searching for data:"
 }
