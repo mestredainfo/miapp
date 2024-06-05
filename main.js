@@ -61,8 +61,8 @@ async function checkUpdate() {
             const options = {
                 type: 'question',
                 buttons: [milang.traduzir('Mais tarde'), milang.traduzir('Atualizar Agora')],
-                title: milang.traduzir('Deseja baixar a nova versão?'),
-                message: milang.traduzir('A versão ') + versaonova + milang.traduzir(' já está disponível.')
+                title: milang.traduzir('Deseja baixar a nova versão do MIApp?'),
+                message: milang.traduzir('A versão ') + versaonova + milang.traduzir(' já está disponível no MIApp.')
             };
 
             require('electron').dialog.showMessageBox(null, options).then(retorno => {
