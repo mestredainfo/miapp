@@ -19,8 +19,10 @@
     "Cancelar": "Cancelar",
     "Mais tarde": "Mais tarde",
     "Atualizar Agora": "Atualizar Agora",
+    "Atualização do MIApp": "Atualização do MIApp",
     "Deseja baixar a nova versão do MIApp?": "Deseja baixar a nova versão do MIApp?",
     "A versão ": "A versão ",
-    " já está disponível no MIApp.": " já está disponível no MIApp.",
-    "Erro ao buscar os dados:": "Erro ao buscar os dados:"
+    " já está disponível para baixar.": " já está disponível para baixar.",
+    "Erro ao buscar os dados:": "Erro ao buscar os dados:",
+    "Erro ao fazer a solicitação HTTP: ": "Erro ao fazer a solicitação HTTP: "
 }
