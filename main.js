@@ -77,7 +77,7 @@ const createWindow = () => {
         width: config.app.width,
         height: config.app.height,
         resizable: config.app.resizable,
-        icon: path.join(getMIAppPath(), '/app/', config.app.icon),
+        icon: path.join(getMIAppPath(), '/app/icon/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
@@ -251,7 +251,7 @@ function miappNewWindow(url, width, height, resizable, menu) {
         width: sWidth,
         height: sHeight,
         resizable: sResizable,
-        icon: path.join(getMIAppPath(), '/app/', config.app.icon),
+        icon: path.join(getMIAppPath(), '/app/icon/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
