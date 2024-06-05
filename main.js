@@ -23,7 +23,7 @@ function getMIAppPath() {
 
     if (!sArg) {
         sArg = 'retorno';
-        app.quit(); //sArg = app.getAppPath();
+        app.quit();
     }
 
     return sArg;
@@ -156,14 +156,6 @@ const createWindow = () => {
     mifunctions.mifunctions(win, milang, miappNewWindow);
 }
 
-// Aplica permissão de execução para o filephp
-// function permPHP(filephp) {
-//     spawn('chmod', ['+x', filephp]);
-//     config.php.linux.perm = false;
-
-//     fs.writeFileSync(path.join(getMIAppPath(), '/app/config/config.json'), JSON.stringify(config, '', '\t'));
-// }
-
 // Inicia o servidor embutido do PHP
 function startPHPServer(win) {
     let sFilePHP;
@@ -179,10 +171,6 @@ function startPHPServer(win) {
         } else {
             sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
         }
-
-        // if (config.php.linux.folder && config.php.linux.perm) {
-        //     permPHP(sFilePHP);
-        // }
 
         if (config.php.linux.ini.custom) {
             if (config.php.linux.ini.folder) {
@@ -218,11 +206,6 @@ function startPHPServer(win) {
     } else {
         app.quit();
     }
-
-    // let sRouter = '';
-    // if (config.php.router) {
-    //     sRouter = path.join(getMIAppPath(), '/app/router.php');
-    // }
 
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
