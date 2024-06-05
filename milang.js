@@ -21,7 +21,11 @@ module.exports = class milang {
 
             // Idioma do MIApp
             let sPathMI = path.join(dirmi, '/lang/', `${aLang}.json`);
-            this.sLangMI = JSON.parse(fs.readFileSync(sPathMI), 'utf-8');
+            if (fs.existsSync(sPathMI)) {
+                this.sLangMI = JSON.parse(fs.readFileSync(sPathMI), 'utf-8');
+            } else {
+                this.sLangMI = JSON.parse(fs.readFileSync(path.join(dirmi, '/lang/en.json')), 'utf-8');
+            }
 
             // Idioma do App
             let sPath = path.join(dirapp, '/app/lang/', `${aLang}.json`);
