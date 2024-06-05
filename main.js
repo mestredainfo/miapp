@@ -76,7 +76,6 @@ async function checkUpdate() {
     }
 }
 
-
 checkUpdate();
 
 const config = (miappPath !== 'retorno') ? JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8')) : '';
