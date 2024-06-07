@@ -5,6 +5,7 @@ MIApp é um software que permite a execução de aplicativos desenvolvidos em PH
 ## Documentação
 
 - [Página do MIApp](https://mestredainfo.wordpress.com/miapp/)
+- [MIApp Changelog](https://mestredainfo.wordpress.com/changelog-miapp/)
 - [Apoie o MIApp](https://mestredainfo.wordpress.com/assinantes/)
 
 ## Licença
