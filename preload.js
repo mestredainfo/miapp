@@ -8,20 +8,14 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 ipcRenderer.setMaxListeners(20);
 
-// Abrir, salvar e criar arquivo
-contextBridge.exposeInMainWorld('arquivo', {
-    abrir: () => ipcRenderer.invoke('abrirArquivo'),
-    salvar: () => ipcRenderer.invoke('salvarArquivo'),
-});
-
-// Abrir aplicativo externo
-contextBridge.exposeInMainWorld('externo', {
-    rodar: (url) => ipcRenderer.invoke('appExterno', url)
-});
-
 // MIApp
 contextBridge.exposeInMainWorld('miapp', {
-    versao: (tipo) => ipcRenderer.invoke('appVersao', tipo),
-    mensagem: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, confirm),
-    novajanela: (url, width, height, resizable, menu) => ipcRenderer.invoke('appNewWindow', url, width, height, resizable, menu),
+    version: (type) => ipcRenderer.invoke('appVersao', type),
+    alert: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, false),
+    confirm: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, true),
+    newwindow: (url, width, height, resizable, menu, hide) => ipcRenderer.invoke('appNewWindow', url, width, height, resizable, menu, hide),
+    openURL: (url) => ipcRenderer.invoke('appExterno', url),
+    translate: (text) => ipcRenderer.invoke('appTraduzir', text),
+    openFile: () => ipcRenderer.invoke('abrirArquivo'),
+    saveFile: () => ipcRenderer.invoke('salvarArquivo'),
 });
