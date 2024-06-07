@@ -257,7 +257,7 @@ function miPre($value)
 function miAboutApp($texto = '', $bootstrap = false): string
 {
     global $milang;
-    $txt = '<h1>' . miTranslate('Sobre o App') . '</h1>
+    $txt = '<h1>' . miTranslate('Sobre o ') . miConfig('app', 'name') . '</h1>
 <p>' . miConfig('app', 'name') . ' ' . miConfig('app', 'version') . '</p>
 <p>' . miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name')  . '</p>
 <p>' . miTranslate('Organização:') . ' ' . miConfig('author', 'organization') . '</p>
@@ -315,22 +315,22 @@ function miCreateShortcut()
             $tplShortcut = file_get_contents(dirname(__FILE__) . '/templates/shortcut.txt');
             $tplShortcut = str_replace('{version}', miConfig('app', 'version'), $tplShortcut);
             $tplShortcut = str_replace('{name}', miConfig('app', 'name'), $tplShortcut);
-            $tplShortcut = str_replace('{description}', miConfig('app', 'description'), $tplShortcut);
+            $tplShortcut = str_replace('{description}', miTranslate(miConfig('app', 'description')), $tplShortcut);
             $tplShortcut = str_replace('{exec}', dirname(miPathRoot()) . "/" . str_replace(' ', '', strtolower(miAppName())), $tplShortcut);
             $tplShortcut = str_replace('{icon}', miPathRoot() . "/icon/" . str_replace(' ', '', strtolower(miAppName())) . ".png", $tplShortcut);
             $tplShortcut = str_replace('{categories}', miConfig('app', 'categories'), $tplShortcut);
 
             $sCreateFile = file_put_contents($sFolder . '/' . str_replace(' ', '', strtolower(miAppName())) . '.desktop', $tplShortcut);
             if ($sCreateFile) {
-                miAlert('Informação ' . miConfig('app', 'name'), 'Atalho criado no menu iniciar', 'info');
+                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Atalho criado no menu iniciar', 'info');
             } else {
-                miAlert('Informação ' . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
             }
         } else {
-            miAlert('Informação ' . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+            miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
         }
     } else {
-        miAlert('Informação ' . miConfig('app', 'name'), 'No Windows você pode criar um atalho clicando com o botão direito no executável \"' . str_replace(' ', '', strtolower(miConfig('app', 'name'))) . '.exe\" e clicando em \"Criar Atalho\"!', 'error');
+        miAlert(miTranslate('Informação ') . miConfig('app', 'name'), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável \"') . str_replace(' ', '', strtolower(miConfig('app', 'name'))) . '.exe\" e clicando em \"Criar Atalho\"!', 'error');
     }
 
     miWindowClose();
@@ -368,7 +368,7 @@ function miCheckUpdate($show = false)
             $versaonova = $matches[1];
 
             if (version_compare($versaonova, $versaoatual, '>')) {
-                miConfirm('Atualização do ' . miConfig('app', 'name'), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
+                miConfirm(miTranslate('Atualização do ') . miConfig('app', 'name'), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
                     miOpenURL($url, true);
                     if ($show) {
                         miWindowClose(true);
@@ -380,7 +380,7 @@ function miCheckUpdate($show = false)
                 });
             } else {
                 if ($show) {
-                    miAlert('Atualização do ' . miConfig('app', 'name'), 'O software já está na versão mais recente.', 'info');
+                    miAlert(miTranslate('Atualização do ') . miConfig('app', 'name'), 'O software já está na versão mais recente.', 'info');
                     miWindowClose();
                 }
             }
