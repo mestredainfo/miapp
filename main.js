@@ -116,7 +116,7 @@ const createWindow = () => {
     });
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
-    mifunctions.mifunctions(win, milang, miappNewWindow);
+    mifunctions.mifunctions(milang, miappNewWindow);
 }
 
 // Inicia o servidor embutido do PHP
@@ -170,13 +170,20 @@ function startPHPServer(win) {
         app.quit();
     }
 
+    // Environment
+    process.env.miapppathroot = path.join(getMIAppPath(), '/app');
+    process.env.miappusername = sOS.userInfo().username;
+    process.env.miappuserpath = sOS.userInfo().homedir;
+    process.env.miappplatform = sPlataform
+
+    // Servidor
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
     sPort = sListen.address().port;
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(getMIAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(getMIAppPath(), '/app/'), path.join(app.getAppPath(), '/app/router.php')], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(milang.traduzir('Erro ao iniciar o servidor PHP:'), err);
@@ -241,11 +248,12 @@ function startPHPServer(win) {
 }
 
 // Nova Janela
-function miappNewWindow(url, width, height, resizable, menu) {
+function miappNewWindow(url, width, height, resizable, menu, hide) {
     let sWidth = (width) ? width : config.app.width;
     let sHeight = (height) ? height : config.app.height;
     let sResizable = (resizable == true || resizable == false) ? resizable : config.app.resizable;
     let sMenu = (menu == true || menu == false) ? menu : config.app.menu;
+    let sHide = (hide == true || hide == false) ? hide : false;
 
     const sNewWindow = new BrowserWindow({
         width: sWidth,
@@ -256,6 +264,11 @@ function miappNewWindow(url, width, height, resizable, menu) {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
     });
+
+    if (sHide) {
+        sNewWindow.hide();
+    }
+
     sNewWindow.setMenu(null);
     sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
 
@@ -323,7 +336,7 @@ function getMenuTemplate(win, menuData) {
                         // Verifica se é uma página ou URL
                         if (menuData[key][submenuKey].page) {
                             if (menuData[key][submenuKey].newwindow) {
-                                miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu)
+                                miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu, menuData[key][submenuKey].hide)
                             } else {
                                 win.loadURL(sServerName + menuData[key][submenuKey].page);
                             }
