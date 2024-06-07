@@ -40,7 +40,7 @@ module.exports = class milang {
                 }
             }
 
-            fs.writeFileSync(path.join(dirapp, '/app/lang/lang.txt'), aLang);
+            process.env.miapplangsystem = aLang;
         } else {
             this.sLangMI = [];
             this.sLangApp = [];
