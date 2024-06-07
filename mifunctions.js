@@ -7,7 +7,7 @@
 const { ipcMain, dialog } = require('electron')
 
 module.exports = {
-    mifunctions: function (win, milang, miappNewWindow) {
+    mifunctions: function (milang, miappNewWindow) {
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
             const { canceled, filePaths } = await dialog.showOpenDialog({});
@@ -66,8 +66,13 @@ module.exports = {
         });
 
         // Abre uma nova janela personalizada
-        ipcMain.handle('appNewWindow', async (event, url, width, height, resizable, menu) => {
-            miappNewWindow(url, width, height, resizable, menu);
+        ipcMain.handle('appNewWindow', async (event, url, width, height, resizable, menu, hide) => {
+            miappNewWindow(url, width, height, resizable, menu, hide);
+        });
+
+        // Traduzir
+        ipcMain.handle('appTraduzir', async (event, text) => {
+            return milang.traduzir(text, true);
         });
     }
 }
