@@ -149,5 +149,5 @@ php/win32/*.ini-production
 # package-lock.json
 package-lock.json
 
-# app
-app/
+# apptest
+apptest/
