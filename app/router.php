@@ -18,7 +18,11 @@ if (empty(miRequestURI())) {
         } elseif (miRequestURI() == 'micheckupdate.php') {
             miCheckUpdate(true);
         } else {
-            include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
+            if (file_exists(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI())) {
+                include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
+            } else {
+                echo miTranslate('Arquivo "%s" não foi encontrado!', basename(miRequestURI()));
+            }
         }
     } else {
         return false;
