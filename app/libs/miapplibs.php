@@ -214,7 +214,6 @@ function miWindowClose($inscript = false)
     }
 }
 
-/* Verifica Arrays */
 function miVerificarArray(string $haystack, mixed $needle): bool
 {
     /* Gera array caso for detectado uma string e não um array */
@@ -230,6 +229,10 @@ function miVerificarArray(string $haystack, mixed $needle): bool
     }
 
     return false;
+}
+
+function miCheckArray(string $keyword,mixed $values) {
+    miVerificarArray($keyword, $values);
 }
 
 function miRemoveAccents(string $valor): string
