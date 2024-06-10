@@ -40,10 +40,16 @@ if (file_exists($miLangPath)) {
     }
 }
 
-function miTranslate(string $text): string
+function miTranslate(string $text, string ...$values): string
 {
     global $miLang;
-    return (empty($miLang[$text])) ? $text : $miLang[$text];
+
+    if (empty($values)) {
+        $sText = $text;
+    } else {
+        $sText = sprintf($text, ...$values);
+    }
+    return (empty($miLang[$sText])) ? $sText : $miLang[$sText];
 }
 
 /* Config */
@@ -231,7 +237,8 @@ function miVerificarArray(string $haystack, mixed $needle): bool
     return false;
 }
 
-function miCheckArray(string $keyword,mixed $values) {
+function miCheckArray(string $keyword, mixed $values)
+{
     miVerificarArray($keyword, $values);
 }
 
@@ -325,15 +332,15 @@ function miCreateShortcut()
 
             $sCreateFile = file_put_contents($sFolder . '/' . str_replace(' ', '', strtolower(miAppName())) . '.desktop', $tplShortcut);
             if ($sCreateFile) {
-                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Atalho criado no menu iniciar', 'info');
+                miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Atalho criado no menu iniciar', 'info');
             } else {
-                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+                miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Não foi possível criar o atalho no menu iniciar!', 'error');
             }
         } else {
-            miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+            miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Não foi possível criar o atalho no menu iniciar!', 'error');
         }
     } else {
-        miAlert(miTranslate('Informação ') . miConfig('app', 'name'), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável \"') . str_replace(' ', '', strtolower(miConfig('app', 'name'))) . '.exe\" e clicando em \"Criar Atalho\"!', 'error');
+        miAlert(miTranslate('Informação %s', miConfig('app', 'name')), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável "%s.exe" e clicando em "Criar Atalho"!', str_replace(' ', '', strtolower(miConfig('app', 'name')))), 'error');
     }
 
     miWindowClose();
@@ -360,7 +367,7 @@ function miCheckUpdate($show = false)
         $html = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            throw new Exception(miTranslate('Erro ao buscar os dados: ') . curl_error($ch));
+            throw new Exception(miTranslate('Erro ao buscar os dados: %s', curl_error($ch)));
         }
 
         curl_close($ch);
@@ -371,7 +378,7 @@ function miCheckUpdate($show = false)
             $versaonova = $matches[1];
 
             if (version_compare($versaonova, $versaoatual, '>')) {
-                miConfirm(miTranslate('Atualização do ') . miConfig('app', 'name'), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
+                miConfirm(miTranslate('Atualização do %s', miConfig('app', 'name')), miTranslate('Deseja baixar a nova versão?'), 'question', function () use ($url, $show) {
                     miOpenURL($url, true);
                     if ($show) {
                         miWindowClose(true);
@@ -383,13 +390,13 @@ function miCheckUpdate($show = false)
                 });
             } else {
                 if ($show) {
-                    miAlert(miTranslate('Atualização do ') . miConfig('app', 'name'), 'O software já está na versão mais recente.', 'info');
+                    miAlert(miTranslate('Atualização do %s', miConfig('app', 'name')), 'O software já está na versão mais recente.', 'info');
                     miWindowClose();
                 }
             }
         }
     } catch (Exception $error) {
-        echo miTranslate('Erro ao buscar os dados: ') . $error->getMessage();
+        echo miTranslate('Erro ao buscar os dados: %s', $error->getMessage());
     }
 }
 
