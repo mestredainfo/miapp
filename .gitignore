@@ -151,3 +151,6 @@ package-lock.json
 
 # apptest
 apptest/
+
+# reportupdate
+reportupdate.txt
