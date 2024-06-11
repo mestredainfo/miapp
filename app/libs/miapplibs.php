@@ -207,7 +207,7 @@ function miOpenURL(string $url, bool $inscript = false)
     }
 }
 
-function miWindowClose($inscript = false)
+function miWindowClose(bool $inscript = false)
 {
     if (!$inscript) {
         echo '<script>';
@@ -260,35 +260,53 @@ function miRemoveSpecialCharacters(string $valor): string
 /* Exibe arrays formatados com tag pre */
 function miPre($value)
 {
-    printf('<pre>%s</pre>', print_r($value, true));
+    $tpl = new miHTML();
+    echo $tpl->pre(print_r($value, true));
 }
 
 // Sobre o App
 function miAboutApp($texto = '', $bootstrap = false): string
 {
-    global $milang;
-    $txt = '<h1>' . miTranslate('Sobre o ') . miConfig('app', 'name') . '</h1>
-<p>' . miConfig('app', 'name') . ' ' . miConfig('app', 'version') . '</p>
-<p>' . miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name')  . '</p>
-<p>' . miTranslate('Organização:') . ' ' . miConfig('author', 'organization') . '</p>
-<p>Site: <a href="javascript:window.miapp.openURL(\'' . miConfig('homepage') . '\');">' . str_replace(['http://', 'https://'], '', miConfig('homepage')) . '</a></p>
-
-<p>' . miConfig('copyright') . '</p>
-
-<p>' . miTranslate('Licença:') . ' ' . miConfig('license') . '</p>
-
-<hr class="border border-primary border-3 opacity-75">
-
-<h3>' . miTranslate('Recursos de Terceiros Utilizados') . '</h3>
-
-<p><strong>MIApp:</strong> <a href="javascript:window.miapp.openURL(\'https://mestredainfo.wordpress.com/miapp/\');">mestredainfo.wordpress.com/miapp/</a></p>
-
-<p><strong>ElectronJS:</strong> <a href="javascript:window.miapp.openURL(\'https://www.electronjs.org\');">electronjs.org</a></p>
-
-<p><strong>PHP:</strong> <a href="javascript:window.miapp.openURL(\'https://www.php.net\');">php.net</a></p>';
+    $tpl = new miHTML();
+    $txt = $tpl->h1(miTranslate('Sobre o %s', miConfig('app', 'name')));
+    $txt .= $tpl->p(miConfig('app', 'name') . ' ' . miConfig('app', 'version'));
+    $txt .= $tpl->p(miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name'));
+    $txt .= $tpl->p(miTranslate('Organização:') . ' ' . miConfig('author', 'organization'));
+    $txt .= $tpl->p('Site: ', $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => "javascript:window.miapp.openURL('" . miConfig('homepage') . "')"]));
+    $txt .= $tpl->p(miConfig('copyright'));
+    $txt .= $tpl->p(miConfig(miTranslate('Licença:') . ' ' . miConfig('license')));
+    $txt .= $tpl->hr('', ['class' => 'border border-primary border-3 opacity-75']);
+    $txt .= $tpl->h3(miTranslate('Recursos de Terceiros Utilizados'));
+    $txt .= $tpl->p(
+        $tpl->strong('MIApp: '),
+        $tpl->a(
+            'mestredainfo.wordpress.com/miapp/',
+            ['href' => "javascript:window.miapp.openURL('https://mestredainfo.wordpress.com/miapp/')"]
+        )
+    );
+    $txt .= $tpl->p(
+        $tpl->strong('ElectronJS: '),
+        $tpl->a(
+            'electronjs.org',
+            ['href' => "javascript:window.miapp.openURL('https://www.electronjs.org')"]
+        )
+    );
+    $txt .= $tpl->p(
+        $tpl->strong('PHP: '), 
+        $tpl->a(
+            'php.net',
+            ['href' => "javascript:window.miapp.openURL('https://www.php.net')"]
+        )
+    );
 
     if ($bootstrap) {
-        $txt .= '<p><strong>Bootstrap:</strong> <a href="javascript:window.miapp.openURL(\'https://getbootstrap.com\');">getbootstrap.com</a></p>';
+        $txt .= $tpl->p(
+            $tpl->strong('Bootstrap: '), 
+            $tpl->a(
+                'getbootstrap.com',
+                ['href' => "javascript:window.miapp.openURL('https://getbootstrap.com')"]
+            )
+        );
     }
 
     $txt .= $texto;
@@ -405,3 +423,5 @@ include_once(dirname(__FILE__) . '/database/select.php');
 include_once(dirname(__FILE__) . '/database/insert.php');
 include_once(dirname(__FILE__) . '/database/update.php');
 include_once(dirname(__FILE__) . '/database/delete.php');
+
+include_once(dirname(__FILE__) . '/template/mihtml.php');
