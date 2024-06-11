@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld('miapp', {
     confirm: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, true),
     newwindow: (url, width, height, resizable, menu, hide) => ipcRenderer.invoke('appNewWindow', url, width, height, resizable, menu, hide),
     openURL: (url) => ipcRenderer.invoke('appExterno', url),
-    translate: (text) => ipcRenderer.invoke('appTraduzir', text),
+    translate: (text, values) => ipcRenderer.invoke('appTraduzir', text, values),
     openFile: () => ipcRenderer.invoke('abrirArquivo'),
     saveFile: () => ipcRenderer.invoke('salvarArquivo'),
 });

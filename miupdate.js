@@ -38,13 +38,13 @@ module.exports = class milang {
                 });
 
                 req.on('error', (error) => {
-                    reject(new Error(this.sMILang.traduzir('Erro ao fazer a solicitação HTTP: ') + error.message));
+                    reject(new Error(this.sMILang.traduzirMI('Erro ao fazer a solicitação HTTP: %s', error.message)));
                 });
 
                 req.end();
             });
         } catch (error) {
-            console.error(this.sMILang.traduzir('Erro ao buscar os dados:'), error);
+            console.error(this.sMILang.traduzirMI('Erro ao buscar os dados:'), error);
         }
     }
 
@@ -56,9 +56,9 @@ module.exports = class milang {
                 if (versaonova > versaoatual) {
                     const options = {
                         type: 'question',
-                        buttons: [this.sMILang.traduzir('Mais tarde'), this.sMILang.traduzir('Atualizar Agora')],
-                        title: this.sMILang.traduzir('Atualização do MIApp'),
-                        message: this.sMILang.traduzir('Deseja baixar a nova versão do MIApp?') + "\n" + this.sMILang.traduzir('A versão ') + versaonova + this.sMILang.traduzir(' já está disponível para baixar.')
+                        buttons: [this.sMILang.traduzirMI('Mais tarde'), this.sMILang.traduzirMI('Atualizar Agora')],
+                        title: this.sMILang.traduzirMI('Atualização do MIApp'),
+                        message: this.sMILang.traduzirMI('Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.', versaonova)
                     };
 
                     require('electron').dialog.showMessageBox(null, options).then(retorno => {
@@ -69,7 +69,7 @@ module.exports = class milang {
                 }
             })
             .catch((error) => {
-                console.error(this.sMILang.traduzir('Erro ao buscar os dados:'), error);
+                console.error(this.sMILang.traduzirMI('Erro ao buscar os dados:'), error);
             });
     }
 }

@@ -284,9 +284,17 @@ module.exports = class milang {
         return (sCode[valor]) ? sCode[valor] : 'en';
     }
 
-    traduzir(texto, app) {
-        if (app) {
+    traduzirApp(texto, values) {
+        if (values) {
+            return require('util').format(texto, values);
+        } else {
             return (this.sLangApp[texto]) ? this.sLangApp[texto] : texto
+        }
+    }
+
+    traduzirMI(texto, values) {
+        if (values) {
+            return require('util').format(texto, values);
         } else {
             return (this.sLangMI[texto]) ? this.sLangMI[texto] : texto
         }

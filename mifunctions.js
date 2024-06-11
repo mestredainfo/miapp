@@ -47,11 +47,11 @@ module.exports = {
         // Função para caixa de alerta
         ipcMain.handle('appMessage', async (event, title, msg, type, confirm) => {
             let sButtons;
-
+            
             if (confirm) {
-                sButtons = [milang.traduzir('Continuar'), milang.traduzir('Cancelar')];
+                sButtons = [milang.traduzirMI('Continuar'), milang.traduzirMI('Cancelar')];
             } else {
-                sButtons = [milang.traduzir('Continuar')];
+                sButtons = [milang.traduzirMI('Continuar')];
             }
 
             let options = {
@@ -59,8 +59,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: milang.traduzir(title, true),
-                message: milang.traduzir(msg, true)
+                title: title,
+                message: msg
             }
             return dialog.showMessageBoxSync(null, options);
         });
@@ -71,8 +71,8 @@ module.exports = {
         });
 
         // Traduzir
-        ipcMain.handle('appTraduzir', async (event, text) => {
-            return milang.traduzir(text, true);
+        ipcMain.handle('appTraduzir', async (event, text, values) => {
+            return milang.traduzirApp(text, values);
         });
     }
 }
