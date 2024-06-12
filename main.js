@@ -41,6 +41,13 @@ const miupdates = require(path.join(app.getAppPath(), '/miupdate.js'));
 const miupdate = new miupdates(milang);
 miupdate.checkUpdate();
 
+if (!fs.existsSync(path.join(getMIAppPath(), '/app/config/config.json'))) {
+    console.log(milang.miappTraduzir('Não foi possível encontrar o arquivo %s', '"config.json"'));
+    
+    app.quit();
+    return false;
+}
+
 const config = (miappPath !== 'retorno') ? JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8')) : '';
 
 if (miappPath !== 'retorno') {
