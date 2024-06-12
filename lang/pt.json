@@ -1,5 +1,6 @@
 {
     "Exceção não tratada:": "Exceção não tratada:",
+    "Não foi possível encontrar o arquivo %s": "Não foi possível encontrar o arquivo %s",
     "Erro ao ler o arquivo JSON": "Erro ao ler o arquivo JSON",
     "Erro ao iniciar o servidor PHP:": "Erro ao iniciar o servidor PHP:",
     "O servidor PHP foi encerrado com o código:": "O servidor PHP foi encerrado com o código:",
