@@ -290,7 +290,8 @@ function miCheckArray(string $keyword, mixed $values): bool
     return false;
 }
 
-function miGETArray(array $values, string ...$names): string|array {
+function miGETArray(array $values, string ...$names): string|array
+{
     $sValor = $values;
 
     foreach ($names as $value) {
@@ -324,30 +325,45 @@ function miPre($value)
 // Sobre o App
 function miAboutApp($texto = '', $bootstrap = false): string
 {
-    global $milang;
-    $txt = '<h1>' . miTranslate('Sobre o ') . miConfig('app', 'name') . '</h1>
-<p>' . miConfig('app', 'name') . ' ' . miConfig('app', 'version') . '</p>
-<p>' . miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name')  . '</p>
-<p>' . miTranslate('Organização:') . ' ' . miConfig('author', 'organization') . '</p>
-<p>Site: <a href="javascript:window.miapp.openURL(\'' . miConfig('homepage') . '\');">' . str_replace(['http://', 'https://'], '', miConfig('homepage')) . '</a></p>
+    $tpl = new miHTML();
 
-<p>' . miConfig('copyright') . '</p>
+    $txt = $tpl->div(
+        '',
+        $tpl->h1(miTranslate('Sobre o %s', miConfig('app', 'name'))),
+        $tpl->p(miConfig('app', 'name') . ' ' . miConfig('app', 'version')),
+        $tpl->p(miTranslate('Desenvolvido por: %s', miConfig('author', 'name'))),
+        $tpl->p(miTranslate('Organização: %s', miConfig('author', 'organization'))),
+        $tpl->p(
+            'Site: ',
+            $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => 'javascript:' . miOpenURL(miConfig('homepage'), true)])
+        ),
+        $tpl->p(miConfig('copyright')),
+        $tpl->p(miTranslate('Licença: %s', miConfig('license'))),
 
-<p>' . miTranslate('Licença:') . ' ' . miConfig('license') . '</p>
+        $tpl->hr('', ['class' => 'border border-primary border-3 opacity-75']),
 
-<hr class="border border-primary border-3 opacity-75">
-
-<h3>' . miTranslate('Recursos de Terceiros Utilizados') . '</h3>
-
-<p><strong>MIApp:</strong> <a href="javascript:window.miapp.openURL(\'https://mestredainfo.wordpress.com/miapp/\');">mestredainfo.wordpress.com/miapp/</a></p>
-
-<p><strong>ElectronJS:</strong> <a href="javascript:window.miapp.openURL(\'https://www.electronjs.org\');">electronjs.org</a></p>
-
-<p><strong>PHP:</strong> <a href="javascript:window.miapp.openURL(\'https://www.php.net\');">php.net</a></p>';
-
-    if ($bootstrap) {
-        $txt .= '<p><strong>Bootstrap:</strong> <a href="javascript:window.miapp.openURL(\'https://getbootstrap.com\');">getbootstrap.com</a></p>';
-    }
+        $tpl->h3(miTranslate('Recursos de Terceiros Utilizados')),
+        $tpl->p(
+            '',
+            $tpl->strong('MIApp:'),
+            ' ',
+            $tpl->a('mestredainfo.wordpress.com/miapp/', ['href' => 'javascript:' . miOpenURL('https://mestredainfo.wordpress.com/miapp/', true)])
+        ),
+        $tpl->p(
+            '',
+            $tpl->strong('PHP:'),
+            ' ',
+            $tpl->a('php.net', ['href' => 'javascript:' . miOpenURL('https://www.php.net', true)])
+        ),
+        $tpl->if($bootstrap == true, function () use ($tpl) {
+            return $tpl->p(
+                '',
+                $tpl->strong('Bootstrap:'),
+                ' ',
+                $tpl->a('getbootstrap.com', ['href' => 'javascript:' . miOpenURL('https://getbootstrap.com', true)])
+            );
+        })
+    );
 
     $txt .= $texto;
 
