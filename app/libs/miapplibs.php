@@ -290,6 +290,16 @@ function miCheckArray(string $keyword, mixed $values): bool
     return false;
 }
 
+function miGETArray(array $values, string ...$names): string|array {
+    $sValor = $values;
+
+    foreach ($names as $value) {
+        $sValor = (empty($sValor[$value])) ? '' : $sValor[$value];
+    }
+
+    return $sValor;
+}
+
 function miRemoveAccents(string $valor): string
 {
     $array1 = array("á", "à", "â", "ã", "ä", "é", "è", "ê", "ë", "í", "ì", "î", "ï", "ó", "ò", "ô", "õ", "ö", "ú", "ù", "û", "ü", "ç", "Á", "À", "Â", "Ã", "Ä", "É", "È", "Ê", "Ë", "Í", "Ì", "Î", "Ï", "Ó", "Ò", "Ô", "Õ", "Ö", "Ú", "Ù", "Û", "Ü", "Ç");

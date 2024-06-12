@@ -10,16 +10,16 @@ include_once(dirname(__FILE__) . '/libs/miapplibs.php');
 if (empty(miRequestURI())) {
     include_once(miPathRoot() . '/home.php');
 } else {
-    $p = pathinfo(miRequestURI());
+    $miPathInfo = pathinfo(miRequestURI());
 
-    if (!empty($p['extension']) && $p['extension'] == 'php') {
+    if (miGETArray($miPathInfo, 'extension') == 'php') {
         if (miRequestURI() == 'micreateshortcut.php') {
             miCreateShortcut();
         } elseif (miRequestURI() == 'micheckupdate.php') {
             miCheckUpdate(true);
         } else {
             if (file_exists(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI())) {
-            include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
+                include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
             } else {
                 echo miappTranslate('File "%s" was not found!', basename(miRequestURI()));
             }
