@@ -34,7 +34,7 @@ const milangs = require(path.join(app.getAppPath(), '/milang.js'));
 const milang = new milangs(sPlataform, app.getAppPath(), miappPath);
 
 process.on('uncaughtException', (error) => {
-    console.error(milang.traduzirMI('Exceção não tratada:'), error);
+    console.error(milang.miappTraduzir('Exceção não tratada:'), error);
 });
 
 const miupdates = require(path.join(app.getAppPath(), '/miupdate.js'));
@@ -60,7 +60,7 @@ let sPort;
 function createMenu(sWin) {
     fs.readFile(path.join(getMIAppPath(), '/app/menu/menu.json'), (err, data) => {
         if (err) {
-            console.error(milang.traduzirMI('Erro ao ler o arquivo JSON'), err);
+            console.error(milang.miappTraduzir('Erro ao ler o arquivo JSON'), err);
             return;
         }
 
@@ -186,11 +186,11 @@ function startPHPServer(win) {
     phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(getMIAppPath(), '/app/'), path.join(app.getAppPath(), '/app/router.php')], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
-        console.error(milang.traduzirMI('Erro ao iniciar o servidor PHP:'), err);
+        console.error(milang.miappTraduzir('Erro ao iniciar o servidor PHP:'), err);
     });
 
     phpServerProcess.on('close', (code) => {
-        console.log(milang.traduzirMI('O servidor PHP foi encerrado com o código:'), code);
+        console.log(milang.miappTraduzir('O servidor PHP foi encerrado com o código:'), code);
     });
 
     if (sPlataform == 'linux') {
@@ -198,19 +198,19 @@ function startPHPServer(win) {
             let lsof = spawn('lsof', ['-ti:' + sPort]);
 
             lsof.stdout.on('data', (data) => {
-                console.log(milang.traduzirMI('Servidor PHP iniciado com sucesso.'));
+                console.log(milang.miappTraduzir('Servidor PHP iniciado com sucesso.'));
                 sServerName = `http://localhost:${sPort}/`;
                 win.loadURL(sServerName);
                 clearInterval(checkPortL);
             });
 
             lsof.stderr.on('data', (data) => {
-                console.error(milang.traduzirMI('Erro ao executar lsof:'), data);
+                console.error(milang.miappTraduzir('Erro ao executar lsof:'), data);
             });
 
             lsof.on('close', (code) => {
                 if (code !== 0) {
-                    console.error(milang.traduzirMI('lsof saiu com código de erro'), code);
+                    console.error(milang.miappTraduzir('lsof saiu com código de erro'), code);
                 }
             });
         }, 1000);
@@ -224,18 +224,18 @@ function startPHPServer(win) {
             });
 
             netstat.stderr.on('data', (data) => {
-                console.error(milang.traduzirMI('Erro ao executar netstat:'), data);
+                console.error(milang.miappTraduzir('Erro ao executar netstat:'), data);
             });
 
             netstat.on('close', (code) => {
                 if (code !== 0) {
-                    console.error(milang.traduzirMI('netstat saiu com código de erro'), code);
+                    console.error(milang.miappTraduzir('netstat saiu com código de erro'), code);
                 }
                 findstr.stdin.end();
             });
 
             findstr.stdout.on('data', (data) => {
-                console.log(milang.traduzirMI('Servidor PHP iniciado com sucesso.'));
+                console.log(milang.miappTraduzir('Servidor PHP iniciado com sucesso.'));
                 sServerName = `http://localhost:${sPort}/`;
                 win.loadURL(sServerName);
                 clearInterval(checkPortW);
@@ -293,10 +293,10 @@ function getMenuTemplate(win, menuData) {
 
     if (config.dev.menu) {
         let devMenu = {
-            label: milang.traduzirMI('Dev'),
+            label: milang.miappTraduzir('Dev'),
             submenu: [
                 {
-                    label: milang.traduzirMI('Refresh'),
+                    label: milang.miappTraduzir('Refresh'),
                     accelerator: 'F5',
                     click: () => {
                         win.reload();
@@ -306,7 +306,7 @@ function getMenuTemplate(win, menuData) {
                     type: 'separator'
                 },
                 {
-                    label: milang.traduzirMI('DevTools'),
+                    label: milang.miappTraduzir('DevTools'),
                     accelerator: 'F12',
                     click: () => {
                         win.openDevTools();
@@ -317,38 +317,6 @@ function getMenuTemplate(win, menuData) {
 
         template.push(devMenu);
     }
-
-    let miappMenu = {
-        label: milang.traduzirMI('MIApp'),
-        submenu: [
-            {
-                label: milang.traduzirMI('Verificar Atualização'),
-                click: () => {
-                    //
-                }
-            },
-            {
-                type: 'separator'
-            },
-            {
-                label: milang.traduzirMI('Apoie o MIApp'),
-                click: () => {
-                    //
-                }
-            },            {
-                type: 'separator'
-            },
-            {
-                label: milang.traduzirMI('Sobre o MIApp'),
-                accelerator: 'F12',
-                click: () => {
-                    //
-                }
-            }
-        ]
-    }
-
-    template.push(miappMenu);
 
     // Loop sobre as chaves do objeto JSON
     Object.keys(menuData).forEach((key) => {
@@ -362,7 +330,7 @@ function getMenuTemplate(win, menuData) {
                 menuItem = { type: 'separator' };
             } else {
                 menuItem = {
-                    label: milang.traduzirApp(submenuKey),
+                    label: milang.traduzir(submenuKey),
                     accelerator: menuData[key][submenuKey].key,
                     click: () => {
                         // Verifica se é uma página ou URL
@@ -385,7 +353,7 @@ function getMenuTemplate(win, menuData) {
         });
 
         // Adiciona o submenu ao item do menu principal
-        template.push({ label: milang.traduzirApp(key), submenu });
+        template.push({ label: milang.traduzir(key), submenu });
     });
 
     return template;
@@ -398,28 +366,28 @@ function killProcessByPort(port) {
         phpServerClose = spawn('lsof', ['-ti:' + port, '|', 'xargs', 'kill'], { shell: true });
 
         phpServerClose.stderr.on('data', (data) => {
-            console.log(milang.traduzirMI('Erro ao encerrar o processo na porta:'), sPort);
+            console.log(milang.miappTraduzir('Erro ao encerrar o processo na porta:'), sPort);
             return;
         });
 
         phpServerClose.on('error', (err) => {
-            console.error(milang.traduzirMI('Erro ao encerrar o processo na porta:'), port, err.message);
+            console.error(milang.miappTraduzir('Erro ao encerrar o processo na porta:'), port, err.message);
             return;
         });
 
         phpServerClose.on('close', (code) => {
-            console.log(milang.traduzirMI('O servidor PHP foi encerrado com o código:'), code);
+            console.log(milang.miappTraduzir('O servidor PHP foi encerrado com o código:'), code);
             return;
         });
 
-        console.log(milang.traduzirMI('Processo na porta'), port, milang.traduzirMI('encerrado com sucesso.'));
+        console.log(milang.miappTraduzir('Processo na porta'), port, milang.traduzir('encerrado com sucesso.'));
     }
 }
 
 function stopPHPServer() {
     if (phpServerProcess) {
         killProcessByPort(sPort); // Encerra todos os processos do PHP que estão sob a mesma porta
-        console.log(milang.traduzirMI('Servidor PHP parado.'));
+        console.log(milang.miappTraduzir('Servidor PHP parado.'));
     }
 }
 

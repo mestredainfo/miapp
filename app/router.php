@@ -19,9 +19,9 @@ if (empty(miRequestURI())) {
             miCheckUpdate(true);
         } else {
             if (file_exists(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI())) {
-                include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
+            include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
             } else {
-                echo miTranslate('Arquivo "%s" não foi encontrado!', basename(miRequestURI()));
+                echo miappTranslate('File "%s" was not found!', basename(miRequestURI()));
             }
         }
     } else {

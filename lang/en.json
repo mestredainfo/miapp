@@ -20,9 +20,7 @@
     "Mais tarde": "Later",
     "Atualizar Agora": "Update now",
     "Atualização do MIApp": "MIApp Update",
-    "Deseja baixar a nova versão do MIApp?": "Want to download the new version of MIApp?",
-    "A versão ": "The version ",
-    " já está disponível para baixar.": " is now available to download.",
+    "Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.": "Want to download the new version of MIApp?\nThe version %s is now available to download.",
     "Erro ao buscar os dados:": "Error when searching for data:",
     "Erro ao fazer a solicitação HTTP: ": "Error when making the request http: "
 }

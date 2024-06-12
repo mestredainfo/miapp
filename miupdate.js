@@ -4,7 +4,7 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-module.exports = class milang {
+module.exports = class miupdate {
     constructor(milang) {
         this.sMILang = milang
     }
@@ -38,13 +38,13 @@ module.exports = class milang {
                 });
 
                 req.on('error', (error) => {
-                    reject(new Error(this.sMILang.traduzirMI('Erro ao fazer a solicitação HTTP: %s', error.message)));
+                    reject(new Error(this.sMILang.miappTraduzir('Erro ao fazer a solicitação HTTP: %s', error.message)));
                 });
 
                 req.end();
             });
         } catch (error) {
-            console.error(this.sMILang.traduzirMI('Erro ao buscar os dados:'), error);
+            console.error(this.sMILang.miappTraduzir('Erro ao buscar os dados:'), error);
         }
     }
 
@@ -56,9 +56,9 @@ module.exports = class milang {
                 if (versaonova > versaoatual) {
                     const options = {
                         type: 'question',
-                        buttons: [this.sMILang.traduzirMI('Mais tarde'), this.sMILang.traduzirMI('Atualizar Agora')],
-                        title: this.sMILang.traduzirMI('Atualização do MIApp'),
-                        message: this.sMILang.traduzirMI('Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.', versaonova)
+                        buttons: [this.sMILang.miappTraduzir('Mais tarde'), this.sMILang.miappTraduzir('Atualizar Agora')],
+                        title: this.sMILang.miappTraduzir('Atualização do MIApp'),
+                        message: this.sMILang.miappTraduzir('Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.', versaonova)
                     };
 
                     require('electron').dialog.showMessageBox(null, options).then(retorno => {
@@ -69,7 +69,7 @@ module.exports = class milang {
                 }
             })
             .catch((error) => {
-                console.error(this.sMILang.traduzirMI('Erro ao buscar os dados:'), error);
+                console.error(this.sMILang.miappTraduzir('Erro ao buscar os dados:'), error);
             });
     }
 }
