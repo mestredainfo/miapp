@@ -400,7 +400,7 @@ app.whenReady().then(() => {
             if (BrowserWindow.getAllWindows().length === 0) createWindow()
         })
     }
-})
+});
 
 // Para sair do aplicativo no Windows e Linux
 // Se for MACOS não roda esse comando
@@ -409,7 +409,7 @@ app.on('window-all-closed', () => {
         stopPHPServer();
         app.quit();
     }
-})
+});
 
 app.on('before-quit', () => {
     stopPHPServer();
