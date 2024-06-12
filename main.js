@@ -89,6 +89,7 @@ const createWindow = () => {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
     });
+    
     win.setMenu(null);
     startPHPServer(win); // Inicie o servidor PHP
 
