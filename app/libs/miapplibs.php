@@ -40,10 +40,10 @@ if (file_exists($miLangPath)) {
     }
 }
 
-function miTranslate(string $text): string
+function miTranslate(string $text, string ...$values): string
 {
     global $miLang;
-    return (empty($miLang[$text])) ? $text : $miLang[$text];
+    return (empty($miLang[$text])) ? sprintf($text, ...$values) : sprintf($miLang[$text], ...$values);
 }
 
 /* Config */
@@ -125,13 +125,11 @@ function miIsLinux(): bool
 /* Exibe Alertas */
 function miAlert(string $title, string $message, string $type, bool $inscript = false)
 {
-    global $milang;
-
     if (!$inscript) {
         echo '<script>';
     }
 
-    echo sprintf("window.miapp.alert('%s', '%s', '%s');", miTranslate($title), miTranslate($message), $type);
+    echo sprintf("window.miapp.alert('%s', '%s', '%s');", $title, $message, $type);
 
     if (!$inscript) {
         echo '</script>';
@@ -141,12 +139,11 @@ function miAlert(string $title, string $message, string $type, bool $inscript = 
 /* Exibe Confirmação */
 function miConfirm(string $title, string $message, string $type, mixed $functionContinue, mixed $functionCancel, bool $inscript = false)
 {
-    global $milang;
     if (!$inscript) {
         echo '<script>';
     }
 
-    echo "window.miapp.confirm('" . miTranslate($title) . "', '" . miTranslate($message) . "', '$type', true).then((result) => {
+    echo "window.miapp.confirm('" . $title . "', '" . $message . "', '$type', true).then((result) => {
         console.log(result);
         if (result) {
             ";
@@ -256,30 +253,44 @@ function miPre($value)
 // Sobre o App
 function miAboutApp($texto = '', $bootstrap = false): string
 {
-    global $milang;
-    $txt = '<h1>' . miTranslate('Sobre o ') . miConfig('app', 'name') . '</h1>
-<p>' . miConfig('app', 'name') . ' ' . miConfig('app', 'version') . '</p>
-<p>' . miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name')  . '</p>
-<p>' . miTranslate('Organização:') . ' ' . miConfig('author', 'organization') . '</p>
-<p>Site: <a href="javascript:window.miapp.openURL(\'' . miConfig('homepage') . '\');">' . str_replace(['http://', 'https://'], '', miConfig('homepage')) . '</a></p>
-
-<p>' . miConfig('copyright') . '</p>
-
-<p>' . miTranslate('Licença:') . ' ' . miConfig('license') . '</p>
-
-<hr class="border border-primary border-3 opacity-75">
-
-<h3>' . miTranslate('Recursos de Terceiros Utilizados') . '</h3>
-
-<p><strong>MIApp:</strong> <a href="javascript:window.miapp.openURL(\'https://mestredainfo.wordpress.com/miapp/\');">mestredainfo.wordpress.com/miapp/</a></p>
-
-<p><strong>ElectronJS:</strong> <a href="javascript:window.miapp.openURL(\'https://www.electronjs.org\');">electronjs.org</a></p>
-
-<p><strong>PHP:</strong> <a href="javascript:window.miapp.openURL(\'https://www.php.net\');">php.net</a></p>';
-
-    if ($bootstrap) {
-        $txt .= '<p><strong>Bootstrap:</strong> <a href="javascript:window.miapp.openURL(\'https://getbootstrap.com\');">getbootstrap.com</a></p>';
-    }
+    $tpl = new miHTML();
+    $txt = $tpl->div(
+        '',
+        $tpl->h1(miTranslate('Sobre o %s', miConfig('app', 'name'))),
+        $tpl->p(miConfig('app', 'name') . ' ' . miconfig('app', 'version')),
+        $tpl->p(miTranslate('Desenvolvido por: %s', miConfig('author', 'name'))),
+        $tpl->p(miTranslate('Organização: %s', miConfig('author', 'organization'))),
+        $tpl->p(
+            'Site: ',
+            $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => miOpenURL(miConfig('homepage'), true)])
+        ),
+        $tpl->p(miConfig('copyright')),
+        $tpl->p(miTranslate('Licença: %s', miConfig('license'))),
+        $tpl->hr('', ['class' => 'border border-primary border-3 opacity-75']),
+        $tpl->h3(miTranslate('Recursos de Terceiros Utilizados')),
+        $tpl->p(
+            '',
+            $tpl->strong('MIApp: '),
+            $tpl->a('www.mestredainfo.com.br/search/label/Apps', ['href' => 'https://www.mestredainfo.com.br/search/label/Apps'])
+        ),
+        $tpl->p(
+            '',
+            $tpl->strong('ElectronJS: '),
+            $tpl->a('electronjs.org', ['href' => 'https://www.electronjs.org'])
+        ),
+        $tpl->p(
+            '',
+            $tpl->strong('PHP: '),
+            $tpl->a('php.net', ['href' => 'https://www.php.net'])
+        ),
+        $tpl->if($bootstrap, function () use ($tpl) {
+            $tpl->p(
+                '',
+                $tpl->strong('Bootstrap: '),
+                $tpl->a('getbootstrap.com', ['href' => 'https://getbootstrap.com'])
+            );
+        })
+    );
 
     $txt .= $texto;
 
@@ -322,15 +333,15 @@ function miCreateShortcut()
 
             $sCreateFile = file_put_contents($sFolder . '/' . str_replace(' ', '', strtolower(miAppName())) . '.desktop', $tplShortcut);
             if ($sCreateFile) {
-                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Atalho criado no menu iniciar', 'info');
+                miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Atalho criado no menu iniciar', 'info');
             } else {
-                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+                miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Não foi possível criar o atalho no menu iniciar!', 'error');
             }
         } else {
-            miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+            miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Não foi possível criar o atalho no menu iniciar!', 'error');
         }
     } else {
-        miAlert(miTranslate('Informação ') . miConfig('app', 'name'), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável \"') . str_replace(' ', '', strtolower(miConfig('app', 'name'))) . '.exe\" e clicando em \"Criar Atalho\"!', 'error');
+        miAlert(miTranslate('Informação %s', miConfig('app', 'name')), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável \"%s.exe\" e clicando em \"Criar Atalho\"!'), 'error');
     }
 
     miWindowClose();
@@ -357,7 +368,7 @@ function miCheckUpdate($show = false)
         $html = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            throw new Exception(miTranslate('Erro ao buscar os dados: ') . curl_error($ch));
+            throw new Exception(miTranslate('Erro ao buscar os dados: %s', curl_error($ch)));
         }
 
         curl_close($ch);
@@ -368,7 +379,7 @@ function miCheckUpdate($show = false)
             $versaonova = $matches[1];
 
             if (version_compare($versaonova, $versaoatual, '>')) {
-                miConfirm(miTranslate('Atualização do ') . miConfig('app', 'name'), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
+                miConfirm(miTranslate('Atualização do %s', miConfig('app', 'name')), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
                     miOpenURL($url, true);
                     if ($show) {
                         miWindowClose(true);
@@ -380,13 +391,13 @@ function miCheckUpdate($show = false)
                 });
             } else {
                 if ($show) {
-                    miAlert(miTranslate('Atualização do ') . miConfig('app', 'name'), 'O software já está na versão mais recente.', 'info');
+                    miAlert(miTranslate('Atualização do %s', miConfig('app', 'name')), 'O software já está na versão mais recente.', 'info');
                     miWindowClose();
                 }
             }
         }
     } catch (Exception $error) {
-        echo miTranslate('Erro ao buscar os dados: ') . $error->getMessage();
+        echo miTranslate('Erro ao buscar os dados: %s', $error->getMessage());
     }
 }
 
