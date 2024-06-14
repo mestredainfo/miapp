@@ -211,7 +211,9 @@ function miWindowClose($inscript = false)
     }
 }
 
-/* Verifica Arrays */
+/**
+ * @deprecated
+ */
 function miVerificarArray(string $haystack, mixed $needle): bool
 {
     /* Gera array caso for detectado uma string e não um array */
@@ -227,6 +229,25 @@ function miVerificarArray(string $haystack, mixed $needle): bool
     }
 
     return false;
+}
+
+/**
+ * @since 4.0.1
+ */
+function miCheckArray(string $keyword, mixed $values): bool
+{
+    return miVerificarArray($keyword, $values);
+}
+
+function miGETArray(array $values, string ...$names): string|array
+{
+    $sValor = $values;
+
+    foreach ($names as $value) {
+        $sValor = (empty($sValor[$value])) ? '' : $sValor[$value];
+    }
+
+    return $sValor;
 }
 
 function miRemoveAccents(string $valor): string
@@ -399,6 +420,12 @@ function miCheckUpdate($show = false)
     } catch (Exception $error) {
         echo miTranslate('Erro ao buscar os dados: %s', $error->getMessage());
     }
+}
+
+function miFileExtension(string $filename): string|bool
+{
+    $p = pathinfo($filename);
+    return (empty($p['extension'])) ? false : $p['extension'];
 }
 
 include_once(dirname(__FILE__) . '/database/midatabase.php');
