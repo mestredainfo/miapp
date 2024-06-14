@@ -11,11 +11,11 @@ ipcRenderer.setMaxListeners(20);
 // MIApp
 contextBridge.exposeInMainWorld('miapp', {
     version: (type) => ipcRenderer.invoke('appVersao', type),
-    alert: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, false),
-    confirm: (title, msg, type, confirm) => ipcRenderer.invoke('appMessage', title, msg, type, true),
+    alert: (title, msg, type) => ipcRenderer.invoke('appMessage', title, msg, type, false),
+    confirm: (title, msg, type) => ipcRenderer.invoke('appMessage', title, msg, type, true),
     newwindow: (url, width, height, resizable, menu, hide) => ipcRenderer.invoke('appNewWindow', url, width, height, resizable, menu, hide),
     openURL: (url) => ipcRenderer.invoke('appExterno', url),
-    translate: (text, ...param) => ipcRenderer.invoke('appTraduzir', text, ...param),
+    translate: (text, ...values) => ipcRenderer.invoke('appTraduzir', text, ...values),
     openFile: () => ipcRenderer.invoke('abrirArquivo'),
     saveFile: () => ipcRenderer.invoke('salvarArquivo'),
 });

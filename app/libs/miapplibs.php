@@ -40,46 +40,10 @@ if (file_exists($miLangPath)) {
     }
 }
 
-function miTranslate(string $text, string ...$values): string
+function miTranslate(string $text): string
 {
     global $miLang;
-    if (empty($values)) {
-        return (empty($miLang[$text])) ? $text : $miLang[$text];
-    } else {
-        if (empty($miLang[$text])) {
-            return sprintf($text, ...$values);
-        } else {
-            return sprintf($miLang[$text], ...$values);
-        }
-    }
-}
-
-// MIApp Translate
-$miappLangPath = dirname(__FILE__, 3) . '/lang/' . $miLangSystem . '.json';
-$miappLang = [];
-
-if (file_exists($miappLangPath)) {
-    $miappLang = json_decode(file_get_contents($miappLangPath), true);
-} else {
-    if (file_exists(dirname(__FILE__, 3) . '/lang/en.json')) {
-        $miappLang = json_decode(file_get_contents(dirname(__FILE__, 3) . '/lang/en.json'), true);
-    } else {
-        $miappLang = [];
-    }
-}
-
-function miappTranslate(string $text, string ...$values): string
-{
-    global $miappLang;
-    if (empty($values)) {
-        return (empty($miappLang[$text])) ? $text : $miappLang[$text];
-    } else {
-        if (empty($miappLang[$text])) {
-            return sprintf($text, ...$values);
-        } else {
-            return sprintf($miappLang[$text], ...$values);
-        }
-    }
+    return (empty($miLang[$text])) ? $text : $miLang[$text];
 }
 
 /* Config */
@@ -250,9 +214,7 @@ function miWindowClose($inscript = false)
     }
 }
 
-/**
- * @deprecated
- */
+/* Verifica Arrays */
 function miVerificarArray(string $haystack, mixed $needle): bool
 {
     /* Gera array caso for detectado uma string e não um array */
@@ -268,37 +230,6 @@ function miVerificarArray(string $haystack, mixed $needle): bool
     }
 
     return false;
-}
-
-/**
- * @since 4.0.1
- */
-function miCheckArray(string $keyword, mixed $values): bool
-{
-    /* Gera array caso for detectado uma string e não um array */
-    if (!is_array($values)) {
-        $values = array($values);
-    }
-
-    foreach ($values as $query) {
-        if (strpos($keyword, $query, 0) !== false) {
-            /* Retorna verdadeiro e para a repetição ao encontrar o resultado */
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function miGETArray(array $values, string ...$names): string|array
-{
-    $sValor = $values;
-
-    foreach ($names as $value) {
-        $sValor = (empty($sValor[$value])) ? '' : $sValor[$value];
-    }
-
-    return $sValor;
 }
 
 function miRemoveAccents(string $valor): string
@@ -325,45 +256,30 @@ function miPre($value)
 // Sobre o App
 function miAboutApp($texto = '', $bootstrap = false): string
 {
-    $tpl = new miHTML();
+    global $milang;
+    $txt = '<h1>' . miTranslate('Sobre o ') . miConfig('app', 'name') . '</h1>
+<p>' . miConfig('app', 'name') . ' ' . miConfig('app', 'version') . '</p>
+<p>' . miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name')  . '</p>
+<p>' . miTranslate('Organização:') . ' ' . miConfig('author', 'organization') . '</p>
+<p>Site: <a href="javascript:window.miapp.openURL(\'' . miConfig('homepage') . '\');">' . str_replace(['http://', 'https://'], '', miConfig('homepage')) . '</a></p>
 
-    $txt = $tpl->div(
-        '',
-        $tpl->h1(miTranslate('Sobre o %s', miConfig('app', 'name'))),
-        $tpl->p(miConfig('app', 'name') . ' ' . miConfig('app', 'version')),
-        $tpl->p(miTranslate('Desenvolvido por: %s', miConfig('author', 'name'))),
-        $tpl->p(miTranslate('Organização: %s', miConfig('author', 'organization'))),
-        $tpl->p(
-            'Site: ',
-            $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => 'javascript:' . miOpenURL(miConfig('homepage'), true)])
-        ),
-        $tpl->p(miConfig('copyright')),
-        $tpl->p(miTranslate('Licença: %s', miConfig('license'))),
+<p>' . miConfig('copyright') . '</p>
 
-        $tpl->hr('', ['class' => 'border border-primary border-3 opacity-75']),
+<p>' . miTranslate('Licença:') . ' ' . miConfig('license') . '</p>
 
-        $tpl->h3(miTranslate('Recursos de Terceiros Utilizados')),
-        $tpl->p(
-            '',
-            $tpl->strong('MIApp:'),
-            ' ',
-            $tpl->a('mestredainfo.wordpress.com/miapp/', ['href' => 'javascript:' . miOpenURL('https://mestredainfo.wordpress.com/miapp/', true)])
-        ),
-        $tpl->p(
-            '',
-            $tpl->strong('PHP:'),
-            ' ',
-            $tpl->a('php.net', ['href' => 'javascript:' . miOpenURL('https://www.php.net', true)])
-        ),
-        $tpl->if($bootstrap == true, function () use ($tpl) {
-            return $tpl->p(
-                '',
-                $tpl->strong('Bootstrap:'),
-                ' ',
-                $tpl->a('getbootstrap.com', ['href' => 'javascript:' . miOpenURL('https://getbootstrap.com', true)])
-            );
-        })
-    );
+<hr class="border border-primary border-3 opacity-75">
+
+<h3>' . miTranslate('Recursos de Terceiros Utilizados') . '</h3>
+
+<p><strong>MIApp:</strong> <a href="javascript:window.miapp.openURL(\'https://mestredainfo.wordpress.com/miapp/\');">mestredainfo.wordpress.com/miapp/</a></p>
+
+<p><strong>ElectronJS:</strong> <a href="javascript:window.miapp.openURL(\'https://www.electronjs.org\');">electronjs.org</a></p>
+
+<p><strong>PHP:</strong> <a href="javascript:window.miapp.openURL(\'https://www.php.net\');">php.net</a></p>';
+
+    if ($bootstrap) {
+        $txt .= '<p><strong>Bootstrap:</strong> <a href="javascript:window.miapp.openURL(\'https://getbootstrap.com\');">getbootstrap.com</a></p>';
+    }
 
     $txt .= $texto;
 
@@ -474,8 +390,8 @@ function miCheckUpdate($show = false)
     }
 }
 
-include_once(dirname(__FILE__) . '/database/midatabase.php');
-include_once(dirname(__FILE__) . '/database/midbselect.php');
-include_once(dirname(__FILE__) . '/database/midbinsert.php');
-include_once(dirname(__FILE__) . '/database/midbupdate.php');
-include_once(dirname(__FILE__) . '/database/midbdelete.php');
+include_once(dirname(__FILE__) . '/database/database.php');
+include_once(dirname(__FILE__) . '/database/select.php');
+include_once(dirname(__FILE__) . '/database/insert.php');
+include_once(dirname(__FILE__) . '/database/update.php');
+include_once(dirname(__FILE__) . '/database/delete.php');

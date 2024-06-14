@@ -1,6 +1,5 @@
 {
     "Exceção não tratada:": "Exceção não tratada:",
-    "Não foi possível encontrar o arquivo %s": "Não foi possível encontrar o arquivo %s",
     "Erro ao ler o arquivo JSON": "Erro ao ler o arquivo JSON",
     "Erro ao iniciar o servidor PHP:": "Erro ao iniciar o servidor PHP:",
     "O servidor PHP foi encerrado com o código:": "O servidor PHP foi encerrado com o código:",
@@ -21,7 +20,9 @@
     "Mais tarde": "Mais tarde",
     "Atualizar Agora": "Atualizar Agora",
     "Atualização do MIApp": "Atualização do MIApp",
-    "Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.": "Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.",
+    "Deseja baixar a nova versão do MIApp?": "Deseja baixar a nova versão do MIApp?",
+    "A versão ": "A versão ",
+    " já está disponível para baixar.": " já está disponível para baixar.",
     "Erro ao buscar os dados:": "Erro ao buscar os dados:",
     "Erro ao fazer a solicitação HTTP: ": "Erro ao fazer a solicitação HTTP: "
 }

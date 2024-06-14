@@ -41,13 +41,6 @@ const miupdates = require(path.join(app.getAppPath(), '/miupdate.js'));
 const miupdate = new miupdates(milang);
 miupdate.checkUpdate();
 
-if (!fs.existsSync(path.join(getMIAppPath(), '/app/config/config.json'))) {
-    console.log(milang.miappTraduzir('Não foi possível encontrar o arquivo %s', '"config.json"'));
-    
-    app.quit();
-    return false;
-}
-
 const config = (miappPath !== 'retorno') ? JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8')) : '';
 
 if (miappPath !== 'retorno') {
@@ -89,7 +82,6 @@ const createWindow = () => {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
     });
-    
     win.setMenu(null);
     startPHPServer(win); // Inicie o servidor PHP
 
@@ -388,7 +380,7 @@ function killProcessByPort(port) {
             return;
         });
 
-        console.log(milang.miappTraduzir('Processo na porta'), port, milang.traduzir('encerrado com sucesso.'));
+        console.log(milang.miappTraduzir('Processo na porta'), port, milang.miappTraduzir('encerrado com sucesso.'));
     }
 }
 
@@ -408,7 +400,7 @@ app.whenReady().then(() => {
             if (BrowserWindow.getAllWindows().length === 0) createWindow()
         })
     }
-});
+})
 
 // Para sair do aplicativo no Windows e Linux
 // Se for MACOS não roda esse comando
@@ -417,7 +409,7 @@ app.on('window-all-closed', () => {
         stopPHPServer();
         app.quit();
     }
-});
+})
 
 app.on('before-quit', () => {
     stopPHPServer();

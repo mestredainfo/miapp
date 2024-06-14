@@ -49,9 +49,9 @@ module.exports = {
             let sButtons;
 
             if (confirm) {
-                sButtons = [milang.miappTraduzir('Continuar'), milang.miappTraduzir('Cancelar')];
+                sButtons = [milang.traduzir('Continuar'), milang.traduzir('Cancelar')];
             } else {
-                sButtons = [milang.miappTraduzir('Continuar')];
+                sButtons = [milang.traduzir('Continuar')];
             }
 
             let options = {
@@ -59,8 +59,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: milang.traduzir(title),
-                message: milang.traduzir(msg)
+                title: milang.traduzir(title, true),
+                message: milang.traduzir(msg, true)
             }
             return dialog.showMessageBoxSync(null, options);
         });
@@ -71,8 +71,8 @@ module.exports = {
         });
 
         // Traduzir
-        ipcMain.handle('appTraduzir', async (event, text, ...param) => {
-            return milang.traduzir(text, ...param);
+        ipcMain.handle('appTraduzir', async (event, text, ...values) => {
+            return milang.traduzir(text, ...values);
         });
     }
 }
