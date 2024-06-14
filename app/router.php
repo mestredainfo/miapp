@@ -5,24 +5,39 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
+define('miapp', true);
+
 include_once(dirname(__FILE__) . '/libs/miapplibs.php');
 
-if (empty(miRequestURI())) {
-    include_once(miPathRoot() . '/home.php');
-} else {
-    if (miFileExtension(miRequestURI()) == 'php') {
-        if (miRequestURI() == 'micreateshortcut.php') {
-            miCreateShortcut();
-        } elseif (miRequestURI() == 'micheckupdate.php') {
-            miCheckUpdate(true);
-        } else {
-            if (file_exists(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI())) {
-                include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
-            } else {
-                echo miTranslate('Arquivo "%s" não encontrado.', basename(miRequestURI()));
-            }
-        }
+function miappshow(): bool
+{
+    if (empty(miRequestURI())) {
+        include_once(miPathRoot() . '/home.php');
+        return true;
     } else {
-        return false;
+        if (miFileExtension(miRequestURI()) == 'php') {
+            if (miRequestURI() == 'micreateshortcut.php') {
+                miCreateShortcut();
+                return true;
+            } elseif (miRequestURI() == 'micheckupdate.php') {
+                miCheckUpdate(true);
+                return true;
+            } else {
+                if (file_exists(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI())) {
+                    include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
+                    return true;
+                } else {
+                    echo miTranslate('Arquivo "%s" não encontrado.', basename(miRequestURI()));
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
     }
+}
+
+$miapp = miappshow();
+if (!$miapp) {
+    return false;
 }
