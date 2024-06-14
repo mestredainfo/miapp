@@ -51,7 +51,7 @@ class miHTML
     }
 
     /* Outras Condições */
-    public function condicoes(mixed $callback): mixed
+    public function conditions(mixed $callback): mixed
     {
         return $callback($this);
     }
