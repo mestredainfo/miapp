@@ -5,6 +5,10 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
+if (!defined('miapp')) {
+    exit;
+}
+
 /* Clean */
 function miCleanDB(?string $valor): string|int|null
 {
@@ -234,7 +238,7 @@ function miVerificarArray(string $haystack, mixed $needle): bool
 /**
  * @since 4.0.1
  */
-function miCheckArray(string $keyword, mixed $values): bool
+function miCheckArray(mixed $values, string $keyword): bool
 {
     return miVerificarArray($keyword, $values);
 }
@@ -328,12 +332,12 @@ function miUserPath(): string
     return miCleanENV('miappuserpath');
 }
 
-function miPathRoot()
+function miPathRoot(): string
 {
     return miCleanENV('miapppathroot');
 }
 
-function miAppName()
+function miAppName(): string
 {
     return miConfig('app', 'name');
 }
@@ -419,6 +423,37 @@ function miCheckUpdate($show = false)
         }
     } catch (Exception $error) {
         echo miTranslate('Erro ao buscar os dados: %s', $error->getMessage());
+    }
+}
+
+function miDeleteFiles(string $caminho): bool
+{
+    // Verifica se o caminho existe
+    if (!file_exists($caminho)) {
+        return false;
+    }
+
+    // Se o caminho é um diretório, itera sobre os arquivos e pastas dentro dele
+    if (is_dir($caminho)) {
+        $diretorio = new DirectoryIterator($caminho);
+        foreach ($diretorio as $item) {
+            if (!$item->isDot()) { // Ignora "." e ".."
+                if ($item->isDir()) {
+                    // Se é um diretório, chama recursivamente a função para excluí-lo
+                    miDeleteFiles($item->getPathname());
+                } else {
+                    // Se é um arquivo, exclui-o
+                    unlink($item->getPathname());
+                }
+            }
+        }
+        // Após excluir todos os arquivos e pastas, exclui o diretório
+        rmdir($caminho);
+        return true;
+    } else {
+        // Se o caminho é um arquivo, exclui diretamente
+        unlink($caminho);
+        return true;
     }
 }
 
