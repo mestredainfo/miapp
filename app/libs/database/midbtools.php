@@ -18,26 +18,31 @@ class miDBTools extends miDatabase
     public function integer()
     {
         $this->ctInteger = true;
+        return $this;
     }
 
     public function null()
     {
         $this->ctNull = true;
+        return $this;
     }
 
     public function primarykey()
     {
         $this->ctPrimaryKey = true;
+        return $this;
     }
 
     public function autoincrement()
     {
         $this->ctAutoIncrement = true;
+        return $this;
     }
 
     public function defaultvalue(string $value)
     {
         $this->ctDefaultValue = $value;
+        return $this;
     }
 
     public function insertColumn(string $name)
@@ -71,6 +76,7 @@ class miDBTools extends miDatabase
         $this->ctPrimaryKey = false;
         $this->ctAutoIncrement = false;
         $this->ctDefaultValue = false;
+        return $this;
     }
 
     public function create()
@@ -81,7 +87,7 @@ class miDBTools extends miDatabase
             $sql .= implode(',', $this->ctColumn);
             $sql .= ');';
 
-            $this->sConecta->exec($sql);
+            $this->exec($sql);
         } catch (SQLite3Exception $ex) {
             echo $ex->getMessage();
         }
@@ -89,8 +95,12 @@ class miDBTools extends miDatabase
 
     public function exec(string $sql)
     {
-        $this->sConecta->exec($sql);
-        $this->sPrepare = false;
-        $this->sFechaResult = false;
+        try {
+            $this->sConecta->exec($sql);
+            $this->sPrepare = false;
+            $this->sFechaResult = false;
+        } catch (SQLite3Exception $ex) {
+            echo $ex->getMessage();
+        }
     }
 }
