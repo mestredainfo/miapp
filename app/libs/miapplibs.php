@@ -390,8 +390,8 @@ function miCheckUpdate($show = false)
     }
 }
 
-include_once(dirname(__FILE__) . '/database/database.php');
-include_once(dirname(__FILE__) . '/database/select.php');
-include_once(dirname(__FILE__) . '/database/insert.php');
-include_once(dirname(__FILE__) . '/database/update.php');
-include_once(dirname(__FILE__) . '/database/delete.php');
+include_once(dirname(__FILE__) . '/database/midatabase.php');
+include_once(dirname(__FILE__) . '/database/midbselect.php');
+include_once(dirname(__FILE__) . '/database/midbinsert.php');
+include_once(dirname(__FILE__) . '/database/midbupdate.php');
+include_once(dirname(__FILE__) . '/database/midbdelete.php');

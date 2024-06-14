@@ -5,7 +5,7 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-class miCreateTable extends miDatabase
+class miDBTools extends miDatabase
 {
     public bool $ctInteger = false;
     public bool $ctNull = false;
@@ -90,5 +90,7 @@ class miCreateTable extends miDatabase
     public function exec(string $sql)
     {
         $this->sConecta->exec($sql);
+        $this->sPrepare = false;
+        $this->sFechaResult = false;
     }
 }
