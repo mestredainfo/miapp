@@ -1,19 +1,19 @@
 # MIApp
 
-MIApp é um software que permite a execução de aplicativos desenvolvidos em PHP para desktop. Compatível com Linux (Debian e Ubuntu) e Windows.
+MIApp is software that allows the execution of developed PHP applications for desktop.Compatible with Linux (Debian and Ubuntu) and Windows.
 
-## Documentação
+## Documentation
 
-- [Página do MIApp](https://mestredainfo.wordpress.com/miapp/)
+- [MIApp Page](https://mestredainfo.wordpress.com/miapp/)
 - [MIApp Changelog](https://mestredainfo.wordpress.com/changelog-miapp/)
-- [Apoie o MIApp](https://mestredainfo.wordpress.com/assinantes/)
+- [Support MIApp](https://mestredainfo.wordpress.com/assinantes/)
 
-## Licença
+## License
 
-O MIApp é fornecido sob:
+The MIApp is provided under:
 
 [SPDX-License-Identifier: GPL-2.0-only](https://spdx.org/licenses/GPL-2.0-only.html)
 
-Estando sob os termos da GNU General Public License version 2 only.
+Being under the terms of the GNU General Public License version 2 only.
 
-Todas as contribuições para o MIApp estão sujeitas a esta licença.
+All contributions to the MIApp are subject to this license.
