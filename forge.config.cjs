@@ -1,7 +1,7 @@
 module.exports = {
   packagerConfig: {
     ignore: [
-      /(.eslintrc.json)|(.gitignore)|(electron.vite.config.ts)|(forge.config.cjs)|(tsconfig.*)|(reportupdate.txt)/,
+      /(.eslintrc.json)|(.gitignore)|(electron.vite.config.ts)|(forge.config.cjs)|(tsconfig.*)|(teste.php)/,
       /^\/node_modules\/.vite/,
       /^\/.git/,
       /^\/apptest/

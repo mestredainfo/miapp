@@ -50,6 +50,27 @@ function miTranslate(string $text, string ...$values): string
     return (empty($miLang[$text])) ? sprintf($text, ...$values) : sprintf($miLang[$text], ...$values);
 }
 
+/* MIAppLang */
+$miappLangPath = dirname(__FILE__, 3) . '/lang/' . $miLangSystem . '.json';
+
+$miappLang = [];
+
+if (file_exists($miappLangPath)) {
+    $miappLang = json_decode(file_get_contents($miappLangPath), true);
+} else {
+    if (file_exists(dirname(__FILE__, 3) . '/lang/en.json')) {
+        $miappLang = json_decode(file_get_contents(dirname(__FILE__, 3) . '/lang/en.json'), true);
+    } else {
+        $miappLang = [];
+    }
+}
+
+function miappTranslate(string $text, string ...$values): string
+{
+    global $miappLang;
+    return (empty($miappLang[$text])) ? sprintf($text, ...$values) : sprintf($miappLang[$text], ...$values);
+}
+
 /* Config */
 $miaConfig = json_decode(file_get_contents(miCleanENV('miapppathroot') . '/config/config.json'), true);
 
@@ -287,7 +308,7 @@ function miAboutApp($texto = '', $bootstrap = false): string
         $tpl->p(miTranslate('Organização: %s', miConfig('author', 'organization'))),
         $tpl->p(
             'Site: ',
-            $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => miOpenURL(miConfig('homepage'), true)])
+            $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => sprintf("javascript:window.miapp.openURL('%s');", miConfig('homepage'))])
         ),
         $tpl->p(miConfig('copyright')),
         $tpl->p(miTranslate('Licença: %s', miConfig('license'))),
@@ -296,23 +317,23 @@ function miAboutApp($texto = '', $bootstrap = false): string
         $tpl->p(
             '',
             $tpl->strong('MIApp: '),
-            $tpl->a('www.mestredainfo.com.br/search/label/Apps', ['href' => 'https://www.mestredainfo.com.br/search/label/Apps'])
+            $tpl->a('mestredainfo.wordpress.com/miapp/', ['href' => "javascript:window.miapp.openURL('https://mestredainfo.wordpress.com/miapp/');"])
         ),
         $tpl->p(
             '',
             $tpl->strong('ElectronJS: '),
-            $tpl->a('electronjs.org', ['href' => 'https://www.electronjs.org'])
+            $tpl->a('electronjs.org', ['href' => "javascript:window.miapp.openURL('https://www.electronjs.org');"])
         ),
         $tpl->p(
             '',
             $tpl->strong('PHP: '),
-            $tpl->a('php.net', ['href' => 'https://www.php.net'])
+            $tpl->a('php.net', ['href' => "javascript:window.miapp.openURL('https://www.php.net');"])
         ),
         $tpl->if($bootstrap, function () use ($tpl) {
             $tpl->p(
                 '',
                 $tpl->strong('Bootstrap: '),
-                $tpl->a('getbootstrap.com', ['href' => 'https://getbootstrap.com'])
+                $tpl->a('getbootstrap.com', ['href' => "javascript:window.miapp.openURL('https://getbootstrap.com');"])
             );
         })
     );

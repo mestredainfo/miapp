@@ -16,7 +16,10 @@ function miappshow(): bool
         return true;
     } else {
         if (miFileExtension(miRequestURI()) == 'php') {
-            if (miRequestURI() == 'micreateshortcut.php') {
+            if (miRequestURI() == 'miappabout.php') {
+                include_once(dirname(__FILE__) . '/pages/miappabout.php');
+                return true;
+            } elseif (miRequestURI() == 'micreateshortcut.php') {
                 miCreateShortcut();
                 return true;
             } elseif (miRequestURI() == 'micheckupdate.php') {
@@ -27,7 +30,7 @@ function miappshow(): bool
                     include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
                     return true;
                 } else {
-                    echo miTranslate('Arquivo "%s" não encontrado.', basename(miRequestURI()));
+                    echo miappTranslate('Arquivo "%s" não encontrado.', basename(miRequestURI()));
                     return true;
                 }
             }

@@ -4,7 +4,7 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, ipcRenderer } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const sOS = require('os');
@@ -57,19 +57,25 @@ let sServerName;
 let phpServerProcess;
 let sPort;
 
-function createMenu(sWin) {
-    fs.readFile(path.join(getMIAppPath(), '/app/menu/menu.json'), (err, data) => {
-        if (err) {
-            console.error(milang.miappTraduzir('Erro ao ler o arquivo JSON'), err);
-            return;
-        }
+function createMenu(sWin, menus) {
+    if (menus) {
+        fs.readFile(path.join(getMIAppPath(), '/app/menu/menu.json'), (err, data) => {
+            if (err) {
+                console.error(milang.miappTraduzir('Erro ao ler o arquivo JSON'), err);
+                return;
+            }
 
-        const menuData = JSON.parse(data);
+            const menuData = JSON.parse(data);
 
+            // Cria o menu principal
+            const mainMenu = Menu.buildFromTemplate(getMenuTemplate(sWin, menuData, true));
+            sWin.setMenu(mainMenu);
+        });
+    } else {
         // Cria o menu principal
-        const mainMenu = Menu.buildFromTemplate(getMenuTemplate(sWin, menuData));
+        const mainMenu = Menu.buildFromTemplate(getMenuTemplate(sWin, '', true));
         sWin.setMenu(mainMenu);
-    });
+    }
 }
 
 const createWindow = () => {
@@ -86,9 +92,9 @@ const createWindow = () => {
     startPHPServer(win); // Inicie o servidor PHP
 
     if (config.app.menu) {
-        createMenu(win);
+        createMenu(win, true);
     } else {
-        win.setMenu(null);
+        createMenu(win);
     }
 
     if (config.dev.tools) {
@@ -283,78 +289,123 @@ function miappNewWindow(url, width, height, resizable, menu, hide) {
     });
 
     if (sMenu) {
-        createMenu(sNewWindow);
+        createMenu(sNewWindow, true);
     }
 }
 
 // Template de Menu
-function getMenuTemplate(win, menuData) {
+function getMenuTemplate(win, menuData, menus) {
     let template = [];
 
-    if (config.dev.menu) {
-        let devMenu = {
-            label: milang.miappTraduzir('Dev'),
-            submenu: [
-                {
-                    label: milang.miappTraduzir('Refresh'),
-                    accelerator: 'F5',
-                    click: () => {
-                        win.reload();
-                    }
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    label: milang.miappTraduzir('DevTools'),
-                    accelerator: 'F12',
-                    click: () => {
-                        win.openDevTools();
-                    }
+    let miappMenu = {
+        label: milang.miappTraduzir('MIApp'),
+        submenu: [
+            {
+                label: milang.miappTraduzir('Verificar Atualização'),
+                click: () => {
+                    miupdate.checkUpdate();
                 }
-            ]
-        }
-
-        template.push(devMenu);
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: milang.miappTraduzir('Documentação'),
+                click: () => {
+                    ipcRenderer.invoke('appExterno', 'https://learn.zohopublic.com/external/manual/miapp?p=653b3d42c178d9278438a60b1d3cd7954298a2a3185abafd78c4618708e9c0b3')
+                }
+            },
+            {
+                label: milang.miappTraduzir('Assinantes'),
+                click: () => {
+                    ipcRenderer.invoke('appExterno', 'https://mestredainfo.wordpress.com/assinantes/')
+                }
+            },
+            {
+                label: milang.miappTraduzir('Suporte'),
+                click: () => {
+                    ipcRenderer.invoke('appExterno', 'https://mestredainfo.wordpress.com/suporte-tecnico/')
+                }
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: milang.miappTraduzir('Sobre o MIApp'),
+                click: () => {
+                    miappNewWindow('/miappabout.php', 800, 400, false, true, false);
+                }
+            }
+        ]
     }
 
-    // Loop sobre as chaves do objeto JSON
-    Object.keys(menuData).forEach((key) => {
-        let submenu = [];
-
-        // Loop sobre os itens do submenu
-        Object.keys(menuData[key]).forEach((submenuKey) => {
-            let menuItem = {};
-
-            if (submenuKey.indexOf('separator') == 0) {
-                menuItem = { type: 'separator' };
-            } else {
-                menuItem = {
-                    label: milang.traduzir(submenuKey),
-                    accelerator: menuData[key][submenuKey].key,
-                    click: () => {
-                        // Verifica se é uma página ou URL
-                        if (menuData[key][submenuKey].page) {
-                            if (menuData[key][submenuKey].newwindow) {
-                                miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu, menuData[key][submenuKey].hide)
-                            } else {
-                                win.loadURL(sServerName + menuData[key][submenuKey].page);
-                            }
-                        } else if (menuData[key][submenuKey].url) {
-                            require('electron').shell.openExternal(menuData[key][submenuKey].url);
-                        } else if (menuData[key][submenuKey].script) {
-                            win.webContents.executeJavaScript(menuData[key][submenuKey].script);
+    template.push(miappMenu);
+    if (menus) {
+        if (config.dev.menu) {
+            let devMenu = {
+                label: milang.miappTraduzir('Dev'),
+                submenu: [
+                    {
+                        label: milang.miappTraduzir('Refresh'),
+                        accelerator: 'F5',
+                        click: () => {
+                            win.reload();
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        label: milang.miappTraduzir('DevTools'),
+                        accelerator: 'F12',
+                        click: () => {
+                            win.openDevTools();
                         }
                     }
-                };
+                ]
             }
 
-            submenu.push(menuItem);
-        });
+            template.push(devMenu);
+        }
 
-        // Adiciona o submenu ao item do menu principal
-        template.push({ label: milang.traduzir(key), submenu });
-    });
+        // Loop sobre as chaves do objeto JSON
+        Object.keys(menuData).forEach((key) => {
+            let submenu = [];
+
+            // Loop sobre os itens do submenu
+            Object.keys(menuData[key]).forEach((submenuKey) => {
+                let menuItem = {};
+
+                if (submenuKey.indexOf('separator') == 0) {
+                    menuItem = { type: 'separator' };
+                } else {
+                    menuItem = {
+                        label: milang.traduzir(submenuKey),
+                        accelerator: menuData[key][submenuKey].key,
+                        click: () => {
+                            // Verifica se é uma página ou URL
+                            if (menuData[key][submenuKey].page) {
+                                if (menuData[key][submenuKey].newwindow) {
+                                    miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu, menuData[key][submenuKey].hide)
+                                } else {
+                                    win.loadURL(sServerName + menuData[key][submenuKey].page);
+                                }
+                            } else if (menuData[key][submenuKey].url) {
+                                require('electron').shell.openExternal(menuData[key][submenuKey].url);
+                            } else if (menuData[key][submenuKey].script) {
+                                win.webContents.executeJavaScript(menuData[key][submenuKey].script);
+                            }
+                        }
+                    };
+                }
+
+                submenu.push(menuItem);
+            });
+
+            // Adiciona o submenu ao item do menu principal
+            template.push({ label: milang.traduzir(key), submenu });
+        });
+    }
 
     return template;
 }
