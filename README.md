@@ -6,7 +6,13 @@ MIApp is software that allows the execution of developed PHP applications for de
 
 - [MIApp Page](https://mestredainfo.wordpress.com/miapp/)
 - [MIApp Changelog](https://mestredainfo.wordpress.com/changelog-miapp/)
-- [Support MIApp](https://mestredainfo.wordpress.com/assinantes/)
+
+## Sponsor
+With your sponsorship I will be able to keep the project always up to date and with new features.Also intending to develop a version for macos, but this will only be possible with your sponsorship.
+
+To sponsor this project just access the page
+
+https://mestredainfo.wordpress.com/apoiadores/
 
 ## License
 
