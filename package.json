@@ -1,6 +1,6 @@
 {
     "name": "miapp",
-    "productName": "MIApp",
+    "productName": "miapp",
     "version": "4.0.1",
     "description": "Executa apps desenvolvidos em PHP para desktop com MIApp.",
     "main": "main.js",
