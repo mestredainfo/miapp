@@ -485,12 +485,13 @@ function miFileExtension(string $filename): string|bool
 
 $miRouterEncontrou = false;
 $miRouter404 = true;
+
 function miRouter(string $url, mixed $function = false): bool
 {
     global $miRouter404, $miRouterEncontrou;
 
     if (!$miRouterEncontrou) {
-        if (miRequestURI() == $url) {
+        if (rtrim(miRequestURI(), '/') == $url) {
             $miRouterEncontrou = true;
             $miRouter404 = false;
             if (!is_bool($function)) {
