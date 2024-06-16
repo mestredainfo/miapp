@@ -15,8 +15,8 @@ module.exports = class miupdate {
 
             return new Promise((resolve, reject) => {
                 const options = {
-                    hostname: 'mestredainfo.wordpress.com',
-                    path: '/miapp/',
+                    hostname: 'www.mestredainfo.com.br',
+                    path: '/p/miapp.html',
                     method: 'GET'
                 };
 
@@ -48,28 +48,96 @@ module.exports = class miupdate {
         }
     }
 
-    checkUpdate() {
-        this.getNewVersion()
-            .then((versaonova) => {
-                const versaoatual = require('electron').app.getVersion();
+    checkUpdate(checkmsg) {
+        const fs = require('fs');
+        const path = require('path');
+        const os = require('os');
+        const versaoatual = require('electron').app.getVersion().trim();
+        const dataatual = new Date();
+        const sDataAtual = `${dataatual.getFullYear().toString().padStart(4, '0')}-${(dataatual.getMonth() + 1).toString().padStart(2, '0')}-${dataatual.getDate().toString().padStart(2, '0')}`
+        const dirname = path.join(os.userInfo().homedir, '/.miapp/update/');
+        const filename = path.join(dirname, '/newversion.txt');
+        const fnCheckDate = path.join(dirname, '/checkdate.txt');
 
-                if (versaonova > versaoatual) {
-                    const options = {
-                        type: 'question',
-                        buttons: [this.sMILang.miappTraduzir('Mais tarde'), this.sMILang.miappTraduzir('Atualizar Agora')],
-                        title: this.sMILang.miappTraduzir('Atualização do MIApp'),
-                        message: this.sMILang.miappTraduzir('Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.', versaonova)
-                    };
-
-                    require('electron').dialog.showMessageBox(null, options).then(retorno => {
-                        if (retorno.response === 1) {
-                            require('electron').shell.openExternal('https://mestredainfo.wordpress.com/miapp/');
+        if (!fs.existsSync(filename)) {
+            if (!fs.existsSync(dirname)) {
+                fs.mkdir(dirname,
+                    (err) => {
+                        if (err) {
+                            return console.error(err);
                         }
                     });
+            }
+
+            fs.writeFileSync(filename, versaoatual);
+        }
+
+        if (!fs.existsSync(fnCheckDate)) {
+            fs.writeFileSync(fnCheckDate, '');
+        }
+
+        const sVersaoNova = fs.readFileSync(filename).toString().trim();
+
+        if (sVersaoNova > versaoatual && !checkmsg) {
+            const options = {
+                type: 'question',
+                buttons: [this.sMILang.miappTraduzir('Mais tarde'), this.sMILang.miappTraduzir('Atualizar Agora')],
+                title: this.sMILang.miappTraduzir('Atualização do MIApp'),
+                message: this.sMILang.miappTraduzir('Deseja baixar a nova versão do MIApp?\nA versão %s já está disponível para baixar.', sVersaoNova)
+            };
+
+            console.log(this.sMILang.miappTraduzir('Nova versão do MIApp disponível para baixar.'));
+
+            require('electron').dialog.showMessageBox(null, options).then(retorno => {
+                if (retorno.response === 1) {
+                    require('electron').shell.openExternal('https://www.mestredainfo.com.br/p/miapp.html');
                 }
-            })
-            .catch((error) => {
-                console.error(this.sMILang.miappTraduzir('Erro ao buscar os dados:'), error);
             });
+        } else {
+            const fncdDate = fs.readFileSync(fnCheckDate).toString().trim();
+
+            if (sDataAtual != fncdDate || checkmsg) {
+                console.log(this.sMILang.miappTraduzir('Verificando uma nova versão do MIApp...'));
+                this.getNewVersion()
+                    .then((versaonova) => {
+                        if (versaonova > versaoatual) {
+                            const options = {
+                                type: 'question',
+                                buttons: [this.sMILang.miappTraduzir('Mais tarde'), this.sMILang.miappTraduzir('Atualizar Agora')],
+                                title: this.sMILang.miappTraduzir('Atualização do MIApp'),
+                                message: this.sMILang.miappTraduzir('Deseja baixar a nova versão do MIApp?\nA nova versão já está disponível para baixar.')
+                            };
+
+                            fs.writeFileSync(filename, versaonova);
+
+                            require('electron').dialog.showMessageBox(null, options).then(retorno => {
+                                if (retorno.response === 1) {
+                                    require('electron').shell.openExternal('https://www.mestredainfo.com.br/p/miapp.html');
+                                }
+                            });
+                        } else {
+                            if (checkmsg) {
+                                const options = {
+                                    type: 'info',
+                                    buttons: [this.sMILang.miappTraduzir('Continuar')],
+                                    title: this.sMILang.miappTraduzir('Atualização do MIApp'),
+                                    message: this.sMILang.miappTraduzir('O MIApp já está na versão mais recente!')
+                                };
+
+                                fs.writeFileSync(filename, versaoatual);
+            
+                                require('electron').dialog.showMessageBox(null, options);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(this.sMILang.miappTraduzir('Erro ao buscar os dados:'), error);
+                    });
+
+                fs.writeFileSync(fnCheckDate, sDataAtual);
+            } else {
+                console.log(this.sMILang.miappTraduzir('Verificação de Atualização: O MIApp já está na versão mais recente!'));
+            }
+        }
     }
 }

@@ -169,7 +169,6 @@ function miConfirm(string $title, string $message, string $type, mixed $function
     }
 
     echo "window.miapp.confirm('" . $title . "', '" . $message . "', '$type', true).then((result) => {
-        console.log(result);
         if (result) {
             ";
     $functionCancel();
@@ -317,7 +316,7 @@ function miAboutApp($texto = '', $bootstrap = false): string
         $tpl->p(
             '',
             $tpl->strong('MIApp: '),
-            $tpl->a('mestredainfo.wordpress.com/miapp/', ['href' => "javascript:window.miapp.openURL('https://mestredainfo.wordpress.com/miapp/');"])
+            $tpl->a('www.mestredainfo.com.br/p/miapp.html', ['href' => "javascript:window.miapp.openURL('https://www.mestredainfo.com.br/p/miapp.html');"])
         ),
         $tpl->p(
             '',

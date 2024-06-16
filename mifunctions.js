@@ -59,8 +59,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: milang.traduzir(title, true),
-                message: milang.traduzir(msg, true)
+                title: milang.traduzir(title),
+                message: milang.traduzir(msg)
             }
             return dialog.showMessageBoxSync(null, options);
         });

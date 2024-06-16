@@ -1,6 +1,6 @@
 {
     "name": "miapp",
-    "productName": "miapp",
+    "productName": "MIApp",
     "version": "4.0.1",
     "description": "Executa apps desenvolvidos em PHP para desktop com MIApp.",
     "main": "main.js",
@@ -16,13 +16,13 @@
         "name": "Murilo Gomes Julio",
         "email": "contatomestredainfo@gmail.com",
         "organization": "Mestre da Info",
-        "contact": "https://mestredainfo.wordpress.com/contato/",
+        "contact": "https://www.mestredainfo.com.br/p/contato.html",
         "url": "https://linktr.ee/mestreinfo"
     },
     "copyright": "Copyright (C) 2004-2024 Murilo Gomes Julio",
-    "homepage": "https://mestredainfo.wordpress.com",
+    "homepage": "https://www.mestredainfo.com.br",
     "bugs": {
-        "url": "https://mestredainfo.wordpress.com/bug-reporting/"
+        "url": "https://www.mestredainfo.com.br/p/bug-reporting.html"
     },
     "license": "GPL-2.0-only",
     "devDependencies": {

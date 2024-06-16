@@ -39,7 +39,6 @@ process.on('uncaughtException', (error) => {
 
 const miupdates = require(path.join(app.getAppPath(), '/miupdate.js'));
 const miupdate = new miupdates(milang);
-miupdate.checkUpdate();
 
 const config = (miappPath !== 'retorno') ? JSON.parse(fs.readFileSync(path.join(getMIAppPath(), '/app/config/config.json'), 'utf-8')) : '';
 
@@ -120,6 +119,8 @@ const createWindow = () => {
             win.removeMenu();
         }
     });
+
+    miupdate.checkUpdate();
 
     const mifunctions = require(path.join(app.getAppPath(), '/mifunctions.js'));
     mifunctions.mifunctions(milang, miappNewWindow);
@@ -303,7 +304,7 @@ function getMenuTemplate(win, menuData, menus) {
             {
                 label: milang.miappTraduzir('Verificar Atualização'),
                 click: () => {
-                    miupdate.checkUpdate();
+                    miupdate.checkUpdate(true);
                 }
             },
             {
@@ -318,13 +319,13 @@ function getMenuTemplate(win, menuData, menus) {
             {
                 label: milang.miappTraduzir('Assinantes'),
                 click: () => {
-                    ipcRenderer.invoke('appExterno', 'https://mestredainfo.wordpress.com/assinantes/')
+                    ipcRenderer.invoke('appExterno', 'https://www.mestredainfo.com.br/p/assinantes.html')
                 }
             },
             {
                 label: milang.miappTraduzir('Suporte'),
                 click: () => {
-                    ipcRenderer.invoke('appExterno', 'https://mestredainfo.wordpress.com/suporte-tecnico/')
+                    ipcRenderer.invoke('appExterno', 'https://www.mestredainfo.com.br/p/suporte.html')
                 }
             },
             {
@@ -333,7 +334,7 @@ function getMenuTemplate(win, menuData, menus) {
             {
                 label: milang.miappTraduzir('Sobre o MIApp'),
                 click: () => {
-                    miappNewWindow('/miappabout.php', 800, 400, false, true, false);
+                    miappNewWindow('/miappabout.php', 800, 400, false, false, false);
                 }
             }
         ]
