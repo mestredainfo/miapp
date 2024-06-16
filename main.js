@@ -4,7 +4,7 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-const { app, BrowserWindow, Menu, ipcRenderer } = require('electron');
+const { app, BrowserWindow, Menu, MenuItem, ipcRenderer } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const sOS = require('os');
@@ -119,6 +119,8 @@ const createWindow = () => {
             win.removeMenu();
         }
     });
+
+    createMenuContext(win);
 
     miupdate.checkUpdate();
 
@@ -341,6 +343,7 @@ function getMenuTemplate(win, menuData, menus) {
     }
 
     template.push(miappMenu);
+
     if (menus) {
         if (config.dev.menu) {
             let devMenu = {
@@ -409,6 +412,40 @@ function getMenuTemplate(win, menuData, menus) {
     }
 
     return template;
+}
+
+function createMenuContext(win) {
+    const contextMenu = new Menu();
+    contextMenu.append(new MenuItem({
+        label: milang.miappTraduzir('Recortar'),
+        role: 'cut'
+    }));
+    contextMenu.append(new MenuItem({
+        label: milang.miappTraduzir('Copiar'),
+        role: 'copy'
+    }));
+    contextMenu.append(new MenuItem({
+        label: milang.miappTraduzir('Colar'),
+        role: 'paste'
+    }));
+    contextMenu.append(new MenuItem({
+        type: "separator"
+    }));
+    contextMenu.append(new MenuItem({
+        label: milang.miappTraduzir('Selecionar Tudo'),
+        role: 'selectall'
+    }));
+
+    win.webContents.on('context-menu', (event, params) => {
+        console.log(params.formControlType)
+        if (params.formControlType == 'input-text' || params.formControlType == 'text-area') {
+            contextMenu.popup({
+                window: win,
+                x: params.x,
+                y: params.y
+            });
+        }
+    });
 }
 
 // Função para encerrar o processo com base na porta
