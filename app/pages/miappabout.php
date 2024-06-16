@@ -33,7 +33,7 @@ echo $tpl->html(
         '',
         $tpl->meta('', ['charset' => 'UTF-8']),
         $tpl->meta('', ['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0']),
-        $tpl->title(miappTranslate('Sobre o %s', ucfirst(miappConfig('productName')))),
+        $tpl->title(miappTranslate('Sobre o MIApp')),
         $tpl->style('
             p {
                 font-size: 18px
@@ -42,14 +42,14 @@ echo $tpl->html(
     ),
     $tpl->body(
         '',
-        $tpl->h1(miappTranslate('Sobre o %s', ucfirst(miappConfig('productName')))),
+        $tpl->h1(miappTranslate('Sobre o MIApp')),
         $tpl->p(
             miappTranslate('O MIApp é um software para executar aplicativos desenvolvidos em PHP para desktop.'),
             $tpl->br(),
             miappTranslate('Compatível atualmente com Linux (Debian e Ubuntu) e Windows.')
         ),
         $tpl->p(''),
-        $tpl->p($tpl->strong(ucfirst(miappConfig('productName')) . ' ' . miappConfig('version'))),
+        $tpl->p($tpl->strong('MIApp' . ' ' . miappConfig('version'))),
         $tpl->p($tpl->strong(miappTranslate('Desenvolvido por: ')), miappConfig('author', 'name')),
         $tpl->p($tpl->strong(miappTranslate('Organização: ')), miappConfig('author', 'organization')),
         $tpl->p(
