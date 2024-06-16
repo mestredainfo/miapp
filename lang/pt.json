@@ -33,11 +33,14 @@
     "Erro ao buscar os dados:": "Erro ao buscar os dados:",
     "Verificação de Atualização: O MIApp já está na versão mais recente!": "Verificação de Atualização: O MIApp já está na versão mais recente!",
     "Arquivo \"%s\" não encontrado.": "Arquivo \"%s\" não encontrado.",
-    "Sobre o %s": "Sobre o %s",
     "O MIApp é um software para executar aplicativos desenvolvidos em PHP para desktop.": "O MIApp é um software para executar aplicativos desenvolvidos em PHP para desktop.",
     "Compatível atualmente com Linux (Debian e Ubuntu).": "Compatível atualmente com Linux (Debian e Ubuntu).",
     "Desenvolvido por: ": "Desenvolvido por: ",
     "Organização: ": "Organização: ",
     "Licença: ": "Licença: ",
-    "Recursos de Terceiros Utilizados": "Recursos de Terceiros Utilizados"
+    "Recursos de Terceiros Utilizados": "Recursos de Terceiros Utilizados",
+    "Recortar": "Recortar",
+    "Copiar": "Copiar",
+    "Colar": "Colar",
+    "Selecionar Tudo": "Selecionar Tudo"
 }
