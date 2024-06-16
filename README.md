@@ -12,7 +12,7 @@ With your sponsorship I will be able to keep the project always up to date and w
 
 To sponsor this project just access the page
 
-https://www.mestredainfo.com.br/p/assinantes.html
+- [MIApp Subscribers](https://www.mestredainfo.com.br/p/assinantes.html)
 
 ## License
 
