@@ -483,6 +483,42 @@ function miFileExtension(string $filename): string|bool
     return (empty($p['extension'])) ? false : $p['extension'];
 }
 
+$miRouterEncontrou = false;
+$miRouter404 = true;
+function miRouter(string $url, mixed $function = false): bool
+{
+    global $miRouter404, $miRouterEncontrou;
+
+    if (!$miRouterEncontrou) {
+        if (miRequestURI() == $url) {
+            $miRouterEncontrou = true;
+            $miRouter404 = false;
+            if (!is_bool($function)) {
+                $function();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function miRouter404(mixed $function = false): bool
+{
+    global $miRouter404;
+
+    if ($miRouter404) {
+        if (!is_bool($function)) {
+            $function();
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 include_once(dirname(__FILE__) . '/database/midatabase.php');
 include_once(dirname(__FILE__) . '/database/midbselect.php');
 include_once(dirname(__FILE__) . '/database/midbinsert.php');

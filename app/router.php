@@ -34,6 +34,9 @@ function miappshow(): bool
                     return true;
                 }
             }
+        } elseif (strpos(miRequestURI(), '/') !== false && miConfig('router')) {
+            include_once(miPathRoot() . '/home.php');
+            return true;
         } else {
             return false;
         }
