@@ -19,3 +19,12 @@ contextBridge.exposeInMainWorld('miapp', {
     openFile: () => ipcRenderer.invoke('abrirArquivo'),
     saveFile: () => ipcRenderer.invoke('salvarArquivo'),
 });
+
+contextBridge.exposeInMainWorld('miappinit', {
+    checkupdate: () => ipcRenderer.invoke('miappCheckUpdate'),
+    menu: (listener) => {
+        ipcRenderer.on('miappmenu', (event, ...args) => listener(...args));
+        ipcRenderer.removeListener('miappmenu');
+    },
+    devTools: () => ipcRenderer.invoke('openDevTools'),
+});
