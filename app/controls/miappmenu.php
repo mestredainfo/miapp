@@ -85,7 +85,7 @@ class miappmenu
                                     $sPage .= 'false,';
                                 }
                             } else {
-                                $sPage .= 'true,';
+                                $sPage .= 'false,';
                             }
 
                             $sPage = rtrim($sPage, ',');
@@ -119,54 +119,56 @@ class miappmenu
     }
 }
 
-$miappMenu = new miappmenu();
+if (!miEmptyGET('scriptpost')) {
+    $miappMenu = new miappmenu();
 ?>
-<ul id="miappmenu" class="miappmenu">
-    <?php
-    if (miConfig('dev', 'menu')) {
-    ?>
-        <li><a href="#"><?php echo miappTranslate('Dev'); ?></a>
-            <ul>
-                <li><a href="javascript:location.reload();" data-key="F5"><?php echo miappTranslate('Atualizar'); ?> <span class="miappmenukey">F5</span></a></li>
+    <ul id="miappmenu" class="miappmenu">
+        <?php
+        if (miConfig('dev', 'menu')) {
+        ?>
+            <li><a href="#"><?php echo miappTranslate('Dev'); ?></a>
+                <ul>
+                    <li><a href="javascript:location.reload();" data-key="F5"><?php echo miappTranslate('Atualizar'); ?> <span class="miappmenukey">F5</span></a></li>
+                    <li>
+                        <hr>
+                    </li>
+                    <li><a href="javascript:miappinit.devTools();" data-key="F12"><?php echo miappTranslate('DevTools'); ?> <span class="miappmenukey">F12</span></a></li>
+                </ul>
+            </li>
+        <?php
+        }
+
+        if (miConfig('app', 'menu')) {
+            $miappMenu->init();
+            echo $miappMenu->create();
+        }
+        ?>
+
+        <li style="float:right;position:absolute;right:10"><a href="#">MIApp</a>
+            <ul style="right: 0px" ;>
+                <li><a href="javascript:miappinit.checkupdate();"><?php echo miappTranslate('Verificar Atualização'); ?></a></li>
                 <li>
                     <hr>
                 </li>
-                <li><a href="javascript:miappinit.devTools();" data-key="F12"><?php echo miappTranslate('DevTools'); ?> <span class="miappmenukey">F12</span></a></li>
+                <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/2024/06/documentacao-miapp.html');"><?php echo miappTranslate('Documentação'); ?></a></li>
+                <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/p/assinantes.html');"><?php echo miappTranslate('Assinantes'); ?></a></li>
+                <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/p/suporte.html');"><?php echo miappTranslate('Suporte'); ?></a></li>
+                <li>
+                    <hr>
+                </li>
+                <li><a href="javascript:miapp.newwindow('/miappabout.php', 800, 400, false, false, false);"><?php echo miappTranslate('Sobre o MIApp'); ?></a></li>
             </ul>
         </li>
-    <?php
-    }
-
-    if (miConfig('app', 'menu')) {
-        $miappMenu->init();
-        echo $miappMenu->create();
-    }
-    ?>
-
-    <li style="float:right;position:absolute;right:10"><a href="#">MIApp</a>
-        <ul style="right: 0px" ;>
-            <li><a href="javascript:miappinit.checkupdate();"><?php echo miappTranslate('Verificar Atualização'); ?></a></li>
-            <li>
-                <hr>
-            </li>
-            <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/2024/06/documentacao-miapp.html');"><?php echo miappTranslate('Documentação'); ?></a></li>
-            <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/p/assinantes.html');"><?php echo miappTranslate('Assinantes'); ?></a></li>
-            <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/p/suporte.html');"><?php echo miappTranslate('Suporte'); ?></a></li>
-            <li>
-                <hr>
-            </li>
-            <li><a href="javascript:miapp.newwindow('/miappabout.php', 800, 400, false, false, false);"><?php echo miappTranslate('Sobre o MIApp'); ?></a></li>
-        </ul>
-    </li>
-</ul>
-
-<!-- Menu de Contexto -->
-<div id="miAppContextMenu">
-    <ul>
-        <li id="miappCutAction"><?php echo miappTranslate('Recortar'); ?>/li>
-        <li id="miappCopyAction"><?php echo miappTranslate('Copiar'); ?></li>
-        <li id="miappPasteAction"><?php echo miappTranslate('Colar'); ?></li>
-        <hr>
-        <li id="miappSelectAllAction"><?php echo miappTranslate('Selecionar Tudo'); ?></li>
     </ul>
-</div>
+
+    <!-- Menu de Contexto -->
+    <div id="miAppContextMenu">
+        <ul>
+            <li id="miappCutAction"><?php echo miappTranslate('Recortar'); ?></li>
+            <li id="miappCopyAction"><?php echo miappTranslate('Copiar'); ?></li>
+            <li id="miappPasteAction"><?php echo miappTranslate('Colar'); ?></li>
+            <hr>
+            <li id="miappSelectAllAction"><?php echo miappTranslate('Selecionar Tudo'); ?></li>
+        </ul>
+    </div>
+<?php }
