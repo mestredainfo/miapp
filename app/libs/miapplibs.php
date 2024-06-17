@@ -296,7 +296,7 @@ function miPre($value)
 }
 
 // Sobre o App
-function miAboutApp($texto = '', $bootstrap = false): string
+function miAboutApp($texto = ''): string
 {
     $tpl = new miHTML();
     $txt = $tpl->div(
@@ -327,14 +327,7 @@ function miAboutApp($texto = '', $bootstrap = false): string
             '',
             $tpl->strong('PHP: '),
             $tpl->a('php.net', ['href' => "javascript:window.miapp.openURL('https://www.php.net');"])
-        ),
-        $tpl->if($bootstrap, function () use ($tpl) {
-            $tpl->p(
-                '',
-                $tpl->strong('Bootstrap: '),
-                $tpl->a('getbootstrap.com', ['href' => "javascript:window.miapp.openURL('https://getbootstrap.com');"])
-            );
-        })
+        )
     );
 
     $txt .= $texto;
