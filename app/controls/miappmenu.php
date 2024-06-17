@@ -41,7 +41,7 @@ class miappmenu
 
         $txt = '';
         foreach ($this->menu as $menu) {
-            $txt .= '<li><a href="#">' . $menu['menu'] . '</a>';
+            $txt .= '<li><a href="#">' . miTranslate($menu['menu']) . '</a>';
             if (!empty($menu['submenu'])) {
                 $txt .= '<ul>';
                 foreach ($menu['submenu'] as $submenu) {
@@ -91,21 +91,21 @@ class miappmenu
                             $sPage = rtrim($sPage, ',');
 
                             $sJS = "javascript:miapp.newwindow($sPage);";
-                            $txt .= '<li><a href="' . $sJS . '"' . $datakey . '>' . $submenu['name'] . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
+                            $txt .= '<li><a href="' . $sJS . '"' . $datakey . '>' . miTranslate($submenu['name']) . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
                         } else {
                             if (empty($submenu['url'])) {
                                 if (empty($submenu['script'])) {
                                     if ($submenu['page'] == '/') {
-                                        $txt .= '<li><a href="' . $submenu['page'] . '"' . $datakey . '>' . $submenu['name'] . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
+                                        $txt .= '<li><a href="' . $submenu['page'] . '"' . $datakey . '>' . miTranslate($submenu['name']) . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
                                     } else {
 
-                                        $txt .= '<li><a href="/' . $submenu['page'] . '"' . $datakey . '>' . $submenu['name'] . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
+                                        $txt .= '<li><a href="/' . $submenu['page'] . '"' . $datakey . '>' . miTranslate($submenu['name']) . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
                                     }
                                 } else {
-                                    $txt .= '<li><a href="javascript:' . $submenu['script'] . '"' . $datakey . '>' . $submenu['name'] . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
+                                    $txt .= '<li><a href="javascript:' . $submenu['script'] . '"' . $datakey . '>' . miTranslate($submenu['name']) . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
                                 }
                             } else {
-                                $txt .= '<li><a href="javascript:miapp.openURL(\'' . $submenu['url'] . '\');"' . $datakey . '>' . $submenu['name'] . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
+                                $txt .= '<li><a href="javascript:miapp.openURL(\'' . $submenu['url'] . '\');"' . $datakey . '>' . miTranslate($submenu['name']) . ' <span class="miappmenukey">' . str_replace(['data-key="', '"'], '', $datakey) . '</span></a></li>';
                             }
                         }
                     }
@@ -163,10 +163,10 @@ $miappMenu = new miappmenu();
 <!-- Menu de Contexto -->
 <div id="miAppContextMenu">
     <ul>
-        <li id="miappCutAction">Recortar</li>
-        <li id="miappCopyAction">Copiar</li>
-        <li id="miappPasteAction">Colar</li>
+        <li id="miappCutAction"><?php echo miappTranslate('Recortar'); ?>/li>
+        <li id="miappCopyAction"><?php echo miappTranslate('Copiar'); ?></li>
+        <li id="miappPasteAction"><?php echo miappTranslate('Colar'); ?></li>
         <hr>
-        <li id="miappSelectAllAction">Selecionar Tudo</li>
+        <li id="miappSelectAllAction"><?php echo miappTranslate('Selecionar Tudo'); ?></li>
     </ul>
 </div>
