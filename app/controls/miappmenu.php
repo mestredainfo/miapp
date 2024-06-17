@@ -149,7 +149,7 @@ $miappMenu = new miappmenu();
             <li>
                 <hr>
             </li>
-            <li><a href="javascript:miapp.openURL('https://learn.zohopublic.com/external/manual/miapp?p=653b3d42c178d9278438a60b1d3cd7954298a2a3185abafd78c4618708e9c0b3');"><?php echo miappTranslate('Documentação'); ?></a></li>
+            <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/2024/06/documentacao-miapp.html');"><?php echo miappTranslate('Documentação'); ?></a></li>
             <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/p/assinantes.html');"><?php echo miappTranslate('Assinantes'); ?></a></li>
             <li><a href="javascript:miapp.openURL('https://www.mestredainfo.com.br/p/suporte.html');"><?php echo miappTranslate('Suporte'); ?></a></li>
             <li>
