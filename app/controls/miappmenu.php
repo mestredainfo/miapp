@@ -119,7 +119,7 @@ class miappmenu
     }
 }
 
-if (!miEmptyGET('scriptpost')) {
+if (miEmptyGET('scriptpost')) {
     $miappMenu = new miappmenu();
 ?>
     <ul id="miappmenu" class="miappmenu">
