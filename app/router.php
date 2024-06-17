@@ -9,10 +9,24 @@ define('miapp', true);
 
 include_once(dirname(__FILE__) . '/libs/miapplibs.php');
 
+$miappInit = function () {
+    echo '<link rel="stylesheet" href="/css/miappstyle.css">';
+    include_once(dirname(__FILE__) . '/controls/miappmenu.php');
+    echo '<script src="/js/miappscript.js"></script>';
+};
+
 function miappshow(): bool
 {
+    global $miappInit;
     if (empty(miRequestURI())) {
+        $miappInit();
         include_once(miPathRoot() . '/home.php');
+        return true;
+    } elseif (miRequestURI() == 'css/miappstyle.css') {
+        echo file_get_contents(dirname(__FILE__) . '/css/miappstyle.css');
+        return true;
+    } elseif (miRequestURI() == 'js/miappscript.js') {
+        echo file_get_contents(dirname(__FILE__) . '/js/miappscript.js');
         return true;
     } else {
         if (miFileExtension(miRequestURI()) == 'php') {
@@ -27,6 +41,7 @@ function miappshow(): bool
                 return true;
             } else {
                 if (file_exists(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI())) {
+                    $miappInit();
                     include_once(miPathRoot() . DIRECTORY_SEPARATOR . miRequestURI());
                     return true;
                 } else {
@@ -35,6 +50,7 @@ function miappshow(): bool
                 }
             }
         } elseif (!miFileExtension(miRequestURI()) && miConfig('router')) {
+            $miappInit();
             include_once(miPathRoot() . '/home.php');
             return true;
         } else {
