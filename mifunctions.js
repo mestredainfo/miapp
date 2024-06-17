@@ -4,10 +4,10 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-const { ipcMain, dialog, BrowserWindow } = require('electron')
+const { ipcMain, dialog } = require('electron')
 
 module.exports = {
-    mifunctions: function (milang, miappNewWindow, miupdate) {
+    mifunctions: function (milang, miappNewWindow) {
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
             const { canceled, filePaths } = await dialog.showOpenDialog({});
@@ -59,8 +59,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: milang.traduzir(title),
-                message: milang.traduzir(msg)
+                title: milang.traduzir(title, true),
+                message: milang.traduzir(msg, true)
             }
             return dialog.showMessageBoxSync(null, options);
         });
@@ -71,18 +71,8 @@ module.exports = {
         });
 
         // Traduzir
-        ipcMain.handle('appTraduzir', async (event, text, ...values) => {
-            return milang.traduzir(text, ...values);
-        });
-
-        // MIAppCheckUpdate
-        ipcMain.handle('miappCheckUpdate', async (event) => {
-            miupdate.checkUpdate(true);
-        });
-
-        // MIAppCheckUpdate
-        ipcMain.handle('openDevTools', async (event) => {
-            BrowserWindow.getFocusedWindow().webContents.openDevTools();
+        ipcMain.handle('appTraduzir', async (event, text) => {
+            return milang.traduzir(text, true);
         });
     }
 }

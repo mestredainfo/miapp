@@ -5,10 +5,6 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-if (!defined('miapp')) {
-    exit;
-}
-
 /* Clean */
 function miCleanDB(?string $valor): string|int|null
 {
@@ -44,31 +40,10 @@ if (file_exists($miLangPath)) {
     }
 }
 
-function miTranslate(string $text, string ...$values): string
+function miTranslate(string $text): string
 {
     global $miLang;
-    return (empty($miLang[$text])) ? sprintf($text, ...$values) : sprintf($miLang[$text], ...$values);
-}
-
-/* MIAppLang */
-$miappLangPath = dirname(__FILE__, 3) . '/lang/' . $miLangSystem . '.json';
-
-$miappLang = [];
-
-if (file_exists($miappLangPath)) {
-    $miappLang = json_decode(file_get_contents($miappLangPath), true);
-} else {
-    if (file_exists(dirname(__FILE__, 3) . '/lang/en.json')) {
-        $miappLang = json_decode(file_get_contents(dirname(__FILE__, 3) . '/lang/en.json'), true);
-    } else {
-        $miappLang = [];
-    }
-}
-
-function miappTranslate(string $text, string ...$values): string
-{
-    global $miappLang;
-    return (empty($miappLang[$text])) ? sprintf($text, ...$values) : sprintf($miappLang[$text], ...$values);
+    return (empty($miLang[$text])) ? $text : $miLang[$text];
 }
 
 /* Config */
@@ -150,11 +125,13 @@ function miIsLinux(): bool
 /* Exibe Alertas */
 function miAlert(string $title, string $message, string $type, bool $inscript = false)
 {
+    global $milang;
+
     if (!$inscript) {
         echo '<script>';
     }
 
-    echo sprintf("window.miapp.alert('%s', '%s', '%s');", $title, $message, $type);
+    echo sprintf("window.miapp.alert('%s', '%s', '%s');", miTranslate($title), miTranslate($message), $type);
 
     if (!$inscript) {
         echo '</script>';
@@ -164,11 +141,13 @@ function miAlert(string $title, string $message, string $type, bool $inscript = 
 /* Exibe Confirmação */
 function miConfirm(string $title, string $message, string $type, mixed $functionContinue, mixed $functionCancel, bool $inscript = false)
 {
+    global $milang;
     if (!$inscript) {
         echo '<script>';
     }
 
-    echo "window.miapp.confirm('" . $title . "', '" . $message . "', '$type', true).then((result) => {
+    echo "window.miapp.confirm('" . miTranslate($title) . "', '" . miTranslate($message) . "', '$type', true).then((result) => {
+        console.log(result);
         if (result) {
             ";
     $functionCancel();
@@ -235,9 +214,7 @@ function miWindowClose($inscript = false)
     }
 }
 
-/**
- * @deprecated
- */
+/* Verifica Arrays */
 function miVerificarArray(string $haystack, mixed $needle): bool
 {
     /* Gera array caso for detectado uma string e não um array */
@@ -253,25 +230,6 @@ function miVerificarArray(string $haystack, mixed $needle): bool
     }
 
     return false;
-}
-
-/**
- * @since 4.0.1
- */
-function miCheckArray(mixed $values, string $keyword): bool
-{
-    return miVerificarArray($keyword, $values);
-}
-
-function miGETArray(array $values, string ...$names): string|array
-{
-    $sValor = $values;
-
-    foreach ($names as $value) {
-        $sValor = (empty($sValor[$value])) ? '' : $sValor[$value];
-    }
-
-    return $sValor;
 }
 
 function miRemoveAccents(string $valor): string
@@ -296,39 +254,32 @@ function miPre($value)
 }
 
 // Sobre o App
-function miAboutApp($texto = ''): string
+function miAboutApp($texto = '', $bootstrap = false): string
 {
-    $tpl = new miHTML();
-    $txt = $tpl->div(
-        '',
-        $tpl->h1(miTranslate('Sobre o %s', miConfig('app', 'name'))),
-        $tpl->p(miConfig('app', 'name') . ' ' . miconfig('app', 'version')),
-        $tpl->p(miTranslate('Desenvolvido por: %s', miConfig('author', 'name'))),
-        $tpl->p(miTranslate('Organização: %s', miConfig('author', 'organization'))),
-        $tpl->p(
-            'Site: ',
-            $tpl->a(str_replace(['http://', 'https://'], '', miConfig('homepage')), ['href' => sprintf("javascript:window.miapp.openURL('%s');", miConfig('homepage'))])
-        ),
-        $tpl->p(miConfig('copyright')),
-        $tpl->p(miTranslate('Licença: %s', miConfig('license'))),
-        $tpl->hr('', ['class' => 'border border-primary border-3 opacity-75']),
-        $tpl->h3(miTranslate('Recursos de Terceiros Utilizados')),
-        $tpl->p(
-            '',
-            $tpl->strong('MIApp: '),
-            $tpl->a('www.mestredainfo.com.br/p/miapp.html', ['href' => "javascript:window.miapp.openURL('https://www.mestredainfo.com.br/p/miapp.html');"])
-        ),
-        $tpl->p(
-            '',
-            $tpl->strong('ElectronJS: '),
-            $tpl->a('electronjs.org', ['href' => "javascript:window.miapp.openURL('https://www.electronjs.org');"])
-        ),
-        $tpl->p(
-            '',
-            $tpl->strong('PHP: '),
-            $tpl->a('php.net', ['href' => "javascript:window.miapp.openURL('https://www.php.net');"])
-        )
-    );
+    global $milang;
+    $txt = '<h1>' . miTranslate('Sobre o ') . miConfig('app', 'name') . '</h1>
+<p>' . miConfig('app', 'name') . ' ' . miConfig('app', 'version') . '</p>
+<p>' . miTranslate('Desenvolvido por:') . ' ' . miConfig('author', 'name')  . '</p>
+<p>' . miTranslate('Organização:') . ' ' . miConfig('author', 'organization') . '</p>
+<p>Site: <a href="javascript:window.miapp.openURL(\'' . miConfig('homepage') . '\');">' . str_replace(['http://', 'https://'], '', miConfig('homepage')) . '</a></p>
+
+<p>' . miConfig('copyright') . '</p>
+
+<p>' . miTranslate('Licença:') . ' ' . miConfig('license') . '</p>
+
+<hr class="border border-primary border-3 opacity-75">
+
+<h3>' . miTranslate('Recursos de Terceiros Utilizados') . '</h3>
+
+<p><strong>MIApp:</strong> <a href="javascript:window.miapp.openURL(\'https://mestredainfo.wordpress.com/miapp/\');">mestredainfo.wordpress.com/miapp/</a></p>
+
+<p><strong>ElectronJS:</strong> <a href="javascript:window.miapp.openURL(\'https://www.electronjs.org\');">electronjs.org</a></p>
+
+<p><strong>PHP:</strong> <a href="javascript:window.miapp.openURL(\'https://www.php.net\');">php.net</a></p>';
+
+    if ($bootstrap) {
+        $txt .= '<p><strong>Bootstrap:</strong> <a href="javascript:window.miapp.openURL(\'https://getbootstrap.com\');">getbootstrap.com</a></p>';
+    }
 
     $txt .= $texto;
 
@@ -345,12 +296,12 @@ function miUserPath(): string
     return miCleanENV('miappuserpath');
 }
 
-function miPathRoot(): string
+function miPathRoot()
 {
     return miCleanENV('miapppathroot');
 }
 
-function miAppName(): string
+function miAppName()
 {
     return miConfig('app', 'name');
 }
@@ -371,15 +322,15 @@ function miCreateShortcut()
 
             $sCreateFile = file_put_contents($sFolder . '/' . str_replace(' ', '', strtolower(miAppName())) . '.desktop', $tplShortcut);
             if ($sCreateFile) {
-                miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Atalho criado no menu iniciar', 'info');
+                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Atalho criado no menu iniciar', 'info');
             } else {
-                miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+                miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
             }
         } else {
-            miAlert(miTranslate('Informação %s', miConfig('app', 'name')), 'Não foi possível criar o atalho no menu iniciar!', 'error');
+            miAlert(miTranslate('Informação ') . miConfig('app', 'name'), 'Não foi possível criar o atalho no menu iniciar!', 'error');
         }
     } else {
-        miAlert(miTranslate('Informação %s', miConfig('app', 'name')), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável \"%s.exe\" e clicando em \"Criar Atalho\"!'), 'error');
+        miAlert(miTranslate('Informação ') . miConfig('app', 'name'), miTranslate('No Windows você pode criar um atalho clicando com o botão direito no executável \"') . str_replace(' ', '', strtolower(miConfig('app', 'name'))) . '.exe\" e clicando em \"Criar Atalho\"!', 'error');
     }
 
     miWindowClose();
@@ -406,7 +357,7 @@ function miCheckUpdate($show = false)
         $html = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            throw new Exception(miTranslate('Erro ao buscar os dados: %s', curl_error($ch)));
+            throw new Exception(miTranslate('Erro ao buscar os dados: ') . curl_error($ch));
         }
 
         curl_close($ch);
@@ -417,7 +368,7 @@ function miCheckUpdate($show = false)
             $versaonova = $matches[1];
 
             if (version_compare($versaonova, $versaoatual, '>')) {
-                miConfirm(miTranslate('Atualização do %s', miConfig('app', 'name')), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
+                miConfirm(miTranslate('Atualização do ') . miConfig('app', 'name'), 'Deseja baixar a nova versão?', 'question', function () use ($url, $show) {
                     miOpenURL($url, true);
                     if ($show) {
                         miWindowClose(true);
@@ -429,94 +380,18 @@ function miCheckUpdate($show = false)
                 });
             } else {
                 if ($show) {
-                    miAlert(miTranslate('Atualização do %s', miConfig('app', 'name')), 'O software já está na versão mais recente.', 'info');
+                    miAlert(miTranslate('Atualização do ') . miConfig('app', 'name'), 'O software já está na versão mais recente.', 'info');
                     miWindowClose();
                 }
             }
         }
     } catch (Exception $error) {
-        echo miTranslate('Erro ao buscar os dados: %s', $error->getMessage());
+        echo miTranslate('Erro ao buscar os dados: ') . $error->getMessage();
     }
 }
 
-function miDeleteFiles(string $caminho): bool
-{
-    // Verifica se o caminho existe
-    if (!file_exists($caminho)) {
-        return false;
-    }
-
-    // Se o caminho é um diretório, itera sobre os arquivos e pastas dentro dele
-    if (is_dir($caminho)) {
-        $diretorio = new DirectoryIterator($caminho);
-        foreach ($diretorio as $item) {
-            if (!$item->isDot()) { // Ignora "." e ".."
-                if ($item->isDir()) {
-                    // Se é um diretório, chama recursivamente a função para excluí-lo
-                    miDeleteFiles($item->getPathname());
-                } else {
-                    // Se é um arquivo, exclui-o
-                    unlink($item->getPathname());
-                }
-            }
-        }
-        // Após excluir todos os arquivos e pastas, exclui o diretório
-        rmdir($caminho);
-        return true;
-    } else {
-        // Se o caminho é um arquivo, exclui diretamente
-        unlink($caminho);
-        return true;
-    }
-}
-
-function miFileExtension(string $filename): string|bool
-{
-    $p = pathinfo($filename);
-    return (empty($p['extension'])) ? false : $p['extension'];
-}
-
-$miRouterEncontrou = false;
-$miRouter404 = true;
-
-function miRouter(string $url, mixed $function = false): bool
-{
-    global $miRouter404, $miRouterEncontrou;
-
-    if (!$miRouterEncontrou) {
-        if (rtrim(miRequestURI(), '/') == $url) {
-            $miRouterEncontrou = true;
-            $miRouter404 = false;
-            if (!is_bool($function)) {
-                $function();
-            }
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-function miRouter404(mixed $function = false): bool
-{
-    global $miRouter404;
-
-    if ($miRouter404) {
-        if (!is_bool($function)) {
-            $function();
-        }
-        return true;
-    } else {
-        return false;
-    }
-}
-
-include_once(dirname(__FILE__) . '/database/midatabase.php');
-include_once(dirname(__FILE__) . '/database/midbselect.php');
-include_once(dirname(__FILE__) . '/database/midbinsert.php');
-include_once(dirname(__FILE__) . '/database/midbupdate.php');
-include_once(dirname(__FILE__) . '/database/midbdelete.php');
-include_once(dirname(__FILE__) . '/database/midbtools.php');
-include_once(dirname(__FILE__) . '/template/mihtml.php');
+include_once(dirname(__FILE__) . '/database/database.php');
+include_once(dirname(__FILE__) . '/database/select.php');
+include_once(dirname(__FILE__) . '/database/insert.php');
+include_once(dirname(__FILE__) . '/database/update.php');
+include_once(dirname(__FILE__) . '/database/delete.php');
