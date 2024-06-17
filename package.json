@@ -2,7 +2,7 @@
     "name": "miapp",
     "productName": "miapp",
     "version": "4.0.1",
-    "description": "Executa apps desenvolvidos em PHP para desktop com MIApp.",
+    "description": "Execute apps desenvolvidos em PHP para desktop com MIApp.",
     "main": "main.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
