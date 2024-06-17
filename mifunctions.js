@@ -4,10 +4,10 @@
 // Organização: Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
-const { ipcMain, dialog } = require('electron')
+const { ipcMain, dialog, BrowserWindow } = require('electron')
 
 module.exports = {
-    mifunctions: function (milang, miappNewWindow) {
+    mifunctions: function (milang, miappNewWindow, miupdate) {
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
             const { canceled, filePaths } = await dialog.showOpenDialog({});
@@ -73,6 +73,16 @@ module.exports = {
         // Traduzir
         ipcMain.handle('appTraduzir', async (event, text, ...values) => {
             return milang.traduzir(text, ...values);
+        });
+
+        // MIAppCheckUpdate
+        ipcMain.handle('miappCheckUpdate', async (event) => {
+            miupdate.checkUpdate(true);
+        });
+
+        // MIAppCheckUpdate
+        ipcMain.handle('openDevTools', async (event) => {
+            BrowserWindow.getFocusedWindow().webContents.openDevTools();
         });
     }
 }
