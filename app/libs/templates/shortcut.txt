@@ -1,8 +1,0 @@
-[Desktop Entry]
-Version={version}
-Name={name}
-Comment={description}
-Type=Application
-Exec={exec}
-Icon={icon}
-Categories={categories}
