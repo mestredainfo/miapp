@@ -1,0 +1,33 @@
+{
+    "app": {
+        "name": "Meu App",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "icon": "meuapp.png",
+        "disableHardwareAcceleration": true,
+        "menu": true
+    },
+    "php": {
+        "linux": {
+            "custom": "",
+            "folder": true,
+            "ini": {
+                "custom": "",
+                "folder": true
+            }
+        },
+        "win32": {
+            "custom": "",
+            "folder": true,
+            "ini": {
+                "custom": "",
+                "folder": true
+            }
+        }
+    },
+    "dev": {
+        "menu": true,
+        "tools": false
+    }
+}
