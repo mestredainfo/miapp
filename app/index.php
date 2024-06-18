@@ -36,8 +36,8 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
     foreach ($files as $file) {
         if (!empty($file)) {
             if ($file !== '.' && $file !== '..') {
-                if (file_exists($file)) {
-                    if ($file !== 'index.php' && $file !== 'includes' && $file !== 'dados' && $file !== 'menu') {
+                if (file_exists($file) && $file !== 'index.php') {
+                    if (is_file($file)) {
                         printf('<li><a href="%s" target="_blank" rel="noopener">%s</a></li>', $file, ucfirst(str_replace('.php', '', $file)));
                     }
                 }
