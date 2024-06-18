@@ -1,62 +1,62 @@
 {
-    "Exemplos": {
-        "Página Inicial": {
+    "Examples": {
+        "Home page": {
             "page": "index.php"
         },
         "separator1": {},
-        "Abrir": {
-            "page": "abrir.php",
+        "Open": {
+            "page": "openfile.php",
             "key": "CTRL+O"
         },
-        "Salvar": {
-            "page": "salvar.php",
+        "To save": {
+            "page": "savefile.php",
             "key": "CTRL+B"
         },
-        "Mensagem": {
-            "page": "mensagem.php"
+        "Message": {
+            "page": "message.php"
         },
         "separator2": {},
-        "Cookies": {
+        "cookies": {
             "page": "cookies.php",
             "key": "CTRL+K",
             "newwindow": true
         },
-        "Include": {
+        "include": {
             "page": "include.php",
             "key": "CTRL+I"
         },
-        "PHPInfo": {
+        "phpInfo": {
             "page": "phpinfo.php",
             "key": "CTRL+P",
             "newwindow": true
         },
-        "Sem Cache": {
-            "page": "semcache.php",
+        "No Cache": {
+            "page": "nocache.php",
             "key": "CTRL+S"
         },
-        "Session": {
+        "session": {
             "page": "session.php",
             "key": "CTRL+SHIFT+S"
         },
-        "SQLite3": {
+        "sqlite3": {
             "page": "sqlite.php",
             "key": "CTRL+ALT+S"
         },
-        "Timezone": {
+        "timezone": {
             "page": "timezone.php",
             "key": "CTRL+T"
         },
         "separator3": {},
-        "Formulário POST": {
+        "Post Form": {
             "page": "formpost.php"
         },
-        "Formulário GET": {
+        "GET Form": {
             "page": "formget.php"
         }
     },
-    "Sobre":
+    "About":
     {
-        "Página do MIApp": {
+        "MIApp Page": {
             "url": "https://www.mestredainfo.com.br/p/miapp.html",
             "key": "CTRL+M"
         }

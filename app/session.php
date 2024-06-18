@@ -2,7 +2,7 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
@@ -11,7 +11,7 @@ session_name('miapp');
 session_start();
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -33,7 +33,7 @@ session_start();
         echo 'Session: ' . $count;
     }
 
-    echo '<p><a href="javascript:window.location.reload();">Atualizar Página</a></p>';
+    echo '<p><a href="javascript:window.location.reload();">Update Page</a></p>';
     ?>
 </body>
 

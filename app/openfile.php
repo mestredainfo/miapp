@@ -2,18 +2,18 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abrir Arquivo</title>
+    <title>File Open</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,11 +28,11 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
     }
     ?>
     <script>
-        async function abrir() {
-            let sAbrir = await window.miapp.openFile();
-            window.location.assign(`?filename=${sAbrir.toString()}`);
+        async function open() {
+            let sOpen = await window.miapp.openFile();
+            window.location.assign(`?filename=${sOpen.toString()}`);
         }
-        abrir();
+        open();
     </script>
 </body>
 

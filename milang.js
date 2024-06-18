@@ -1,7 +1,7 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 module.exports = class milang {
@@ -32,7 +32,7 @@ module.exports = class milang {
                 }
             }
 
-            process.env.miapplangsystem = aLang;
+            process.env.MIAPP_LANG = aLang;
         } else {
             this.sLangApp = [];
         }

@@ -2,7 +2,7 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
@@ -16,7 +16,7 @@ if (empty($_COOKIE['info'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -31,34 +31,34 @@ if (empty($_COOKIE['info'])) {
         mkdir($pathDados);
     }
 
-    // Cria o banco de dados e a tabela
-    $db1 = new SQLite3($pathDados . '/exemplo.sqlite');
-    $db1->exec("CREATE TABLE IF NOT EXISTS mi_exemplo (
+    // Creates the database and the table
+    $db1 = new SQLite3($pathDados . '/example.sqlite');
+    $db1->exec("CREATE TABLE IF NOT EXISTS mi_example (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL
+    name TEXT NOT NULL
 )");
     $db1->close();
 
-    // Inseri registros
-    $db2 = new SQLite3($pathDados . '/exemplo.sqlite', SQLITE3_OPEN_READWRITE);
+    // Insert records
+    $db2 = new SQLite3($pathDados . '/example.sqlite', SQLITE3_OPEN_READWRITE);
     if (empty($_COOKIE['info'])) {
-        $db2->query("INSERT INTO mi_exemplo (nome) VALUES ('" . $count . "')");
+        $db2->query("INSERT INTO mi_example (name) VALUES ('" . $count . "')");
     } else {
-        if ($stmt = $db2->prepare("INSERT INTO mi_exemplo (nome) VALUES (:nome)")) {
-            $stmt->bindParam(':nome', $count);
+        if ($stmt = $db2->prepare("INSERT INTO mi_example (name) VALUES (:name)")) {
+            $stmt->bindParam(':name', $count);
             $stmt->execute();
             $stmt->close();
         }
     }
     $db2->close();
 
-    echo '<p><a href="javascript:window.location.reload();">Atualizar Página</a></p>';
+    echo '<p><a href="javascript:window.location.reload();">Update Page</a></p>';
 
-    // Consulta registros
-    $db3 = new SQLite3($pathDados . '/exemplo.sqlite', SQLITE3_OPEN_READONLY);
-    $query = $db3->query('SELECT * FROM mi_exemplo ORDER BY id DESC');
+    // Check records
+    $db3 = new SQLite3($pathDados . '/example.sqlite', SQLITE3_OPEN_READONLY);
+    $query = $db3->query('SELECT * FROM mi_example ORDER BY id DESC');
     while ($row = $query->fetchArray(SQLITE3_ASSOC)) {
-        echo $row['nome'] . '<br>';
+        echo $row['name'] . '<br>';
     }
     $db3->close();
     ?>

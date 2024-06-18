@@ -1,7 +1,7 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 const { ipcMain, dialog, BrowserWindow } = require('electron')

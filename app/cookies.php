@@ -2,7 +2,7 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
@@ -16,7 +16,7 @@ if (empty($_COOKIE['info'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@ if (empty($_COOKIE['info'])) {
 <body>
     <?php
     echo 'Cookie: ' . $count;
-    echo '<p><a href="javascript:window.location.reload();">Atualizar Página</a></p>';
+    echo '<p><a href="javascript:window.location.reload();">Update Page</a></p>';
     ?>
 </body>
 

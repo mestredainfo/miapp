@@ -2,18 +2,18 @@
 // Copyright (C) 2004-2024 Murilo Gomes Julio
 // SPDX-License-Identifier: MIT
 
-// Organização: Mestre da Info
+// Mestre da Info
 // Site: https://linktr.ee/mestreinfo
 
 header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'");
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário GET</title>
+    <title>Form GET</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,19 +21,19 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
 <body>
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        if (!empty($_GET['txtNome'])) {
-            $txtNome = filter_input(INPUT_GET, 'txtNome');
+        if (!empty($_GET['txtName'])) {
+            $txtName = filter_input(INPUT_GET, 'txtName');
 
-            echo 'Seu nome é ' . $txtNome . '<hr>';
+            echo 'My name is ' . $txtName . '<hr>';
         }
     }
     ?>
     <form name="frmPost" method="get" action="formget.php">
         <div>
-            <label for="txtNome">Digite seu nome</label>
-            <input id="txtNome" name="txtNome" type="text" placeholder="Digite seu nome" required>
+            <label for="txtName">Type your name</label>
+            <input id="txtName" name="txtName" type="text" placeholder="Type your name" required>
         </div>
-        <button type="submit">Enviar</button>
+        <button type="submit">To send</button>
     </form>
 </body>
 
