@@ -1,3 +1,10 @@
+<?php
+// Copyright (C) 2004-2024 Murilo Gomes Julio
+// SPDX-License-Identifier: MIT
+
+// Mestre da Info
+// Site: https://linktr.ee/mestreinfo
+?>
 <!DOCTYPE html>
 <html lang="en">
 
