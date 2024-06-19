@@ -181,7 +181,13 @@ function startPHPServer(win) {
     sListen.close();
     sCreateServer.close();
 
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+    // Router
+    let sRouter = '';
+    if (config.router) {
+        sRouter = path.join(app.getAppPath(), '/app/router.php');
+    }
+
+    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(milang.traduzir('Erro ao iniciar o servidor PHP:'), err);
