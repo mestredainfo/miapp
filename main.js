@@ -174,6 +174,15 @@ function startPHPServer(win) {
     process.env.MIAPP_USERPATH = sOS.userInfo().homedir;
     process.env.MIAPP_PLATFORM = sPlataform
 
+    let sArgv = process.argv;
+    if (sArgv[1] == '.') {
+        sArgv = sArgv.slice(2);
+    } else {
+        sArgv = sArgv.slice(1);
+    }
+    process.env.MIAPP_ARGV = sArgv;
+
+
     // Servidor
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
@@ -183,7 +192,7 @@ function startPHPServer(win) {
 
     // Router
     let sRouter = '';
-    if (config.router) {
+    if (config.php.router) {
         sRouter = path.join(app.getAppPath(), '/app/router.php');
     }
 
