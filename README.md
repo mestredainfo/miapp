@@ -18,6 +18,6 @@ To sponsor this project just access the page
 
 The MIApp is provided under:
 
-[SPDX-License-Identifier: MIT](https://spdx.org/licenses/MIT)
+[SPDX-License-Identifier: MIT](https://spdx.org/licenses/MIT.html)
 
 Licensed under the MIT license.
