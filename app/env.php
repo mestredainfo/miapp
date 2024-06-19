@@ -7,15 +7,15 @@
 </head>
 <body>
     <strong>Username</strong><br>
-    <?php echo $_SERVER['MIAPP_USERNAME']; ?><br><br>
+    <?php echo $_ENV['MIAPP_USERNAME']; ?><br><br>
 
     <strong>User Path</strong><br>
-    <?php echo $_SERVER['MIAPP_USERPATH']; ?><br><br>
+    <?php echo $_ENV['MIAPP_USERPATH']; ?><br><br>
 
     <strong>Platform</strong><br>
-    <?php echo $_SERVER['MIAPP_PLATFORM']; ?><br><br>
+    <?php echo $_ENV['MIAPP_PLATFORM']; ?><br><br>
 
     <strong>Language</strong><br>
-    <?php echo $_SERVER['MIAPP_LANG']; ?><br><br>
+    <?php echo $_ENV['MIAPP_LANG']; ?><br><br>
 </body>
 </html>
