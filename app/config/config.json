@@ -25,9 +25,9 @@
 				"custom": "",
 				"folder": true
 			}
-		}
+		},
+		"router": true
 	},
-	"router": true,
 	"dev": {
 		"menu": true,
 		"tools": false
