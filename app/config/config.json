@@ -27,6 +27,7 @@
 			}
 		}
 	},
+	"router": true,
 	"dev": {
 		"menu": true,
 		"tools": false
