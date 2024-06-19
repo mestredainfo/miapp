@@ -174,11 +174,12 @@ function startPHPServer(win) {
     process.env.MIAPP_USERPATH = sOS.userInfo().homedir;
     process.env.MIAPP_PLATFORM = sPlataform
 
-    let sArgv = process.argv;
-    if (sArgv[1] == '.') {
-        sArgv = sArgv.slice(2);
+    let sArgs = process.argv;
+    let sArgv = '';
+    if (sArgs[1] == '.') {
+        sArgv = sArgs.slice(2).toString();
     } else {
-        sArgv = sArgv.slice(1);
+        sArgv = sArgs.slice(1).toString();
     }
     process.env.MIAPP_ARGV = sArgv;
 
