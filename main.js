@@ -147,7 +147,7 @@ function startPHPServer(win) {
     } else if (sPlataform == 'win32') {
         if (config.php.win32.custom) {
             if (config.php.win32.folder) {
-                sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.win32.custom);
+                sFilePHP = path.join(app.getAppPath(), '/php/win32/', config.php.win32.custom);
             } else {
                 sFilePHP = config.php.win32.custom;
             }
@@ -157,7 +157,7 @@ function startPHPServer(win) {
 
         if (config.php.win32.ini.custom) {
             if (config.php.win32.ini.folder) {
-                sFilePHPINI = path.join(app.getAppPath(), '/php/linux/', config.php.win32.ini.custom);
+                sFilePHPINI = path.join(app.getAppPath(), '/php/win32/', config.php.win32.ini.custom);
             } else {
                 sFilePHPINI = config.php.win32.ini.custom;
             }
@@ -192,12 +192,14 @@ function startPHPServer(win) {
     sCreateServer.close();
 
     // Router
-    let sRouter = '';
+    
     if (config.php.router) {
+        let sRouter = '';
         sRouter = path.join(app.getAppPath(), '/app/router.php');
+        phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
+    } else {
+        phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
     }
-
-    phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
 
     phpServerProcess.on('error', (err) => {
         console.error(milang.traduzir('Erro ao iniciar o servidor PHP:'), err);
