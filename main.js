@@ -104,6 +104,18 @@ const createWindow = () => {
     mifunctions.mifunctions(milang, miappNewWindow);
 }
 
+// Aplica permissão de execução para o filephp
+function permPHP(filephp) {
+    if (config.php.linux.perm) {
+        spawn('chmod', ['+x', filephp]);
+        config.php.linux.perm = false;
+
+        fs.writeFileSync(path.join(app.getAppPath(), '/app/config/config.json'), JSON.stringify(config, '', "\t"));
+
+        console.log(milang.traduzir('Aplicado permissão de execução para o %s', path.basename(filephp)));
+    }
+}
+
 // Inicia o servidor embutido do PHP
 function startPHPServer(win) {
     let sFilePHP;
@@ -113,11 +125,13 @@ function startPHPServer(win) {
         if (config.php.linux.custom) {
             if (config.php.linux.folder) {
                 sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.linux.custom);
+                permPHP(sFilePHP);
             } else {
                 sFilePHP = config.php.linux.custom;
             }
         } else {
             sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
+            permPHP(sFilePHP);
         }
 
         if (config.php.linux.ini.custom) {
