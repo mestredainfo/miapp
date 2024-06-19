@@ -1,6 +1,7 @@
 {
 "Exceção não tratada:":"Excepción no controlada:",
 "Erro ao ler o arquivo JSON":"Error al leer el archivo JSON",
+"Aplicado permissão de execução para o %s":"Permiso de ejecución aplicado a %s",
 "Erro ao iniciar o servidor PHP:":"Error al iniciar el servidor PHP:",
 "O servidor PHP foi encerrado com o código:":"El servidor PHP finalizó con el código:",
 "Servidor PHP iniciado com sucesso.":"El servidor PHP se inició correctamente.",
@@ -8,7 +9,7 @@
 "lsof saiu com código de erro":"lsof salió con código de error",
 "Erro ao executar netstat:":"Error al ejecutar netstat:",
 "netstat saiu com código de erro":"netstat salió con código de error",
-"Dev":"Desarrollador",
+"Dev":"desarrollador",
 "Atualizar":"Actualizar",
 "Ferramentas do Desenvolvedor":"Herramientas de desarrollo",
 "Recortar":"Cultivo",
@@ -18,5 +19,7 @@
 "Erro ao encerrar o processo na porta:":"Error al finalizar el proceso en el puerto:",
 "Processo na porta":"Proceso en la puerta",
 "encerrado com sucesso.":"finalizado exitosamente.",
-"Servidor PHP parado.":"El servidor PHP se detuvo."
+"Servidor PHP parado.":"El servidor PHP se detuvo.",
+"Continuar":"Continuar",
+"Cancelar":"Cancelar"
 }

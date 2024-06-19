@@ -1,6 +1,7 @@
 {
 "Exceção não tratada:":"Exceção não tratada:",
 "Erro ao ler o arquivo JSON":"Erro ao ler o arquivo JSON",
+"Aplicado permissão de execução para o %s":"Aplicado permissão de execução para o %s",
 "Erro ao iniciar o servidor PHP:":"Erro ao iniciar o servidor PHP:",
 "O servidor PHP foi encerrado com o código:":"O servidor PHP foi encerrado com o código:",
 "Servidor PHP iniciado com sucesso.":"Servidor PHP iniciado com sucesso.",
@@ -18,5 +19,7 @@
 "Erro ao encerrar o processo na porta:":"Erro ao encerrar o processo na porta:",
 "Processo na porta":"Processo na porta",
 "encerrado com sucesso.":"encerrado com sucesso.",
-"Servidor PHP parado.":"Servidor PHP parado."
+"Servidor PHP parado.":"Servidor PHP parado.",
+"Continuar":"Continuar",
+"Cancelar":"Cancelar"
 }
