@@ -18,6 +18,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
         body {
             font-size: 18px;
         }
+
         li {
             line-height: 27px;
         }
@@ -36,7 +37,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
     foreach ($files as $file) {
         if (!empty($file)) {
             if ($file !== '.' && $file !== '..') {
-                if (file_exists($file) && $file !== 'index.php') {
+                if (file_exists($file) && $file !== 'index.php' && $file !== 'style.css') {
                     if (is_file($file)) {
                         printf('<li><a href="%s" target="_blank" rel="noopener">%s</a></li>', $file, ucfirst(str_replace('.php', '', $file)));
                     }
