@@ -5,8 +5,21 @@ module.exports = {
       /^\/node_modules\/.vite/,
       /^\/.git/,
       /^\/.github/
+    ],
+    asar: true,
+    extraResource: [
+      "./app/",
+      "./php/",
+      "./LICENSE",
+      "./README.md"
     ]
   },
+  plugins: [
+    {
+      name: '@electron-forge/plugin-auto-unpack-natives',
+      config: {}
+    }
+  ],
   makers: [
     {
       name: "@electron-forge/maker-zip",
@@ -25,9 +38,9 @@ module.exports = {
       const platform = buildPath.platform.toString();
 
       if (platform === 'win32') {
-        fs.rmSync(path.join(outputPath, '/resources/app/php/linux/'), { recursive: true, force: true });
+        fs.rmSync(path.join(outputPath, '/resources/php/linux/'), { recursive: true, force: true });
       } else if (platform === 'linux') {
-        fs.rmSync(path.join(outputPath, '/resources/app/php/win32/'), { recursive: true, force: true });
+        fs.rmSync(path.join(outputPath, '/resources/php/win32/'), { recursive: true, force: true });
       }
     }
   },
