@@ -1,7 +1,7 @@
 {
     "name": "miapp",
     "productName": "miapp",
-    "version": "5.0.0",
+    "version": "5.0.1",
     "description": "Execute apps desenvolvidos em PHP para desktop com MIApp.",
     "main": "main.js",
     "scripts": {
@@ -28,6 +28,7 @@
     "devDependencies": {
         "@electron-forge/cli": "^7.4.0",
         "@electron-forge/maker-zip": "^7.4.0",
+        "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
         "electron": "^31.0.1"
     }
 }
