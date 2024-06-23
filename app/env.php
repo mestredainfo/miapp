@@ -26,5 +26,8 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
 
     <strong>Language</strong><br>
     <?php echo $_ENV['MIAPP_LANG']; ?><br><br>
+
+    <strong>App Path</strong><br>
+    <?php echo $_ENV['MIAPP_PATH']; ?><br><br>
 </body>
 </html>
