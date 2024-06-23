@@ -14,13 +14,13 @@ const sHttp = require('http');
 const sPlataform = sOS.platform().toLowerCase();
 
 const milangs = require(path.join(app.getAppPath(), '/milang.js'));
-const milang = new milangs(sPlataform, app.getAppPath(), app.getAppPath());
+const milang = new milangs(sPlataform, app.getAppPath().replace('app.asar', ''));
 
 process.on('uncaughtException', (error) => {
     console.error(milang.traduzir('Exceção não tratada:'), error);
 });
 
-const config = JSON.parse(fs.readFileSync(path.join(app.getAppPath(), '/app/config/config.json'), 'utf-8'));
+const config = JSON.parse(fs.readFileSync(path.join(app.getAppPath().replace('app.asar', ''), '/app/config/config.json'), 'utf-8'));
 
 if (config.app.disableHardwareAcceleration) {
     app.disableHardwareAcceleration();
@@ -36,7 +36,7 @@ let sPort;
 
 function createMenu(sWin, menus) {
     if (menus) {
-        fs.readFile(path.join(app.getAppPath(), '/app/menu/menu.json'), (err, data) => {
+        fs.readFile(path.join(app.getAppPath().replace('app.asar', ''), '/app/menu/menu.json'), (err, data) => {
             if (err) {
                 console.error(milang.traduzir('Erro ao ler o arquivo JSON'), err);
                 return;
@@ -60,7 +60,7 @@ const createWindow = () => {
         width: config.app.width,
         height: config.app.height,
         resizable: config.app.resizable,
-        icon: path.join(app.getAppPath(), '/app/icon/', config.app.icon),
+        icon: path.join(app.getAppPath().replace('app.asar', ''), '/app/icon/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
@@ -110,7 +110,7 @@ function permPHP(filephp) {
         spawn('chmod', ['+x', filephp]);
         config.php.linux.perm = false;
 
-        fs.writeFileSync(path.join(app.getAppPath(), '/app/config/config.json'), JSON.stringify(config, '', "\t"));
+        fs.writeFileSync(path.join(app.getAppPath().replace('app.asar', ''), '/app/config/config.json'), JSON.stringify(config, '', "\t"));
 
         console.log(milang.traduzir('Aplicado permissão de execução para o %s', path.basename(filephp)));
     }
@@ -124,45 +124,45 @@ function startPHPServer(win) {
     if (sPlataform == 'linux') {
         if (config.php.linux.custom) {
             if (config.php.linux.folder) {
-                sFilePHP = path.join(app.getAppPath(), '/php/linux/', config.php.linux.custom);
+                sFilePHP = path.join(app.getAppPath().replace('app.asar', ''), '/php/linux/', config.php.linux.custom);
                 permPHP(sFilePHP);
             } else {
                 sFilePHP = config.php.linux.custom;
             }
         } else {
-            sFilePHP = path.join(app.getAppPath(), '/php/linux/miappserver');
+            sFilePHP = path.join(app.getAppPath().replace('app.asar', ''), '/php/linux/miappserver');
             permPHP(sFilePHP);
         }
 
         if (config.php.linux.ini.custom) {
             if (config.php.linux.ini.folder) {
-                sFilePHPINI = path.join(app.getAppPath(), '/php/linux/', config.php.linux.ini.custom);
+                sFilePHPINI = path.join(app.getAppPath().replace('app.asar', ''), '/php/linux/', config.php.linux.ini.custom);
             } else {
                 sFilePHPINI = config.php.linux.ini.custom;
             }
         } else {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/linux/php.ini');
+            sFilePHPINI = path.join(app.getAppPath().replace('app.asar', ''), '/php/linux/php.ini');
 
         }
     } else if (sPlataform == 'win32') {
         if (config.php.win32.custom) {
             if (config.php.win32.folder) {
-                sFilePHP = path.join(app.getAppPath(), '/php/win32/', config.php.win32.custom);
+                sFilePHP = path.join(app.getAppPath().replace('app.asar', ''), '/php/win32/', config.php.win32.custom);
             } else {
                 sFilePHP = config.php.win32.custom;
             }
         } else {
-            sFilePHP = path.join(app.getAppPath(), '/php/win32/php.exe');
+            sFilePHP = path.join(app.getAppPath().replace('app.asar', ''), '/php/win32/php.exe');
         }
 
         if (config.php.win32.ini.custom) {
             if (config.php.win32.ini.folder) {
-                sFilePHPINI = path.join(app.getAppPath(), '/php/win32/', config.php.win32.ini.custom);
+                sFilePHPINI = path.join(app.getAppPath().replace('app.asar', ''), '/php/win32/', config.php.win32.ini.custom);
             } else {
                 sFilePHPINI = config.php.win32.ini.custom;
             }
         } else {
-            sFilePHPINI = path.join(app.getAppPath(), '/php/win32/php.ini');
+            sFilePHPINI = path.join(app.getAppPath().replace('app.asar', ''), '/php/win32/php.ini');
 
         }
     } else {
@@ -173,6 +173,7 @@ function startPHPServer(win) {
     process.env.MIAPP_USERNAME = sOS.userInfo().username;
     process.env.MIAPP_USERPATH = sOS.userInfo().homedir;
     process.env.MIAPP_PLATFORM = sPlataform
+    process.env.MIAPP_PATH = path.join(app.getAppPath().replace('app.asar', ''), '/app/');
 
     let sArgs = process.argv;
     let sArgv = '';
@@ -183,7 +184,6 @@ function startPHPServer(win) {
     }
     process.env.MIAPP_ARGV = sArgv;
 
-
     // Servidor
     let sCreateServer = sHttp.createServer();
     let sListen = sCreateServer.listen();
@@ -192,13 +192,12 @@ function startPHPServer(win) {
     sCreateServer.close();
 
     // Router
-    
     if (config.php.router) {
         let sRouter = '';
-        sRouter = path.join(app.getAppPath(), '/app/router.php');
-        phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
+        sRouter = path.join(app.getAppPath().replace('app.asar', ''), '/app/router.php');
+        phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath().replace('app.asar', ''), '/app/'), sRouter], { cwd: process.env.HOME, env: process.env });
     } else {
-        phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath(), '/app/')], { cwd: process.env.HOME, env: process.env });
+        phpServerProcess = spawn(sFilePHP, ['-S', 'localhost:' + sPort, '-c', sFilePHPINI, '-t', path.join(app.getAppPath().replace('app.asar', ''), '/app/')], { cwd: process.env.HOME, env: process.env });
     }
 
     phpServerProcess.on('error', (err) => {
@@ -275,7 +274,7 @@ function miappNewWindow(url, width, height, resizable, menu, hide) {
         width: sWidth,
         height: sHeight,
         resizable: sResizable,
-        icon: path.join(app.getAppPath(), '/app/icon/', config.app.icon),
+        icon: path.join(app.getAppPath().replace('app.asar', ''), '/app/icon/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
         }
@@ -287,6 +286,8 @@ function miappNewWindow(url, width, height, resizable, menu, hide) {
 
     sNewWindow.setMenu(null);
     sNewWindow.loadURL(`${sServerName}/${url.replace(sServerName, '')}`);
+
+    createMenuContext(sNewWindow);
 
     sNewWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (url !== '') {
@@ -400,7 +401,6 @@ function createMenuContext(win) {
     }));
 
     win.webContents.on('context-menu', (event, params) => {
-        console.log(params.formControlType)
         if (params.formControlType == 'input-text' || params.formControlType == 'text-area') {
             contextMenu.popup({
                 window: win,
