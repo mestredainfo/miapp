@@ -117,8 +117,8 @@ module.exports = {
         // AppTray
         ipcMain.handle('appExportPDF', async (event, filename, options) => {
             const fs = require('fs');
-            // Use default printing options
             const pdfPath = filename;
+            
             let pdfOptions = options;
             if (!pdfOptions) {
                 pdfOptions = {
