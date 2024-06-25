@@ -61,8 +61,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: milang.traduzir(title),
-                message: milang.traduzir(msg)
+                title: title,
+                message: msg
             }
             return dialog.showMessageBoxSync(null, options);
         });
@@ -76,8 +76,8 @@ module.exports = {
                 buttons: sButtons,
                 defaultId: 1,
                 cancelId: 2,
-                title: milang.traduzir(title),
-                message: milang.traduzir(msg)
+                title: title,
+                message: msg
             }
             return dialog.showMessageBoxSync(null, options);
         });
