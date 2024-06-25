@@ -8,9 +8,17 @@ const { ipcMain, dialog, BrowserWindow } = require('electron')
 
 module.exports = {
     mifunctions: function (milang, miappNewWindow) {
+        // Função para selecionar pasta
+        ipcMain.handle('selecionarDiretorio', async () => {
+            const { canceled, filePaths } = await dialog.showOpenDialog({properties: ['openDirectory']});
+            if (!canceled) {
+                return filePaths[0];
+            }
+        });
+
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
-            const { canceled, filePaths } = await dialog.showOpenDialog({});
+            const { canceled, filePaths } = await dialog.showOpenDialog({properties: ['openFile']});
             if (!canceled) {
                 return filePaths[0];
             }
