@@ -10,7 +10,7 @@ module.exports = {
     mifunctions: function (milang, miappNewWindow) {
         // Função para selecionar pasta
         ipcMain.handle('selecionarDiretorio', async () => {
-            const { canceled, filePaths } = await dialog.showOpenDialog({properties: ['openDirectory']});
+            const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] });
             if (!canceled) {
                 return filePaths[0];
             }
@@ -18,7 +18,7 @@ module.exports = {
 
         // Função para abrir arquivo
         ipcMain.handle('abrirArquivo', async () => {
-            const { canceled, filePaths } = await dialog.showOpenDialog({properties: ['openFile']});
+            const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openFile'] });
             if (!canceled) {
                 return filePaths[0];
             }
@@ -86,6 +86,11 @@ module.exports = {
         // DevTools
         ipcMain.handle('openDevTools', async (event) => {
             BrowserWindow.getFocusedWindow().webContents.openDevTools();
+        });
+
+        ipcMain.handle('appNotification', async (event, title, text) => {
+            let { Notification } = require('electron');            
+            new Notification({ title: title, body: text }).show();
         });
     }
 }
