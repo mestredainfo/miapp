@@ -23,7 +23,7 @@ if (!file_exists(dirname(__FILE__) . '/pdf/')) {
 </head>
 
 <body>
-    <button type="button" onclick="pdf()" class="no-print">Export PDF</button>
+    <button id="pdf" type="button" class="no-print">Export PDF</button>
     <div class="display-none print">
         <h3>Example PDF</h3>
         <table>
@@ -35,10 +35,16 @@ if (!file_exists(dirname(__FILE__) . '/pdf/')) {
     </div>
     <p class="no-print">Print div</p>
     <script>
-        async function pdf() {
-            await miapp.exportPDF('<?php echo dirname(__FILE__) . '/pdf/example.pdf'; ?>');
+        const pdf = document.getElementById('pdf');
+
+        pdf.addEventListener('click', async () => {
+            <?php if ($_ENV['MIAPP_PLATFORM'] == 'linux') { ?>
+                await miapp.exportPDF('<?php echo dirname(__FILE__) . '/pdf/example.pdf'; ?>');
+            <?php } else { ?>
+                await miapp.exportPDF('<?php echo str_replace('\\','\\\\', dirname(__FILE__)) . '\\\\pdf\\\\example.pdf'; ?>');
+            <?php } ?>
             miapp.newWindow('/pdf/example.pdf');
-        }
+        });
     </script>
 </body>
 
