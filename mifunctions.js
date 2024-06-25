@@ -74,8 +74,8 @@ module.exports = {
         });
 
         // Abre uma nova janela personalizada
-        ipcMain.handle('appNewWindow', async (event, url, width, height, resizable, menu, hide) => {
-            miappNewWindow(url, width, height, resizable, menu, hide);
+        ipcMain.handle('appNewWindow', async (event, url, width, height, resizable, frame, menu, hide) => {
+            miappNewWindow(url, width, height, resizable, frame, menu, hide);
         });
 
         // Traduzir

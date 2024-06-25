@@ -60,6 +60,7 @@ const createWindow = () => {
         width: config.app.width,
         height: config.app.height,
         resizable: config.app.resizable,
+        frame: config.app.frame,
         icon: path.join(app.getAppPath().replace('app.asar', ''), '/app/icon/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
@@ -263,10 +264,11 @@ function startPHPServer(win) {
 }
 
 // Nova Janela
-function miappNewWindow(url, width, height, resizable, menu, hide) {
+function miappNewWindow(url, width, height, resizable, frame, menu, hide) {
     let sWidth = (width) ? width : config.app.width;
     let sHeight = (height) ? height : config.app.height;
     let sResizable = (resizable == true || resizable == false) ? resizable : config.app.resizable;
+    let sFrame = (frame == true || frame == false) ? frame : config.app.frame;
     let sMenu = (menu == true || menu == false) ? menu : config.app.menu;
     let sHide = (hide == true || hide == false) ? hide : false;
 
@@ -274,6 +276,7 @@ function miappNewWindow(url, width, height, resizable, menu, hide) {
         width: sWidth,
         height: sHeight,
         resizable: sResizable,
+        frame: sFrame,
         icon: path.join(app.getAppPath().replace('app.asar', ''), '/app/icon/', config.app.icon),
         webPreferences: {
             preload: path.join(app.getAppPath(), '/preload.js'),
@@ -354,7 +357,7 @@ function getMenuTemplate(win, menuData, menus) {
                             // Verifica se é uma página ou URL
                             if (menuData[key][submenuKey].page) {
                                 if (menuData[key][submenuKey].newwindow) {
-                                    miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].menu, menuData[key][submenuKey].hide)
+                                    miappNewWindow(menuData[key][submenuKey].page, menuData[key][submenuKey].width, menuData[key][submenuKey].height, menuData[key][submenuKey].resizable, menuData[key][submenuKey].frame, menuData[key][submenuKey].menu, menuData[key][submenuKey].hide)
                                 } else {
                                     win.loadURL(sServerName + menuData[key][submenuKey].page);
                                 }
