@@ -29,7 +29,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
     ?>
     <script>
         async function open() {
-            let sOpen = await window.miapp.openFile();
+            let sOpen = await miapp.openFile();
             window.location.assign(`?filename=${sOpen.toString()}`);
         }
         open();

@@ -30,7 +30,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
     ?>
     <script>
         async function save() {
-            let sSave = await window.miapp.saveFile();
+            let sSave = await miapp.saveFile();
             window.location.assign(`?filename=${sSave.toString()}`);
         }
         save();

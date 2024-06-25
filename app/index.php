@@ -50,19 +50,19 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
     <script>
         const txtVersion = document.getElementById('version');
 
-        window.miapp.version('miapp').then((result) => {
+        miapp.version('miapp').then((result) => {
             txtVersion.innerHTML = `Version of MIApp: ${result}<br>`;
         });
 
-        window.miapp.version('electron').then((result) => {
+        miapp.version('electron').then((result) => {
             txtVersion.innerHTML += `Version of ElectronJS: ${result}<br>`;
         });
 
-        window.miapp.version('node').then((result) => {
+        miapp.version('node').then((result) => {
             txtVersion.innerHTML += `Version of NodeJS: ${result}<br>`;
         });
 
-        window.miapp.version('chromium').then((result) => {
+        miapp.version('chromium').then((result) => {
             txtVersion.innerHTML += `Version of Chromium: ${result}<br>`;
         });
     </script>

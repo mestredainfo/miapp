@@ -24,11 +24,11 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
     <div id="info"></div>
     <script>
         async function message() {
-            window.miapp.alert('Information message', 'This is an example of a message!', 'info', false);
+            miapp.alert('Information message', 'This is an example of a message!', 'info', false);
         }
 
         async function confirm() {
-            window.miapp.confirm('Confirmation message', 'This is an example of a message!', 'error', true).then((result) => {
+            miapp.confirm('Confirmation message', 'This is an example of a message!', 'error', true).then((result) => {
                 if (result) {
                     document.getElementById('info').innerHTML = 'Not confirmed';
                 } else {
