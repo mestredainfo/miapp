@@ -70,7 +70,7 @@ module.exports = {
         // Função para caixa de confirmação
         ipcMain.handle('appConfirm', async (event, title, msg, type, ...buttons) => {
             let sButtons = [milang.traduzir('Continuar'), milang.traduzir('Cancelar'), ...buttons];
-    
+
             let options = {
                 type: type,
                 buttons: sButtons,
@@ -112,6 +112,28 @@ module.exports = {
             tray.setContextMenu(contextMenu);
             tray.setToolTip(tooltip);
             tray.setTitle(title);
+        });
+
+        // AppTray
+        ipcMain.handle('appExportPDF', async (event, filename, options) => {
+            const fs = require('fs');
+            // Use default printing options
+            const pdfPath = filename;
+            let pdfOptions = options;
+            if (!pdfOptions) {
+                pdfOptions = {
+                    pageSize: 'A4'
+                };
+            }
+
+            BrowserWindow.getFocusedWindow().webContents.printToPDF(pdfOptions).then(data => {
+                fs.writeFile(pdfPath, data, (error) => {
+                    if (error) throw error
+                    console.log(milang.traduzir('PDF salvo com sucesso em %s', pdfPath))
+                })
+            }).catch(error => {
+                console.log(milang.traduzir('Erro ao tentar gerar o PDF em %s', pdfPath), error)
+            })
         });
 
         // AppExec
