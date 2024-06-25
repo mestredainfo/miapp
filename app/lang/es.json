@@ -21,5 +21,7 @@
 "encerrado com sucesso.":"finalizado exitosamente.",
 "Servidor PHP parado.":"El servidor PHP se detuvo.",
 "Continuar":"Continuar",
-"Cancelar":"Cancelar"
+"Cancelar":"Cancelar",
+"PDF salvo com sucesso em %s":"PDF guardado exitosamente en %s",
+"Erro ao tentar gerar o PDF em %s":"Error al intentar generar PDF en %s"
 }
