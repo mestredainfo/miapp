@@ -92,5 +92,19 @@ module.exports = {
             let { Notification } = require('electron');            
             new Notification({ title: title, body: text }).show();
         });
+
+        ipcMain.handle('appExec', async (event, command) => {
+            var childProcess = require('child_process');
+            const child = childProcess.exec(command);
+
+            child.stdout.on('data', (d) => {
+                BrowserWindow.getFocusedWindow().webContents.send('list:exec', d);
+            });
+
+            child.stdout.on('close', () => {
+                child.unref();
+                child.kill();
+            });
+        });
     }
 }

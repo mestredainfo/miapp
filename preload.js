@@ -20,4 +20,6 @@ contextBridge.exposeInMainWorld('miapp', {
     openFile: () => ipcRenderer.invoke('abrirArquivo'),
     saveFile: () => ipcRenderer.invoke('salvarArquivo'),
     notification: (title, text) => ipcRenderer.invoke('appNotification', title, text),
+    exec: (command) => ipcRenderer.invoke('appExec', command),
+    listExec: (listener) => ipcRenderer.on('list:exec', (event, ...args) => listener(...args) + ipcRenderer.removeListener('list:exec')),
 });
