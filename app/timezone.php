@@ -10,7 +10,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
 date_default_timezone_set("America/Sao_Paulo");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $_ENV['MIAPP_LANG']; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

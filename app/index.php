@@ -8,7 +8,7 @@
 header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $_ENV['MIAPP_LANG']; ?>">
 
 <head>
     <meta charset="UTF-8">

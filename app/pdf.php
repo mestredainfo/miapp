@@ -12,7 +12,7 @@ if (!file_exists(dirname(__FILE__) . '/pdf/')) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $_ENV['MIAPP_LANG']; ?>">
 
 <head>
     <meta charset="UTF-8">

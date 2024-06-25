@@ -14,7 +14,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $_ENV['MIAPP_LANG']; ?>">
 
 <head>
     <meta charset="UTF-8">
