@@ -11,8 +11,8 @@ ipcRenderer.setMaxListeners(20);
 // MIApp
 contextBridge.exposeInMainWorld('miapp', {
     version: (type) => ipcRenderer.invoke('appVersao', type),
-    alert: (title, msg, type) => ipcRenderer.invoke('appMessage', title, msg, type, false),
-    confirm: (title, msg, type) => ipcRenderer.invoke('appMessage', title, msg, type, true),
+    alert: (title, msg, type, ...buttons) => ipcRenderer.invoke('appMessage', title, msg, type, ...buttons),
+    confirm: (title, msg, type, ...buttons) => ipcRenderer.invoke('appConfirm', title, msg, type, ...buttons),
     newWindow: (url, width, height, resizable, frame, menu, hide) => ipcRenderer.invoke('appNewWindow', url, width, height, resizable, frame, menu, hide),
     openURL: (url) => ipcRenderer.invoke('appExterno', url),
     translate: (text, ...values) => ipcRenderer.invoke('appTraduzir', text, ...values),

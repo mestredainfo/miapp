@@ -53,15 +53,24 @@ module.exports = {
         });
 
         // Função para caixa de alerta
-        ipcMain.handle('appMessage', async (event, title, msg, type, confirm) => {
-            let sButtons;
+        ipcMain.handle('appMessage', async (event, title, msg, type, ...buttons) => {
+            let sButtons = [milang.traduzir('Continuar'), ...buttons];
 
-            if (confirm) {
-                sButtons = [milang.traduzir('Continuar'), milang.traduzir('Cancelar')];
-            } else {
-                sButtons = [milang.traduzir('Continuar')];
+            let options = {
+                type: type,
+                buttons: sButtons,
+                defaultId: 1,
+                cancelId: 2,
+                title: milang.traduzir(title),
+                message: milang.traduzir(msg)
             }
+            return dialog.showMessageBoxSync(null, options);
+        });
 
+        // Função para caixa de confirmação
+        ipcMain.handle('appConfirm', async (event, title, msg, type, ...buttons) => {
+            let sButtons = [milang.traduzir('Continuar'), milang.traduzir('Cancelar'), ...buttons];
+    
             let options = {
                 type: type,
                 buttons: sButtons,
