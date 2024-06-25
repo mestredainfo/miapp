@@ -28,7 +28,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-in
 <body>
     <h3>Information</h3>
     <p id="version" style="line-height: 37px;"></p>
-    <p style="margin-top: -7px;">PHP version: <?php echo phpversion(); ?></p>
+    <p style="margin-top: -7px;">Version of PHP: <?php echo phpversion(); ?></p>
 
     <h3>Examples</h3>
     <?php
