@@ -88,11 +88,24 @@ module.exports = {
             BrowserWindow.getFocusedWindow().webContents.openDevTools();
         });
 
+        // AppNotification
         ipcMain.handle('appNotification', async (event, title, text) => {
-            let { Notification } = require('electron');            
+            let { Notification } = require('electron');
             new Notification({ title: title, body: text }).show();
         });
 
+        // AppTray
+        ipcMain.handle('appTray', async (event, title, tooltip, image, menu) => {
+            const { Tray, Menu, nativeImage } = require('electron')
+            const icon = nativeImage.createFromPath(image)
+            let tray = new Tray(icon)
+            const contextMenu = Menu.buildFromTemplate(menu);
+            tray.setContextMenu(contextMenu);
+            tray.setToolTip(tooltip);
+            tray.setTitle(title);
+        });
+
+        // AppExec
         ipcMain.handle('appExec', async (event, command) => {
             var childProcess = require('child_process');
             const child = childProcess.exec(command);
