@@ -1,0 +1,14 @@
+{
+    "Example": {
+        "Home page": {
+            "page": "index.php"
+        }
+    },
+    "About":
+    {
+        "MIApp Page": {
+            "url": "https://www.mestredainfo.com.br/p/miapp.html",
+            "key": "CTRL+M"
+        }
+    }
+}

@@ -1,0 +1,64 @@
+{
+    "Examples": {
+        "Home page": {
+            "page": "index.php"
+        },
+        "separator1": {},
+        "Open": {
+            "page": "openfile.php",
+            "key": "CTRL+O"
+        },
+        "To save": {
+            "page": "savefile.php",
+            "key": "CTRL+B"
+        },
+        "Message": {
+            "page": "message.php"
+        },
+        "separator2": {},
+        "cookies": {
+            "page": "cookies.php",
+            "key": "CTRL+K",
+            "newwindow": true
+        },
+        "include": {
+            "page": "include.php",
+            "key": "CTRL+I"
+        },
+        "phpInfo": {
+            "page": "phpinfo.php",
+            "key": "CTRL+P",
+            "newwindow": true
+        },
+        "No Cache": {
+            "page": "nocache.php",
+            "key": "CTRL+S"
+        },
+        "session": {
+            "page": "session.php",
+            "key": "CTRL+SHIFT+S"
+        },
+        "sqlite3": {
+            "page": "sqlite.php",
+            "key": "CTRL+ALT+S"
+        },
+        "timezone": {
+            "page": "timezone.php",
+            "key": "CTRL+T"
+        },
+        "separator3": {},
+        "Post Form": {
+            "page": "formpost.php"
+        },
+        "GET Form": {
+            "page": "formget.php"
+        }
+    },
+    "About":
+    {
+        "MIApp Page": {
+            "url": "https://www.mestredainfo.com.br/p/miapp.html",
+            "key": "CTRL+M"
+        }
+    }
+}
